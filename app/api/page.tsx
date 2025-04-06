@@ -13,12 +13,12 @@ export default async function Api() {
 
 	return (
 		<>
-			<div className='card shadow-lg bg-base-100'>
-				<div className='card-body'>
-					<h1 className='card-title text-2xl'>
-						RSS Aggregator - Hono API
+			<div className='bg-base-100'>
+				<div>
+					<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
+						Hono API
 					</h1>
-
+					<p className='my-2'>RSS Aggregator Hono REST API info.</p>
 					<p className='flex flex-row items-center gap-2 font-bold'>
 						<span>Status:</span>
 						<span

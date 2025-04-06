@@ -43,11 +43,12 @@ export default function AuthForm() {
 	}
 
 	return (
-		<div className='flex items-center justify-center min-h-screen'>
-			<div className='w-full max-w-md p-8 space-y-6 '>
-				<h1 className='text-2xl font-bold text-center'>
-					{isLogin ? 'Login' : 'Register'}
+		<div className='flex'>
+			<div className='w-full max-w-lg'>
+				<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
+					{isLogin ? 'Sign in' : 'Sign up'}
 				</h1>
+
 				<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
 					{!isLogin && (
 						<div>
@@ -66,6 +67,7 @@ export default function AuthForm() {
 							)}
 						</div>
 					)}
+
 					<div>
 						<label htmlFor='email' className='label'>
 							<span className='label-text'>Email</span>
@@ -82,6 +84,7 @@ export default function AuthForm() {
 							</span>
 						)}
 					</div>
+
 					<div>
 						<label htmlFor='password' className='label'>
 							<span className='label-text'>Password</span>
@@ -98,17 +101,19 @@ export default function AuthForm() {
 							</span>
 						)}
 					</div>
+
 					<button type='submit' className='btn btn-primary w-full'>
-						{isLogin ? 'Log in' : 'Register'}
+						{isLogin ? 'Sign in' : 'Sign up'}
 					</button>
 				</form>
-				<div className='text-center'>
+
+				<div className='text-center lg:text-left'>
 					<button
 						type='button'
 						onClick={() => setIsLogin(!isLogin)}
-						className='btn btn-link'
+						className='btn btn-link m-0 p-0'
 					>
-						{isLogin ? 'Switch to registration' : 'Switch to login'}
+						{isLogin ? 'Switch to sign up' : 'Switch to sign in'}
 					</button>
 				</div>
 			</div>

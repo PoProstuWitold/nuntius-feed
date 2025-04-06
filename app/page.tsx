@@ -12,8 +12,10 @@ export default async function Home() {
 
 	return (
 		<>
-			<h1 className='text-4xl font-bold mb-2'>RSS Aggregator</h1>
-			<p className='text-lg text-gray-600'>{text}</p>
+			<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
+				RSS Aggregator
+			</h1>
+			<p>{text}</p>
 		</>
 	)
 }

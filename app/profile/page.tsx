@@ -13,7 +13,9 @@ export default async function Login() {
 
 	return (
 		<>
-			<h1 className='text-4xl font-bold mb-2'>Login</h1>
+			<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
+				Profile
+			</h1>
 			<Profile user={user} />
 		</>
 	)
