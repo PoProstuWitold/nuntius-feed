@@ -1,0 +1,14 @@
+services:
+  mongodb_rss:
+    image: mongo:noble
+    container_name: mongodb_rss
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: rss
+    volumes:
+      - mongodb_rss_data:/data/db
+
+volumes:
+  mongodb_rss_data:

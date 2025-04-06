@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+	themes: light --default, dark --prefersdark, emerald, retro, cyberpunk,
+		valentine, halloween, winter, business, nord;
+	logs: true;
+	prefix: "";
+	rtl: false;
+	base: true;
+	styled: true;
+	utils: true;
+}
