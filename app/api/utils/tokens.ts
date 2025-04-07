@@ -39,7 +39,7 @@ export class Tokens {
 		const now = Math.floor(Date.now() / 1000)
 
 		return new SignJWT(payload)
-			.setProtectedHeader({ alg: 'HS256' })
+			.setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
 			.setJti(nanoid())
 			.setIssuedAt(now)
 			.setExpirationTime(now + expiresIn)

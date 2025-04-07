@@ -57,10 +57,6 @@ export const isAuthWithCookies = async (c: Context, next: Next) => {
 		?.split('; ')
 		.find((c) => c.startsWith('access_token='))
 		?.split('=')[1]
-	const refreshToken = cookies
-		?.split('; ')
-		.find((c) => c.startsWith('refresh_token='))
-		?.split('=')[1]
 
 	if (accessToken) {
 		try {
@@ -70,28 +66,6 @@ export const isAuthWithCookies = async (c: Context, next: Next) => {
 		} catch {
 			// no throwing error, maybe we can refresh token later
 			console.warn('Access token expired or invalid')
-		}
-	}
-
-	if (refreshToken) {
-		try {
-			const { payload } = await Tokens.verify(refreshToken)
-
-			const newAccessToken = await Tokens.create(
-				payload,
-				Tokens.accessExp
-			)
-			Tokens.setCookie(
-				c,
-				'access_token',
-				newAccessToken,
-				Tokens.accessExp
-			)
-
-			c.set('user', payload)
-			return await next()
-		} catch (err) {
-			console.error('Refresh token invalid', err)
 			return c.json({ message: 'Unauthorized' }, 401)
 		}
 	}
