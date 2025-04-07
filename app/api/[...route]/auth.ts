@@ -22,11 +22,10 @@ const app = new Hono<Env>()
 			},
 			Tokens.accessExp
 		)
-		const refreshToken = await Tokens.create(
+
+		const refreshToken = await Tokens.createEncrypted(
 			{
-				sub: user.id,
-				name: user.name,
-				email: user.email
+				sub: user.id
 			},
 			Tokens.refreshExp
 		)
@@ -34,13 +33,13 @@ const app = new Hono<Env>()
 		Tokens.setCookie(c, 'access_token', accessToken, Tokens.accessExp)
 		Tokens.setCookie(c, 'refresh_token', refreshToken, Tokens.refreshExp)
 
+		user.password = undefined
+
 		return c.json({
 			message: 'User created successfully',
-			user: {
-				id: user.id,
-				name: user.name,
-				email: user.email
-			}
+			user,
+			accessToken,
+			refreshToken
 		})
 	})
 	.post('/signin', async (c) => {
@@ -58,11 +57,10 @@ const app = new Hono<Env>()
 			},
 			Tokens.accessExp
 		)
-		const refreshToken = await Tokens.create(
+
+		const refreshToken = await Tokens.createEncrypted(
 			{
-				sub: user.id,
-				name: user.name,
-				email: user.email
+				sub: user.id
 			},
 			Tokens.refreshExp
 		)
@@ -70,13 +68,13 @@ const app = new Hono<Env>()
 		Tokens.setCookie(c, 'access_token', accessToken, Tokens.accessExp)
 		Tokens.setCookie(c, 'refresh_token', refreshToken, Tokens.refreshExp)
 
+		user.password = undefined
+
 		return c.json({
 			message: 'User signed in successfully',
-			user: {
-				id: user.id,
-				name: user.name,
-				email: user.email
-			}
+			user,
+			accessToken,
+			refreshToken
 		})
 	})
 	.post('/signout', async (c) => {
@@ -97,12 +95,18 @@ const app = new Hono<Env>()
 		}
 
 		try {
-			const { payload } = await Tokens.verify(refreshToken)
+			const { payload } = await Tokens.decrypt(refreshToken)
+
+			const user = await User.findById(payload.sub)
+			if (!user) {
+				return c.json({ message: 'User not found' }, 401)
+			}
+
 			const accessToken = await Tokens.create(
 				{
-					sub: payload.sub,
-					name: payload.name,
-					email: payload.email
+					sub: user.id,
+					name: user.name,
+					email: user.email
 				},
 				Tokens.accessExp
 			)

@@ -1,11 +1,23 @@
 import type { Context } from 'hono'
-import { type JWTPayload, SignJWT, jwtVerify } from 'jose'
+import type { CookieOptions } from 'hono/utils/cookie'
+import {
+	EncryptJWT,
+	type JWTPayload,
+	SignJWT,
+	jwtDecrypt,
+	jwtVerify
+} from 'jose'
 import { nanoid } from 'nanoid'
 
-const ACCESS_TOKEN_EXP = 60 * 5 // 5 minut
-const REFRESH_TOKEN_EXP = 60 * 60 * 24 * 30 // 30 dni
+const ACCESS_TOKEN_EXP = 60 * 5 // 5 minutes
+const REFRESH_TOKEN_EXP = 60 * 60 * 24 * 30 // 30 days
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dev-secret')
+const secret = new TextEncoder().encode(
+	process.env.JWT_SIGNING_SECRET || 'dev-secret'
+)
+const encryptionSecret = new TextEncoder().encode(
+	process.env.JWT_ENCRYPTION_SECRET || 'dev-secret'
+)
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -13,7 +25,7 @@ export class Tokens {
 	static accessExp = ACCESS_TOKEN_EXP
 	static refreshExp = REFRESH_TOKEN_EXP
 
-	static cookieOptions = {
+	static cookieOptions: CookieOptions = {
 		httpOnly: true,
 		secure: isProd,
 		sameSite: 'Strict',
@@ -48,5 +60,20 @@ export class Tokens {
 
 	static async verify(token: string) {
 		return jwtVerify(token, secret)
+	}
+
+	static async createEncrypted(payload: JWTPayload, expiresIn: number) {
+		const now = Math.floor(Date.now() / 1000)
+
+		return new EncryptJWT(payload)
+			.setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+			.setJti(nanoid())
+			.setIssuedAt(now)
+			.setExpirationTime(now + expiresIn)
+			.encrypt(encryptionSecret)
+	}
+
+	static async decrypt(token: string) {
+		return jwtDecrypt(token, encryptionSecret)
 	}
 }
