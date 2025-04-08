@@ -7,6 +7,8 @@ import {
 	CodeIcon,
 	LogInIcon,
 } from 'lucide-react'
+import { client } from '../utils/server-rpc'
+import { LogoutButton } from './LogoutButton'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -20,7 +22,10 @@ const geistMono = Geist_Mono({
 	display: 'swap'
 })
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export async function Layout({ children }: { children: React.ReactNode }) {
+	const res = await client.api.auth.me.$get()
+	const { user } = await res.json()
+
 	return (
 		<html lang='en' className='bg-base-100 text-base-content'>
 			<body
@@ -80,19 +85,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 									<HomeIcon size={18} /> Home
 								</a>
 							</li>
-							<li>
-								<a href='/profile' className='flex items-center gap-3'>
-									<UserIcon size={18} /> Profile
-								</a>
-							</li>
+							{user && (
+								<>
+									<li>
+										<a href='/profile' className='flex items-center gap-3'>
+											<UserIcon size={18} /> Profile
+										</a>
+									</li>
+									{/* LOGOUT */}
+									<LogoutButton />
+								</>
+							)}
+							{!user && (
+								<li>
+									<a href='/login' className='flex items-center gap-3'>
+										<LogInIcon size={18} /> Login
+									</a>
+								</li>
+							)}
+							<div className='divider' />
 							<li>
 								<a href='/api' className='flex items-center gap-3'>
 									<CodeIcon size={18} /> API
-								</a>
-							</li>
-							<li>
-								<a href='/login' className='flex items-center gap-3'>
-									<LogInIcon size={18} /> Login
 								</a>
 							</li>
 						</ul>

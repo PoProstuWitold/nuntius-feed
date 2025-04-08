@@ -17,45 +17,51 @@ export async function middleware(req: NextRequest) {
 	console.log('[middleware] Triggered:', path)
 
 	const cookie = req.headers.get('cookie') || ''
-	const res = NextResponse.next()
 
-	const me = await client.api.auth.me.$get({
-		headers: { cookie }
-	})
+	// Only for not logged in users
+	const publicOnlyPaths = ['/login']
+
+	// Only for logged in users
+	const protectedPaths = ['/profile']
+
+	let isLoggedIn = false
+
+	// Try to get user info from the API
+	const me = await client.api.auth.me.$get({ headers: { cookie } })
 
 	if (me.status !== 401) {
-		console.log('[middleware] Access token NOT OK')
-		return res
-	}
+		isLoggedIn = true
+	} else {
+		console.warn('[middleware] Access token expired, trying refresh...')
 
-	console.warn('[middleware] Access token expired, trying refresh...')
+		const refreshRes = await client.api.auth['refresh-token'].$post({ headers: { cookie } })
 
-	const refreshRes = await client.api.auth['refresh-token'].$post({
-		headers: { cookie }
-	})
+		if (refreshRes.ok) {
+			console.info('[middleware] Token refreshed ✅')
 
-	if (refreshRes.ok) {
-		console.info('[middleware] Token refreshed')
+			const setCookie = refreshRes.headers.get('set-cookie')
+			const redirectUrl = new URL(req.url)
+			redirectUrl.searchParams.set('refreshed', '1')
 
-		const setCookie = refreshRes.headers.get('set-cookie')
-		const redirectUrl = new URL(req.url)
-		redirectUrl.searchParams.set('refreshed', '1')
+			const redirectRes = NextResponse.redirect(redirectUrl)
+			if (setCookie) {
+				redirectRes.headers.set('set-cookie', setCookie)
+			}
 
-		const redirectRes = NextResponse.redirect(redirectUrl)
-
-		if (setCookie) {
-			redirectRes.headers.set('set-cookie', setCookie)
+			return redirectRes
 		}
-
-		return redirectRes
 	}
 
-	return res
-}
+	// Now we can redirect the user if needed
+	if (isLoggedIn && publicOnlyPaths.includes(path)) {
+		console.log('[middleware] Redirecting logged-in user from public-only path:', path)
+		return NextResponse.redirect(new URL('/', req.url))
+	}
 
-export const config = {
-	matcher: [
-		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-		'/(api|trpc)(.*)'
-	]
+	if (!isLoggedIn && protectedPaths.some(p => path.startsWith(p))) {
+		console.log('[middleware] Redirecting anon user from protected path:', path)
+		return NextResponse.redirect(new URL('/login', req.url))
+	}
+
+	return NextResponse.next()
 }

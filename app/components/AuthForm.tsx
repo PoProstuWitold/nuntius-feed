@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { client } from '../utils/client-rpc'
+import { useRouter } from 'next/navigation'
 
 type FormData = {
 	name?: string
@@ -11,6 +12,8 @@ type FormData = {
 }
 
 export default function AuthForm() {
+	const router = useRouter()
+	
 	const [isLogin, setIsLogin] = useState(true)
 	const {
 		register,
@@ -27,6 +30,8 @@ export default function AuthForm() {
 			if (res.ok) {
 				const result = await res.json()
 				console.info('Signed in:', result)
+				router.push('/profile')
+                router.refresh()
 			} else {
 				console.error('Sign in error')
 			}
@@ -36,6 +41,8 @@ export default function AuthForm() {
 			if (res.ok) {
 				const result = await res.json()
 				console.info('Signed up:', result)
+				router.push('/profile')
+                router.refresh()
 			} else {
 				console.error('Signed up error')
 			}
