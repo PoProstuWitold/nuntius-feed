@@ -71,7 +71,7 @@ Below are the technical details of the implementation:
 ```json
 {
     "sub": "user_id",
-    "jti": "refresh_token_id",
+    "jti": "random_token_id",
     "iat": 1712345678,
     "exp": 1714937678
 }

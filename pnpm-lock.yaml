@@ -10,16 +10,16 @@ importers:
     dependencies:
       '@scalar/hono-api-reference':
         specifier: ^0.8.0
-        version: 0.8.0(hono@4.7.5)
+        version: 0.8.0(hono@4.7.6)
       argon2:
         specifier: ^0.41.1
         version: 0.41.1
       hono:
-        specifier: ^4.7.5
-        version: 4.7.5
+        specifier: ^4.7.6
+        version: 4.7.6
       hono-openapi:
         specifier: ^0.4.6
-        version: 0.4.6(hono@4.7.5)(zod@3.24.2)
+        version: 0.4.6(hono@4.7.6)(zod@3.24.2)
       jose:
         specifier: ^6.0.10
         version: 6.0.10
@@ -61,8 +61,8 @@ importers:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
       daisyui:
-        specifier: ^5.0.12
-        version: 5.0.12
+        specifier: ^5.0.16
+        version: 5.0.16
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -482,8 +482,8 @@ packages:
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
-  daisyui@5.0.12:
-    resolution: {integrity: sha512-01DU0eYBcHgPtuf5fxcrkGkIN6/Uyaqmkle5Yo3ZyW9YVAu036ALZbjv2KH5euvUbeQ4r9q3gAarGcf7Tywhng==}
+  daisyui@5.0.16:
+    resolution: {integrity: sha512-MQiZQ21+r91zrKv3fxDOF56dzkfrr2FyXOaR/1T4f9AIeI/ilkc0i+UqOIE/VqjIfkWyq+wBPmBcyIf6iPJpYQ==}
 
   debug@4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
@@ -562,8 +562,8 @@ packages:
       zod-openapi:
         optional: true
 
-  hono@4.7.5:
-    resolution: {integrity: sha512-fDOK5W2C1vZACsgLONigdZTRZxuBqFtcKh7bUQ5cVSbwI2RWjloJDcgFOVzbQrlI6pCmhlTsVYZ7zpLj4m4qMQ==}
+  hono@4.7.6:
+    resolution: {integrity: sha512-564rVzELU+9BRqqx5k8sT2NFwGD3I3Vifdb6P7CmM6FiarOSY+fDC+6B+k9wcCb86ReoayteZP2ki0cRLN1jbw==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -1033,10 +1033,10 @@ snapshots:
     dependencies:
       '@scalar/types': 0.1.6
 
-  '@scalar/hono-api-reference@0.8.0(hono@4.7.5)':
+  '@scalar/hono-api-reference@0.8.0(hono@4.7.6)':
     dependencies:
       '@scalar/core': 0.2.6
-      hono: 4.7.5
+      hono: 4.7.6
 
   '@scalar/openapi-types@0.2.0':
     dependencies:
@@ -1202,7 +1202,7 @@ snapshots:
 
   csstype@3.1.3: {}
 
-  daisyui@5.0.12: {}
+  daisyui@5.0.16: {}
 
   debug@4.4.0:
     dependencies:
@@ -1223,14 +1223,14 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  hono-openapi@0.4.6(hono@4.7.5)(zod@3.24.2):
+  hono-openapi@0.4.6(hono@4.7.6)(zod@3.24.2):
     dependencies:
       json-schema-walker: 2.0.0
     optionalDependencies:
-      hono: 4.7.5
+      hono: 4.7.6
       zod: 3.24.2
 
-  hono@4.7.5: {}
+  hono@4.7.6: {}
 
   hookable@5.5.3: {}
 
