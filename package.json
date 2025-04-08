@@ -15,6 +15,7 @@
 		"hono": "^4.7.6",
 		"hono-openapi": "^0.4.6",
 		"jose": "^6.0.10",
+		"lucide-react": "^0.487.0",
 		"mongoose": "^8.13.2",
 		"nanoid": "^5.1.5",
 		"next": "15.2.4",

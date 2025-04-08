@@ -1,4 +1,12 @@
 import { Geist, Geist_Mono } from 'next/font/google'
+import {
+	MenuIcon,
+	RssIcon,
+	HomeIcon,
+	UserIcon,
+	CodeIcon,
+	LogInIcon,
+} from 'lucide-react'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -34,31 +42,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						{/* Navbar */}
 						<div className='navbar bg-base-300'>
 							<div className='flex-none lg:hidden'>
-								<label
-									htmlFor='my-drawer-3'
-									aria-label='open sidebar'
-									className='btn btn-square btn-ghost'
-								>
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										fill='none'
-										viewBox='0 0 24 24'
-										className='inline-block h-6 w-6 stroke-current'
-										role='img'
-										aria-label='menu'
+								<div className='flex items-center'>
+									<label
+										htmlFor='my-drawer-3'
+										aria-label='open sidebar'
+										className='btn btn-square btn-ghost'
 									>
-										<title>Menu</title>
-										<path
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											strokeWidth='2'
-											d='M4 6h16M4 12h16M4 18h16'
-										/>
-									</svg>
-								</label>
+										<MenuIcon />
+									</label>
+									<div className='divider divider-horizontal'/>
+								</div>
 							</div>
 							<div className='flex-1 px-2 font-bold text-lg'>
-								RSS Aggregator
+								<span className='flex items-center gap-2 text-center font-extrabold text-2xl text-primary'>
+									<RssIcon size='32' />
+									<span>RSS Aggregator</span>
+								</span>
 							</div>
 						</div>
 
@@ -75,18 +74,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
 							aria-label='close sidebar'
 							className='drawer-overlay'
 						/>
-						<ul className='menu p-4 w-80 min-h-full bg-base-200'>
+						<ul className='menu p-6 w-80 min-h-full bg-base-200 text-base-content gap-2'>
 							<li>
-								<a href='/'>Home</a>
+								<a href='/' className='flex items-center gap-3'>
+									<HomeIcon size={18} /> Home
+								</a>
 							</li>
 							<li>
-								<a href='/profile'>Profile</a>
+								<a href='/profile' className='flex items-center gap-3'>
+									<UserIcon size={18} /> Profile
+								</a>
 							</li>
 							<li>
-								<a href='/api'>API</a>
+								<a href='/api' className='flex items-center gap-3'>
+									<CodeIcon size={18} /> API
+								</a>
 							</li>
 							<li>
-								<a href='/login'>Login</a>
+								<a href='/login' className='flex items-center gap-3'>
+									<LogInIcon size={18} /> Login
+								</a>
 							</li>
 						</ul>
 					</div>
