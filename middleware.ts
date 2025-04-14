@@ -34,7 +34,9 @@ export async function middleware(req: NextRequest) {
 	} else {
 		console.warn('[middleware] Access token expired, trying refresh...')
 
-		const refreshRes = await client.api.auth['refresh-token'].$post({ headers: { cookie } })
+		const refreshRes = await client.api.auth['refresh-token'].$post({
+			headers: { cookie }
+		})
 
 		if (refreshRes.ok) {
 			console.info('[middleware] Token refreshed ✅')
@@ -54,12 +56,18 @@ export async function middleware(req: NextRequest) {
 
 	// Now we can redirect the user if needed
 	if (isLoggedIn && publicOnlyPaths.includes(path)) {
-		console.log('[middleware] Redirecting logged-in user from public-only path:', path)
+		console.log(
+			'[middleware] Redirecting logged-in user from public-only path:',
+			path
+		)
 		return NextResponse.redirect(new URL('/', req.url))
 	}
 
-	if (!isLoggedIn && protectedPaths.some(p => path.startsWith(p))) {
-		console.log('[middleware] Redirecting anon user from protected path:', path)
+	if (!isLoggedIn && protectedPaths.some((p) => path.startsWith(p))) {
+		console.log(
+			'[middleware] Redirecting anon user from protected path:',
+			path
+		)
 		return NextResponse.redirect(new URL('/login', req.url))
 	}
 

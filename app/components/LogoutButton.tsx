@@ -1,19 +1,19 @@
 'use client'
 
 import { LogOutIcon } from 'lucide-react'
-import { client } from '../utils/client-rpc'
 import { useRouter } from 'next/navigation'
+import { client } from '../utils/client-rpc'
 
 export function LogoutButton() {
-    const router = useRouter()
+	const router = useRouter()
 
 	async function handleLogout() {
 		try {
 			const res = await client.api.auth.signout.$post()
 
-            if (res.ok) {
+			if (res.ok) {
 				router.push('/login')
-                router.refresh()
+				router.refresh()
 			} else {
 				console.error('Logout failed')
 			}
@@ -25,6 +25,7 @@ export function LogoutButton() {
 	return (
 		<li>
 			<button
+				type='button'
 				onClick={handleLogout}
 				className='flex items-center gap-3 w-full text-left'
 			>

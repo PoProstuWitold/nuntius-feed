@@ -1,12 +1,12 @@
-import { Geist, Geist_Mono } from 'next/font/google'
 import {
+	CodeIcon,
+	HomeIcon,
+	LogInIcon,
 	MenuIcon,
 	RssIcon,
-	HomeIcon,
-	UserIcon,
-	CodeIcon,
-	LogInIcon,
+	UserIcon
 } from 'lucide-react'
+import { Geist, Geist_Mono } from 'next/font/google'
 import { client } from '../utils/server-rpc'
 import { LogoutButton } from './LogoutButton'
 
@@ -55,7 +55,7 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 									>
 										<MenuIcon />
 									</label>
-									<div className='divider divider-horizontal'/>
+									<div className='divider divider-horizontal' />
 								</div>
 							</div>
 							<div className='flex-1 px-2 font-bold text-lg'>
@@ -88,7 +88,10 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 							{user && (
 								<>
 									<li>
-										<a href='/profile' className='flex items-center gap-3'>
+										<a
+											href='/profile'
+											className='flex items-center gap-3'
+										>
 											<UserIcon size={18} /> Profile
 										</a>
 									</li>
@@ -98,14 +101,20 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 							)}
 							{!user && (
 								<li>
-									<a href='/login' className='flex items-center gap-3'>
+									<a
+										href='/login'
+										className='flex items-center gap-3'
+									>
 										<LogInIcon size={18} /> Login
 									</a>
 								</li>
 							)}
 							<div className='divider' />
 							<li>
-								<a href='/api' className='flex items-center gap-3'>
+								<a
+									href='/api'
+									className='flex items-center gap-3'
+								>
 									<CodeIcon size={18} /> API
 								</a>
 							</li>
