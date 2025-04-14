@@ -1,6 +1,8 @@
 import type { Context } from 'hono'
 import type { HTTPResponseError, Next } from 'hono/types'
 import type { ContentfulStatusCode, StatusCode } from 'hono/utils/http-status'
+import { User } from '../models'
+import type { Env } from '../types'
 import { Tokens } from './tokens'
 
 interface ExceptionOptions {
@@ -71,4 +73,21 @@ export const isAuthWithCookies = async (c: Context, next: Next) => {
 	}
 
 	return c.json({ message: 'Unauthorized' }, 401)
+}
+
+export const isAdmin = async (c: Context<Env>, next: Next) => {
+	const user = c.get('user')
+	if (!user) {
+		return c.json({ message: 'Unauthorized' }, 401)
+	}
+	const dbUser = await User.findById(user.sub).select('role')
+	if (!dbUser) {
+		return c.json({ message: 'Unauthorized' }, 401)
+	}
+
+	if (dbUser.role !== 'admin') {
+		return c.json({ message: 'Forbidden' }, 403)
+	}
+
+	return await next()
 }

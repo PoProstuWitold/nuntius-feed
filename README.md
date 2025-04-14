@@ -1,8 +1,21 @@
 # RSS Aggregator
 
-A lightweight fullstack web application for subscribing to and reading RSS feeds.  
+A lightweight fullstack web application for subscribing to and reading RSS channels.  
 Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web Tokens (JWT).
 
+## ✨ Features
+### 🧑 Accounts & Authentication
+- Credential auth flow
+- JWT with access and refresh tokens with silent refresh
+- Admin accounts which can add new and refresh existing RSS channel on demand
+
+### 📚 RSS Channels & Items
+- A curated list of predefined RSS channels available to all users
+- Channels and items follow strictly [RSS 2.0 Specification](https://www.rssboard.org/rss-specification)
+- Users can subscribe or unsubscribe from available channels
+- Each user can manage their personal list of subscribed channels
+- Channel items are cached and stored in MongoDB for efficient delivery
+- Periodic background refresh of channel items (e.g. every 30 minutes)
 
 ## Environment Configuration
 To generate secure ``JWT_SIGNING_SECRET`` and ``JWT_ENCRYPTION_SECRET`` values, use the following command in your terminal:

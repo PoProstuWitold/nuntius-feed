@@ -1,5 +1,5 @@
 {
-	"name": "rss",
+	"name": "rss-aggregator",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -10,6 +10,7 @@
 		"check": "biome check --fix"
 	},
 	"dependencies": {
+		"@hono/zod-validator": "^0.4.3",
 		"@scalar/hono-api-reference": "^0.8.1",
 		"argon2": "^0.41.1",
 		"hono": "^4.7.6",
@@ -21,7 +22,9 @@
 		"next": "15.3.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-hook-form": "^7.55.0"
+		"react-hook-form": "^7.55.0",
+		"rss-parser": "^3.13.0",
+		"zod": "^3.24.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",

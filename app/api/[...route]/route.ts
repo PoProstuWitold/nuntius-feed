@@ -18,6 +18,8 @@ import {
 } from '../utils/middlewares'
 import { connectDB } from '../utils/mongo'
 import authRoutes from './auth'
+import rssRoutes from './rss'
+import userRoutes from './user'
 
 const app = new Hono<Env>().basePath('/api')
 
@@ -83,6 +85,8 @@ const routes = app
 		})
 	})
 	.route('/auth', authRoutes)
+	.route('/rss', rssRoutes)
+	.route('/user', userRoutes)
 
 const GET = app.fetch
 const POST = app.fetch
