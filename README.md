@@ -1,19 +1,19 @@
 # Nuntius Feed
 
-Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom channels.
+Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds.
 Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web Tokens (JWT).
 
 ## ✨ Features
 ### 🧑 Accounts & Authentication
 - Credential auth flow
 - JWT with access and refresh tokens with silent refresh
-- Admin accounts which can add new and refresh existing RSS channel on demand
+- Admin accounts which can add new and refresh existing RSS and Atom feed on demand
 
-### 📚 RSS Channels & Items
-- A curated list of predefined RSS channels available to all users
+### 📚 RSS & Atom feeds
+- A curated list of predefined feeds available to all users
 - Feed and items allow and parse all specifications of Atom and RSS standards
-- Users can subscribe or unsubscribe from available channels
-- Each user can manage their personal list of subscribed channels
+- Users can subscribe or unsubscribe from available feeds
+- Each user can manage their personal list of subscribed feeds
 - Channel items are cached and stored in MongoDB for efficient delivery
 - Periodic background refresh of channel items (e.g. every 30 minutes)
 
