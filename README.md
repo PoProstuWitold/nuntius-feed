@@ -1,6 +1,6 @@
-# RSS Aggregator
+# Nuntius Feed
 
-A lightweight fullstack web application for subscribing to and reading RSS channels.  
+Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom channels.
 Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web Tokens (JWT).
 
 ## ✨ Features

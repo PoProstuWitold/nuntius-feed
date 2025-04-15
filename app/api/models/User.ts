@@ -7,14 +7,14 @@ import {
 	model,
 	models
 } from 'mongoose'
-import type { ChannelDocument } from './Channel'
+import type { FeedDocument } from './Feed'
 
 export interface UserDocument extends Document {
 	name: string
 	email: string
 	password: string
 	role: 'user' | 'admin'
-	channels: (Types.ObjectId | ChannelDocument)[]
+	feeds: (Types.ObjectId | FeedDocument)[]
 	verifyPassword: (inputPassword: string) => Promise<boolean>
 }
 
@@ -28,7 +28,7 @@ const UserSchema = new Schema<UserDocument>(
 			enum: ['user', 'admin'],
 			default: 'user'
 		},
-		channels: [{ type: Schema.Types.ObjectId, ref: 'Channel' }]
+		feeds: [{ type: Schema.Types.ObjectId, ref: 'Feed' }]
 	},
 	{
 		timestamps: true

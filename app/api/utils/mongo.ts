@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/rss'
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/feed'
 
 export const connectDB = async () => {
 	try {

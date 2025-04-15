@@ -1,61 +1,40 @@
 import { type Document, Schema, type Types, model, models } from 'mongoose'
+import type { ItemData } from '../types'
+import { FeedAuthorSchema, FeedCategorySchema, FeedImageSchema } from './Feed'
 
-// Official RSS 2.0 Specification:
-// https://www.rssboard.org/rss-specification
-
-// Validation rules for RSS 2.0:
-// https://validator.w3.org/feed/docs/rss2.html
-export type ItemEnclosure = {
-	url: string
-	length?: number
-	type?: string
-}
-
-export interface ItemData {
-	// custom
-	channel: Types.ObjectId
-	// required
-	title: string // The title of the item
-	link: string // The URL of the item
-	description: string // The description of the item
-	// optional
-	author?: string // The author of the item
-	category?: string // The category of the item
-	enclosure?: ItemEnclosure // The enclosure of the item
-	guid?: string // The globally unique identifier of the item
-	pubDate?: Date | string // The publication date of the item
-	source?: string // The source of the item
-}
+const FeedItemMediaSchema = new Schema(
+	{
+		image: String,
+		length: Number,
+		mimetype: String,
+		title: String,
+		type: String,
+		url: { type: String, required: true }
+	},
+	{ _id: false }
+)
 
 export interface ItemDocument extends ItemData, Document {}
-
 const ItemSchema = new Schema<ItemDocument>(
 	{
-		// custom
-		channel: {
+		feed: {
 			type: Schema.Types.ObjectId,
-			ref: 'Channel',
+			ref: 'Feed',
 			required: true
 		},
-		// required
-		title: { type: String, required: true },
-		description: { type: String, required: true },
-		link: { type: String, required: true },
-		// optional
-		author: { type: String },
-		category: { type: String },
-		enclosure: {
-			url: { type: String, required: true },
-			length: { type: Number },
-			type: { type: String }
-		},
-		guid: { type: String, unique: true },
-		pubDate: { type: Date },
-		source: { type: String }
+		guid: { type: String, required: true, index: true, unique: true },
+		authors: { type: [FeedAuthorSchema], default: [] },
+		categories: { type: [FeedCategorySchema], default: [] },
+		content: String,
+		description: String,
+		image: { type: FeedImageSchema, default: null },
+		media: { type: [FeedItemMediaSchema], default: [] },
+		published: Date,
+		title: String,
+		updated: Date,
+		url: String
 	},
-	{
-		timestamps: true
-	}
+	{ timestamps: true }
 )
 
 ItemSchema.index({ pubDate: -1 })
