@@ -11,7 +11,7 @@ Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web 
 
 ### 📚 RSS Channels & Items
 - A curated list of predefined RSS channels available to all users
-- Channels and items follow strictly [RSS 2.0 Specification](https://www.rssboard.org/rss-specification)
+- Feed and items allow and parse all specifications of Atom and RSS standards
 - Users can subscribe or unsubscribe from available channels
 - Each user can manage their personal list of subscribed channels
 - Channel items are cached and stored in MongoDB for efficient delivery
