@@ -61,7 +61,7 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 							<div className='flex-1 px-2 font-bold text-lg'>
 								<span className='flex items-center gap-2 text-center font-extrabold text-2xl text-primary'>
 									<RssIcon size='32' />
-									<span>RSS Aggregator</span>
+									<span>Nuntius Feed</span>
 								</span>
 							</div>
 						</div>

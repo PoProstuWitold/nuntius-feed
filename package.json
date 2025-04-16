@@ -14,7 +14,7 @@
 		"@rowanmanning/feed-parser": "^2.0.2",
 		"@scalar/hono-api-reference": "^0.8.1",
 		"argon2": "^0.41.1",
-		"hono": "^4.7.6",
+		"hono": "^4.7.7",
 		"hono-openapi": "^0.4.6",
 		"jose": "^6.0.10",
 		"lucide-react": "^0.488.0",
@@ -34,7 +34,7 @@
 		"@types/react": "^19.1.2",
 		"@types/react-dom": "^19.1.2",
 		"autoprefixer": "^10.4.21",
-		"daisyui": "^5.0.20",
+		"daisyui": "^5.0.22",
 		"postcss": "^8.5.3",
 		"tailwindcss": "^4.1.4",
 		"typescript": "^5.8.3"

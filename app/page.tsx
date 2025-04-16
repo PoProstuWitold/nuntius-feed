@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { client } from './utils/server-rpc'
 
 export const metadata: Metadata = {
-	title: 'RSS Aggregator',
-	description: 'Welcome to the RSS Aggregator'
+	title: 'Nuntius Feed',
+	description:
+		'Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds.'
 }
 
 export default async function Home() {
@@ -13,7 +14,7 @@ export default async function Home() {
 	return (
 		<>
 			<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
-				RSS Aggregator
+				Nuntius Feed
 			</h1>
 			<p>{text}</p>
 		</>

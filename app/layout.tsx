@@ -3,9 +3,9 @@ import type { Metadata } from 'next'
 import { Layout } from './components/Layout'
 
 export const metadata: Metadata = {
-	title: 'RSS Aggregator',
+	title: 'Nuntius Feed',
 	description:
-		'A simple RSS aggregator built with Next.js, Hono and TypeScript'
+		'Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds.'
 }
 
 export default function RootLayout({

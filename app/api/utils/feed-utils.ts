@@ -94,7 +94,7 @@ export class FeedUtils {
 			const updatedItems = await Promise.all(
 				parsedItems.map((item) =>
 					Item.findOneAndUpdate(
-						{ guid: item.guid },
+						{ guid: item.guid, feed: existingFeed._id },
 						{ ...item, feed: updatedFeed._id },
 						{ upsert: true, new: true, setDefaultsOnInsert: true }
 					)

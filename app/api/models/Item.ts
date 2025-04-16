@@ -22,7 +22,7 @@ const ItemSchema = new Schema<ItemDocument>(
 			ref: 'Feed',
 			required: true
 		},
-		guid: { type: String, required: true, index: true, unique: true },
+		guid: { type: String, required: true },
 		authors: { type: [FeedAuthorSchema], default: [] },
 		categories: { type: [FeedCategorySchema], default: [] },
 		content: String,
@@ -38,6 +38,7 @@ const ItemSchema = new Schema<ItemDocument>(
 )
 
 ItemSchema.index({ pubDate: -1 })
+ItemSchema.index({ guid: 1, feed: 1 }, { unique: true })
 
 ItemSchema.set('toJSON', {
 	virtuals: true,

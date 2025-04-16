@@ -68,7 +68,11 @@ app.notFound((c) => {
 app.use(responseTime)
 
 const routes = app
-	.get('/v1', (c) => c.text('RSS Aggregator from Hono API!'))
+	.get('/v1', (c) =>
+		c.text(
+			'Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds. Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web Tokens (JWT).'
+		)
+	)
 	.get('/health', (c) => {
 		const mongoStatus = mongoose.connection.readyState === 1
 
