@@ -4,13 +4,13 @@ import {
 	LogInIcon,
 	MenuIcon,
 	RssIcon,
-	UserIcon,
-	UserCog
+	UserCog,
+	UserIcon
 } from 'lucide-react'
 import { Geist, Geist_Mono } from 'next/font/google'
+import Link from 'next/link'
 import { client } from '../utils/server-rpc'
 import { LogoutButton } from './LogoutButton'
-import Link from 'next/link'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -83,7 +83,10 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 						/>
 						<ul className='menu p-6 w-80 min-h-full bg-base-200 text-base-content gap-2'>
 							<li>
-								<Link href='/' className='flex items-center gap-3'>
+								<Link
+									href='/'
+									className='flex items-center gap-3'
+								>
 									<HomeIcon size={18} /> Home
 								</Link>
 							</li>
