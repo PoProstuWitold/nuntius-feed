@@ -4,11 +4,13 @@ import {
 	LogInIcon,
 	MenuIcon,
 	RssIcon,
-	UserIcon
+	UserIcon,
+	UserCog
 } from 'lucide-react'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { client } from '../utils/server-rpc'
 import { LogoutButton } from './LogoutButton'
+import Link from 'next/link'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -67,7 +69,7 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 						</div>
 
 						{/* Main content */}
-						<main className='w-full max-w-screen-sm px-4 py-8 flex-grow'>
+						<main className='w-full px-5 py-10 flex-grow'>
 							{children}
 						</main>
 					</div>
@@ -81,19 +83,19 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 						/>
 						<ul className='menu p-6 w-80 min-h-full bg-base-200 text-base-content gap-2'>
 							<li>
-								<a href='/' className='flex items-center gap-3'>
+								<Link href='/' className='flex items-center gap-3'>
 									<HomeIcon size={18} /> Home
-								</a>
+								</Link>
 							</li>
 							{user && (
 								<>
 									<li>
-										<a
+										<Link
 											href='/profile'
 											className='flex items-center gap-3'
 										>
 											<UserIcon size={18} /> Profile
-										</a>
+										</Link>
 									</li>
 									{/* LOGOUT */}
 									<LogoutButton />
@@ -101,23 +103,35 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 							)}
 							{!user && (
 								<li>
-									<a
+									<Link
 										href='/login'
 										className='flex items-center gap-3'
 									>
 										<LogInIcon size={18} /> Login
-									</a>
+									</Link>
 								</li>
 							)}
-							<div className='divider' />
-							<li>
-								<a
-									href='/api'
-									className='flex items-center gap-3'
-								>
-									<CodeIcon size={18} /> API
-								</a>
-							</li>
+							{user?.role === 'admin' && (
+								<>
+									<div className='divider'>Admin</div>
+									<li>
+										<Link
+											href='/dashboard'
+											className='flex items-center gap-3'
+										>
+											<UserCog size={18} /> Dashboard
+										</Link>
+									</li>
+									<li>
+										<Link
+											href='/api'
+											className='flex items-center gap-3'
+										>
+											<CodeIcon size={18} /> API
+										</Link>
+									</li>
+								</>
+							)}
 						</ul>
 					</div>
 				</div>

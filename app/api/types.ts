@@ -4,6 +4,7 @@ export interface PayloadUser {
 	sub: string
 	name: string
 	email: string
+	role: string
 }
 
 export type Env = {

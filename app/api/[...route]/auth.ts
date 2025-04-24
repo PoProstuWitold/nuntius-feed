@@ -18,7 +18,8 @@ const app = new Hono<Env>()
 			{
 				sub: user.id,
 				name: user.name,
-				email: user.email
+				email: user.email,
+				role: user.role
 			},
 			Tokens.accessExp
 		)
@@ -53,7 +54,8 @@ const app = new Hono<Env>()
 			{
 				sub: user.id,
 				name: user.name,
-				email: user.email
+				email: user.email,
+				role: user.role
 			},
 			Tokens.accessExp
 		)
@@ -106,7 +108,8 @@ const app = new Hono<Env>()
 				{
 					sub: user.id,
 					name: user.name,
-					email: user.email
+					email: user.email,
+					role: user.role
 				},
 				Tokens.accessExp
 			)

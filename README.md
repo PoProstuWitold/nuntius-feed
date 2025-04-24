@@ -61,11 +61,15 @@ Below are the technical details of the implementation:
     "sub": "user_id",
     "name": "Username",
     "email": "useremail@example.com",
+    "role": "user or admin",
     "jti": "random_token_id",
     "iat": 1712345678,
     "exp": 1712349278
 }
 ```
+
+``role`` is used only for displaying UI. Admin privileges are validated separately using database.
+
 - **Storage:** Sent as a ``HttpOnly`` cookie named ``access_token``
 - **Expiry:** Short-lived (e.g., 5 minutes)
 
