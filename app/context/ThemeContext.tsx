@@ -18,7 +18,6 @@ const themes = [
 
 export type Theme = (typeof themes)[number]
 
-
 interface ThemeContextType {
 	theme: Theme
 	setTheme: (theme: Theme) => void
@@ -61,9 +60,7 @@ export const ThemeProvider = ({
 	}
 
 	return (
-		<ThemeContext.Provider
-			value={{ theme, setTheme: changeTheme }}
-		>
+		<ThemeContext.Provider value={{ theme, setTheme: changeTheme }}>
 			{children}
 		</ThemeContext.Provider>
 	)

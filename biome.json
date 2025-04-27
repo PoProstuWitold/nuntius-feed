@@ -15,7 +15,9 @@
 			"globals.css",
 			".next",
 			"public",
-			"build"
+			"build",
+			"middleware.ts",
+			"Layout.tsx"
 		]
 	},
 	"formatter": {
