@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Layout } from './components/Layout'
+import { ThemeProvider } from './context/ThemeContext'
 
 export const metadata: Metadata = {
 	title: 'Nuntius Feed',
@@ -13,5 +14,9 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
-	return <Layout>{children}</Layout>
+	return (
+		<ThemeProvider defaultTheme='system'>
+			<Layout>{children}</Layout>
+		</ThemeProvider>
+	)
 }

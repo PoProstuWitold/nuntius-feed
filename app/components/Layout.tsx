@@ -11,6 +11,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import Link from 'next/link'
 import { client } from '../utils/server-rpc'
 import { LogoutButton } from './LogoutButton'
+import { ThemeSwitcher } from './ThemeSwitcher'
+import { setThemeScript } from '../utils/functions'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -29,7 +31,11 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 	const { user } = await res.json()
 
 	return (
-		<html lang='en' className='bg-base-100 text-base-content'>
+		<html lang='en' className='bg-base-100 text-base-content' suppressHydrationWarning>
+			<head>
+				{/* Inline script to load theme instantly server-side */}
+				<script dangerouslySetInnerHTML={{ __html: setThemeScript }} />
+			</head>
 			<body
 				className={`
 					${geistSans.variable}
@@ -82,6 +88,7 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 							className='drawer-overlay'
 						/>
 						<ul className='menu p-6 w-80 min-h-full bg-base-200 text-base-content gap-2'>
+							<div className='divider'>Navigation</div>
 							<li>
 								<Link
 									href='/'
@@ -114,6 +121,8 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 									</Link>
 								</li>
 							)}
+							<div className='divider'>Settings</div>
+							<ThemeSwitcher />
 							{user?.role === 'admin' && (
 								<>
 									<div className='divider'>Admin</div>

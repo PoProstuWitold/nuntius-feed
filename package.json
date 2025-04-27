@@ -10,7 +10,7 @@
 		"types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@hono/zod-validator": "^0.4.3",
+		"@hono/zod-validator": "^0.5.0",
 		"@rowanmanning/feed-parser": "^2.0.2",
 		"@scalar/hono-api-reference": "^0.8.5",
 		"argon2": "^0.43.0",
@@ -18,7 +18,7 @@
 		"hono-openapi": "^0.4.6",
 		"jose": "^6.0.10",
 		"lucide-react": "^0.503.0",
-		"mongoose": "^8.13.2",
+		"mongoose": "^8.14.0",
 		"nanoid": "^5.1.5",
 		"next": "15.3.1",
 		"react": "^19.1.0",
@@ -30,7 +30,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@tailwindcss/postcss": "^4.1.4",
-		"@types/node": "^22.14.1",
+		"@types/node": "^22.15.2",
 		"@types/react": "^19.1.2",
 		"@types/react-dom": "^19.1.2",
 		"autoprefixer": "^10.4.21",
