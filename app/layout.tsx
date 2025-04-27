@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { ToastContainer } from 'react-toastify'
 import { Layout } from './components/Layout'
 import { ThemeProvider } from './context/ThemeContext'
 
@@ -17,6 +18,7 @@ export default function RootLayout({
 	return (
 		<ThemeProvider defaultTheme='system'>
 			<Layout>{children}</Layout>
+			<ToastContainer />
 		</ThemeProvider>
 	)
 }

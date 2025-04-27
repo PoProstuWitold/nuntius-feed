@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import { client } from '../utils/client-rpc'
 
 type FormData = {
@@ -30,6 +31,10 @@ export default function AuthForm() {
 			if (res.ok) {
 				const result = await res.json()
 				console.info('Signed in:', result)
+				toast('Signed in successfully', {
+					theme: 'colored',
+					type: 'success'
+				})
 				router.push('/profile')
 				router.refresh()
 			} else {
@@ -41,6 +46,10 @@ export default function AuthForm() {
 			if (res.ok) {
 				const result = await res.json()
 				console.info('Signed up:', result)
+				toast('Signed up successfully', {
+					theme: 'colored',
+					type: 'success'
+				})
 				router.push('/profile')
 				router.refresh()
 			} else {

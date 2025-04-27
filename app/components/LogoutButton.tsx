@@ -2,6 +2,7 @@
 
 import { LogOutIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 import { client } from '../utils/client-rpc'
 
 export function LogoutButton() {
@@ -12,6 +13,10 @@ export function LogoutButton() {
 			const res = await client.api.auth.signout.$post()
 
 			if (res.ok) {
+				toast('Signed out successfully', {
+					theme: 'colored',
+					type: 'success'
+				})
 				router.push('/login')
 				router.refresh()
 			} else {
