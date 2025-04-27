@@ -8,11 +8,68 @@ import { validatorParamObjectId } from '../utils/schemas'
 const app = new Hono<Env>()
 	// List all available feeds (optionally with filters)
 	.get('/', async (c) => {
-		c.status(200)
-		return c.json({
+		const limit = Number.parseInt(c.req.query('limit') || '10')
+		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const sortBy = c.req.query('sortBy') || 'createdAt'
+		const sortOrder = c.req.query('sortOrder') || 'desc'
+		const filters = {
+			limit,
+			offset,
+			sortBy,
+			sortOrder
+		}
+		const feeds = await Feed.find({}, null, {
+			limit: filters.limit,
+			skip: filters.offset,
+			sort: {
+				[filters.sortBy]: filters.sortOrder === 'asc' ? 1 : -1
+			}
+		}).lean()
+
+		// Dla każdego feeda - policz itemy
+		const feedsWithItemsCount = await Promise.all(
+			feeds.map(async (feed) => {
+				const itemsCount = await Item.countDocuments({ feed: feed._id })
+				const { _id, __v, ...rest } = feed
+
+				return {
+					...rest,
+					id: _id,
+					itemsCount
+				}
+			})
+		)
+
+		const totalFeeds = await Feed.countDocuments()
+		const totalPages = Math.ceil(totalFeeds / filters.limit)
+		const currentPage = Math.floor(filters.offset / filters.limit) + 1
+		const hasNextPage = filters.offset + filters.limit < totalFeeds
+		const hasPreviousPage = filters.offset > 0
+		const nextPage = hasNextPage ? currentPage + 1 : null
+		const previousPage = hasPreviousPage ? currentPage - 1 : null
+		const pagination = {
+			totalFeeds,
+			totalPages,
+			currentPage,
+			hasNextPage,
+			hasPreviousPage,
+			nextPage,
+			previousPage
+		}
+
+		const response = {
 			success: true,
-			message: 'Fetched all available feeds'
-		})
+			message: 'Fetched all available feeds',
+			feeds: feedsWithItemsCount,
+			pagination
+		}
+
+		// example query: /api/feed?limit=10&offset=0&sortBy=createdAt&sortOrder=desc
+		// example query: /api/feed?limit=10&offset=0&sortBy=title&sortOrder=asc
+		// example query: /api/feed?limit=10&offset=0&sortBy=title&sortOrder=desc
+		// example query: /api/feed?limit=10&offset=0&sortBy=createdAt&sortOrder=asc
+		c.status(200)
+		return c.json(response)
 	})
 	// Get details of a single feed
 	.get('/:id', validatorParamObjectId, async (c) => {
