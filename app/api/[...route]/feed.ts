@@ -27,7 +27,7 @@ const app = new Hono<Env>()
 		}).lean()
 
 		// Dla każdego feeda - policz itemy
-		const feedsWithItemsCount = await Promise.all(
+		const feedsWithItemsCount = (await Promise.all(
 			feeds.map(async (feed) => {
 				const itemsCount = await Item.countDocuments({ feed: feed._id })
 				const { _id, __v, ...rest } = feed
@@ -38,7 +38,8 @@ const app = new Hono<Env>()
 					itemsCount
 				}
 			})
-		)
+			// biome-ignore lint: Weird and wrong type casting
+		)) as any
 
 		const totalFeeds = await Feed.countDocuments()
 		const totalPages = Math.ceil(totalFeeds / filters.limit)

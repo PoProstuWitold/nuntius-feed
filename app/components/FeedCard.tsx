@@ -14,10 +14,27 @@ import {
 } from 'lucide-react'
 import type { Feed } from '../types'
 
-// Funkcja pomocnicza do flag emoji na podstawie języka
-function getFlagEmoji(language: string | null) {
-	if (!language) return '🏳️'
-	const lang = language.split('-')[1] || language
+function getFlagEmoji(language: string | null, url: string) {
+	const ignoredTlds = ['com', 'org', 'net', 'info', 'gov', 'edu']
+
+	let lang = language?.split('-')[1] || language
+
+	if (!lang && url) {
+		const hostname = new URL(url).hostname
+		const tld = hostname.split('.').pop()
+
+		if (tld) lang = tld
+	}
+
+	if (!lang) return '🏳️'
+
+	if (
+		lang.toLowerCase() === 'en' ||
+		ignoredTlds.includes(lang.toLowerCase())
+	) {
+		return '🇺🇸 (?)'
+	}
+
 	const codePoints = lang
 		.toUpperCase()
 		.split('')
@@ -30,23 +47,20 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 		<div className='card bg-base-100 shadow-md border border-base-300 relative overflow-hidden'>
 			{/* Ribbon / Wstążka */}
 			<div className='absolute top-1 right-[-30px] w-[100px] bg-primary text-primary-content text-center font-bold py-1 rotate-45 shadow-md'>
-				{getFlagEmoji(feed.language)}
+				{getFlagEmoji(feed.language, feed.url).includes('(?') ? (
+					<div
+						className='tooltip tooltip-bottom cursor-pointer'
+						data-tip='Auto-detected'
+					>
+						<span>{getFlagEmoji(feed.language, feed.url)}</span>
+					</div>
+				) : (
+					<span>{getFlagEmoji(feed.language, feed.url)}</span>
+				)}
 			</div>
 
 			<div className='card-body flex flex-col justify-between'>
 				<div className='flex flex-col gap-4'>
-					{/* Title */}
-					<h2 className='card-title text-primary'>
-						<a
-							href={feed.url || '#'}
-							target='_blank'
-							rel='noopener noreferrer'
-							className='link link-hover'
-						>
-							{feed.title || 'Untitled feed'}
-						</a>
-					</h2>
-
 					{/* Feed source + standard info */}
 					<div className='flex items-center gap-2 text-sm text-base-content/70'>
 						<LinkIcon size={16} />
@@ -65,11 +79,29 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 							<span>No feed source</span>
 						)}
 					</div>
+					{/* Title */}
+					<h2 className='card-title text-primary line-clamp-2 min-h-[4rem] overflow-hidden text-ellipsis'>
+						<a
+							href={feed.url || '#'}
+							target='_blank'
+							rel='noopener noreferrer'
+							className='link link-hover'
+						>
+							{feed.title || 'Untitled feed'}
+						</a>
+					</h2>
 
 					{/* Description */}
-					<p className='text-sm text-base-content/70 min-h-[3rem] line-clamp-2 overflow-hidden text-ellipsis'>
-						{feed.description || 'No description available.'}
-					</p>
+					<div
+						className='tooltip'
+						data-tip={
+							feed.description || 'No description available.'
+						}
+					>
+						<p className='cursor-pointer text-sm text-base-content/70 min-h-[2.5rem] line-clamp-2 overflow-hidden text-ellipsis'>
+							{feed.description || 'No description available.'}
+						</p>
+					</div>
 
 					<div className='divider'>Info</div>
 					{/* Main Info */}

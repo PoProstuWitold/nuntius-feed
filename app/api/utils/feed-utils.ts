@@ -39,7 +39,7 @@ export class FeedUtils {
 				meta: feed.meta,
 				published: feed.published,
 				title: feed.title,
-				self: feed.self,
+				self: feed.self || feedUrl,
 				updated: feed.updated,
 				url: feed.url
 			} as FeedData,
