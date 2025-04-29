@@ -47,61 +47,67 @@ export const FeedUtils = () => {
 	const formatTime = (timestamp: string | null) =>
 		timestamp ? new Date(timestamp).toLocaleString() : '-'
 
-	const percent = (processed: number, total: number) =>
-		total > 0 ? ` (${Math.round((processed / total) * 100)}%)` : ''
+	const renderStats = (p: Progress, path: 'refresh' | 'defaults') => {
+		const percentage =
+			p.total > 0 ? Math.round((p.processed / p.total) * 100) : 0
 
-	const renderStats = (p: Progress) => (
-		<div>
-			<div className='divider' />
-			<p className='font-semibold'>Process info</p>
-			<p>
-				<span className='font-medium'>Status:</span>{' '}
-				{p.isRunning ? 'Running' : 'Idle'}
-			</p>
-			<p>
-				<span className='font-medium'>Total:</span> {p.total}
-			</p>
-			<p>
-				<span className='font-medium'>Processed:</span> {p.processed} /{' '}
-				{p.total}
-				<span className='text-gray-500'>
-					{percent(p.processed, p.total)}
-				</span>
-			</p>
-			<p>
-				<span className='font-medium'>Started at:</span>{' '}
-				{formatTime(p.startedAt)}
-			</p>
-			{p.finishedAt && (
-				<p>
-					<span className='font-medium'>Finished at:</span>{' '}
-					{formatTime(p.finishedAt)}
+		return (
+			<div>
+				<div className='divider' />
+				<p className='font-semibold mb-2'>Progress</p>
+				<progress
+					className={`progress ${path === 'refresh' ? 'progress-primary' : 'progress-secondary'}`}
+					value={percentage}
+					max='100'
+				/>
+				<p className='text-sm mb-5'>
+					{p.processed} / {p.total} ({percentage}%)
 				</p>
-			)}
-			<div className='divider' />
-			<p className='font-semibold'>Items info</p>
-			{typeof p.failed === 'number' && (
+
+				<p className='font-semibold'>Process info</p>
 				<p>
-					<span className='font-medium'>Failed:</span> {p.failed}
+					<span className='font-medium'>Status:</span>{' '}
+					{p.isRunning ? 'Running' : 'Idle'}
 				</p>
-			)}
-			{typeof p.success === 'number' && (
 				<p>
-					<span className='font-medium'>Success:</span> {p.success}
+					<span className='font-medium'>Started at:</span>{' '}
+					{formatTime(p.startedAt)}
 				</p>
-			)}
-			{typeof p.created === 'number' && (
-				<p>
-					<span className='font-medium'>Created:</span> {p.created}
-				</p>
-			)}
-			{typeof p.updated === 'number' && (
-				<p>
-					<span className='font-medium'>Updated:</span> {p.updated}
-				</p>
-			)}
-		</div>
-	)
+				{p.finishedAt && (
+					<p>
+						<span className='font-medium'>Finished at:</span>{' '}
+						{formatTime(p.finishedAt)}
+					</p>
+				)}
+
+				<div className='divider' />
+				<p className='font-semibold'>Items info</p>
+				{typeof p.failed === 'number' && (
+					<p>
+						<span className='font-medium'>Failed:</span> {p.failed}
+					</p>
+				)}
+				{typeof p.success === 'number' && (
+					<p>
+						<span className='font-medium'>Success:</span>{' '}
+						{p.success}
+					</p>
+				)}
+				{typeof p.created === 'number' && (
+					<p>
+						<span className='font-medium'>Created:</span>{' '}
+						{p.created}
+					</p>
+				)}
+				{typeof p.updated === 'number' && (
+					<p>
+						<span className='font-medium'>Updated:</span>{' '}
+						{p.updated}
+					</p>
+				)}
+			</div>
+		)
+	}
 
 	return (
 		<div className='mx-auto my-10'>
@@ -119,7 +125,11 @@ export const FeedUtils = () => {
 					>
 						{refresh?.isRunning ? 'Running...' : 'Start Refresh'}
 					</button>
-					{refresh ? renderStats(refresh) : <p>Loading status...</p>}
+					{refresh ? (
+						renderStats(refresh, 'refresh')
+					) : (
+						<p>Loading status...</p>
+					)}
 				</section>
 
 				<section className='border rounded-lg p-6 shadow-md bg-base-100'>
@@ -135,7 +145,7 @@ export const FeedUtils = () => {
 						{defaults?.isRunning ? 'Running...' : 'Start Import'}
 					</button>
 					{defaults ? (
-						renderStats(defaults)
+						renderStats(defaults, 'defaults')
 					) : (
 						<p>Loading status...</p>
 					)}
