@@ -16,8 +16,10 @@ export default async function Home({
 	searchParams?: { page?: string }
 }) {
 	const page = Number(searchParams?.page || '1')
-	const limit = 10
+	const limit = 12
 	const offset = (page - 1) * limit
+	const sortBy = 'updatedAt'
+	const sortOrder = 'desc'
 
 	const v1 = await client.api.v1.$get()
 	const text = await v1.text()
@@ -26,8 +28,8 @@ export default async function Home({
 		query: {
 			limit: limit.toString(),
 			offset: offset.toString(),
-			sortBy: 'createdAt',
-			sortOrder: 'desc'
+			sortBy,
+			sortOrder
 		}
 	})
 
@@ -49,28 +51,34 @@ export default async function Home({
 			</div>
 
 			{/* Pagination */}
-			<div className='flex justify-center gap-4'>
-				{data.pagination.hasPreviousPage && (
-					<Link
-						href={`/?page=${data.pagination.previousPage}`}
-						className='btn btn-outline'
-					>
-						Previous
-					</Link>
-				)}
-				<span className='btn btn-disabled'>
-					Page {data.pagination.currentPage} of{' '}
-					{data.pagination.totalPages}
+			{data.feeds.length > 0 ? (
+				<div className='flex justify-center gap-4'>
+					{data.pagination.hasPreviousPage && (
+						<Link
+							href={`/?page=${data.pagination.previousPage}`}
+							className='btn btn-outline'
+						>
+							Previous
+						</Link>
+					)}
+					<span className='btn btn-disabled'>
+						Page {data.pagination.currentPage} of{' '}
+						{data.pagination.totalPages}
+					</span>
+					{data.pagination.hasNextPage && (
+						<Link
+							href={`/?page=${data.pagination.nextPage}`}
+							className='btn btn-outline'
+						>
+							Next
+						</Link>
+					)}
+				</div>
+			) : (
+				<span className='flex justify-center text-center mx-auto text-lg font-semibold'>
+					No feeds found
 				</span>
-				{data.pagination.hasNextPage && (
-					<Link
-						href={`/?page=${data.pagination.nextPage}`}
-						className='btn btn-outline'
-					>
-						Next
-					</Link>
-				)}
-			</div>
+			)}
 		</>
 	)
 }

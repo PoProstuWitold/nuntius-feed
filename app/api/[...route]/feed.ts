@@ -8,10 +8,17 @@ import { validatorParamObjectId } from '../utils/schemas'
 const app = new Hono<Env>()
 	// List all available feeds (optionally with filters)
 	.get('/', async (c) => {
-		const limit = Number.parseInt(c.req.query('limit') || '10')
+		const limit = Number.parseInt(c.req.query('limit') || '12')
 		const offset = Number.parseInt(c.req.query('offset') || '0')
-		const sortBy = c.req.query('sortBy') || 'createdAt'
-		const sortOrder = c.req.query('sortOrder') || 'desc'
+
+		const allowedSortBy = ['createdAt', 'updatedAt', 'title']
+		let sortBy = c.req.query('sortBy') || 'updatedAt'
+		if (!allowedSortBy.includes(sortBy)) {
+			sortBy = 'createdAt'
+		}
+		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
+		const sortOptions = { [sortBy]: sortOrder }
+
 		const filters = {
 			limit,
 			offset,
@@ -19,11 +26,9 @@ const app = new Hono<Env>()
 			sortOrder
 		}
 		const feeds = await Feed.find({}, null, {
-			limit: filters.limit,
-			skip: filters.offset,
-			sort: {
-				[filters.sortBy]: filters.sortOrder === 'asc' ? 1 : -1
-			}
+			limit,
+			skip: offset,
+			sort: sortOptions
 		}).lean()
 
 		// Dla każdego feeda - policz itemy
@@ -65,10 +70,6 @@ const app = new Hono<Env>()
 			pagination
 		}
 
-		// example query: /api/feed?limit=10&offset=0&sortBy=createdAt&sortOrder=desc
-		// example query: /api/feed?limit=10&offset=0&sortBy=title&sortOrder=asc
-		// example query: /api/feed?limit=10&offset=0&sortBy=title&sortOrder=desc
-		// example query: /api/feed?limit=10&offset=0&sortBy=createdAt&sortOrder=asc
 		c.status(200)
 		return c.json(response)
 	})

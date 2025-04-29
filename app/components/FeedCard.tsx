@@ -1,6 +1,7 @@
 'use client'
 
 import {
+	ArrowUpLeft,
 	CalendarIcon,
 	DatabaseIcon,
 	FileTextIcon,
@@ -12,34 +13,41 @@ import {
 	UsersIcon,
 	ZapIcon
 } from 'lucide-react'
+import Link from 'next/link'
 import type { Feed } from '../types'
 
 function getFlagEmoji(language: string | null, url: string) {
 	const ignoredTlds = ['com', 'org', 'net', 'info', 'gov', 'edu']
+	const fallbackFlag = '🇺🇸 (?)'
 
 	let lang = language?.split('-')[1] || language
 
-	if (!lang && url) {
+	if ((!lang || lang.toLowerCase() === 'und') && url) {
 		const hostname = new URL(url).hostname
-		const tld = hostname.split('.').pop()
+		const tld = hostname.split('.').pop()?.toLowerCase()
 
-		if (tld) lang = tld
+		if (tld && !ignoredTlds.includes(tld)) lang = tld
 	}
-
-	if (!lang) return '🏳️'
 
 	if (
-		lang.toLowerCase() === 'en' ||
-		ignoredTlds.includes(lang.toLowerCase())
+		!lang ||
+		lang.toLowerCase() === 'und' ||
+		ignoredTlds.includes(lang.toLowerCase()) ||
+		lang.toLowerCase() === 'en'
 	) {
-		return '🇺🇸 (?)'
+		return fallbackFlag
 	}
 
-	const codePoints = lang
-		.toUpperCase()
-		.split('')
-		.map((char) => 127397 + char.charCodeAt(0))
-	return String.fromCodePoint(...codePoints)
+	try {
+		const codePoints = lang
+			.toUpperCase()
+			.slice(0, 2)
+			.split('')
+			.map((char) => 127397 + char.charCodeAt(0))
+		return String.fromCodePoint(...codePoints)
+	} catch {
+		return fallbackFlag
+	}
 }
 
 export const FeedCard = ({ feed }: { feed: Feed }) => {
@@ -62,22 +70,33 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 			<div className='card-body flex flex-col justify-between'>
 				<div className='flex flex-col gap-4'>
 					{/* Feed source + standard info */}
-					<div className='flex items-center gap-2 text-sm text-base-content/70'>
-						<LinkIcon size={16} />
-						{feed.self ? (
-							<a
-								href={feed.self}
-								target='_blank'
-								rel='noopener noreferrer'
-								className='link link-hover'
+					<div className='flex items-center text-sm text-base-content/70'>
+						<span>
+							<Link
+								href={`/feed/${feed.id}`}
+								className='btn btn-secondary'
 							>
-								Feed Source (
-								{feed.meta.type?.toUpperCase() || 'Unknown'}{' '}
-								{feed.meta.version || ''})
-							</a>
-						) : (
-							<span>No feed source</span>
-						)}
+								<ArrowUpLeft size={15} /> Visit
+							</Link>
+						</span>
+						<div className='divider divider-horizontal' />
+						<span className='flex items-center gap-2'>
+							<LinkIcon size={16} />
+							{feed.self ? (
+								<a
+									href={feed.self}
+									target='_blank'
+									rel='noopener noreferrer'
+									className='link link-hover'
+								>
+									Feed Source (
+									{feed.meta.type?.toUpperCase() || 'Unknown'}{' '}
+									{feed.meta.version || ''})
+								</a>
+							) : (
+								<span>No feed source</span>
+							)}
+						</span>
 					</div>
 					{/* Title */}
 					<h2 className='card-title text-primary line-clamp-2 min-h-[4rem] overflow-hidden text-ellipsis'>
@@ -120,18 +139,10 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 						<div className='flex items-center gap-2'>
 							<ZapIcon size={16} />
 							{feed.generator?.label ? (
-								<a
-									href={
-										feed.generator.url ||
-										feed.generator.label
-									}
-									target='_blank'
-									rel='noopener noreferrer'
-									className='link link-hover'
-								>
+								<span>
 									Generator: {feed.generator.label}{' '}
 									{feed.generator.version}
-								</a>
+								</span>
 							) : (
 								<span>Unknown generator</span>
 							)}
@@ -167,7 +178,7 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 							<UploadIcon size={16} />
 							<span>
 								{feed.published
-									? `Published: ${new Date(feed.published).toLocaleDateString('pl-PL')}`
+									? `Published: ${new Date(feed.published).toLocaleString('pl-PL')}`
 									: 'Unknown published date'}
 							</span>
 						</div>
@@ -177,7 +188,7 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 							<CalendarIcon size={16} />
 							<span>
 								{feed.updated
-									? `Last updated: ${new Date(feed.updated).toLocaleDateString('pl-PL')}`
+									? `Last updated: ${new Date(feed.updated).toLocaleString('pl-PL')}`
 									: 'No update date'}
 							</span>
 						</div>
@@ -200,9 +211,7 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 						<UploadIcon size={16} />
 						<span>
 							Created:{' '}
-							{new Date(feed.createdAt).toLocaleDateString(
-								'pl-PL'
-							)}
+							{new Date(feed.createdAt).toLocaleString('pl-PL')}
 						</span>
 					</div>
 
@@ -210,9 +219,7 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 						<HistoryIcon size={16} />
 						<span>
 							Updated:{' '}
-							{new Date(feed.updatedAt).toLocaleDateString(
-								'pl-PL'
-							)}
+							{new Date(feed.updatedAt).toLocaleString('pl-PL')}
 						</span>
 					</div>
 				</div>

@@ -19,7 +19,7 @@ export class FeedUtils {
 			categories: item.categories,
 			content: item.content,
 			description: item.description,
-			guid: item.id,
+			guid: item.id || item.url,
 			image: item.image,
 			media: item.media,
 			published: item.published,
@@ -35,11 +35,11 @@ export class FeedUtils {
 				copyright: feed.copyright,
 				generator: feed.generator,
 				image: feed.image,
-				language: feed.language,
+				language: FeedUtils.getLanguageTag(feed.language, feedUrl),
 				meta: feed.meta,
 				published: feed.published,
 				title: feed.title,
-				self: feed.self || feedUrl,
+				self: feedUrl,
 				updated: feed.updated,
 				url: feed.url
 			} as FeedData,
@@ -111,5 +111,42 @@ export class FeedUtils {
 				name: 'Bad Request'
 			})
 		}
+	}
+
+	private static getLanguageTag(
+		rawLang: string | null | undefined,
+		url: string
+	): string {
+		const ignoredTlds = ['com', 'org', 'net', 'info', 'gov', 'edu']
+
+		let lang = rawLang?.toLowerCase() ?? ''
+
+		if (!lang && url) {
+			const hostname = new URL(url).hostname
+			const tld = hostname.split('.').pop()?.toLowerCase()
+			if (tld && !ignoredTlds.includes(tld)) lang = tld
+		}
+
+		if (!lang) return 'und-UND'
+
+		// Normalize common 2-letter codes to full BCP47
+		const mappings: Record<string, string> = {
+			pl: 'pl-PL',
+			en: 'en-US',
+			de: 'de-DE',
+			fr: 'fr-FR',
+			ru: 'ru-RU',
+			it: 'it-IT',
+			es: 'es-ES',
+			uk: 'uk-UA',
+			cz: 'cs-CZ',
+			sk: 'sk-SK'
+		}
+
+		// If already full format, return as-is
+		if (/^[a-z]{2}-[A-Z]{2}$/.test(lang)) return lang
+
+		// Try mapping
+		return mappings[lang] || `${lang}-${lang.toUpperCase()}`
 	}
 }
