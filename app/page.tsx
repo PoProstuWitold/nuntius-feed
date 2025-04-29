@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 export default async function Home({
 	searchParams
 }: {
-	searchParams?: { page?: string }
+	searchParams?: Promise<{ page?: string }>
 }) {
-	const page = Number(searchParams?.page || '1')
+	const page = Number((await searchParams)?.page || '1')
 	const limit = 12
 	const offset = (page - 1) * limit
 	const sortBy = 'updatedAt'

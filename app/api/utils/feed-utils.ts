@@ -307,6 +307,7 @@ export class FeedUtils {
 }
 
 export const curatedFeedLinks = [
+	// World
 	'https://feeds.bbci.co.uk/news/world/rss.xml',
 	'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml',
 	'https://www.watchdoguganda.com/feed',
@@ -332,8 +333,7 @@ export const curatedFeedLinks = [
 	'https://feeds.feedburner.com/BeMyTravelMuse',
 	'https://feeds.feedburner.com/Theblondeabroad/ScWo',
 	'https://feeds.feedburner.com/craftbeercom',
-
-	// Poland 🇵🇱
+	// Poland
 	'https://www.polsatnews.pl/rss/wszystkie.xml',
 	'https://www.polsatnews.pl/rss/polska.xml',
 	'https://www.polsatnews.pl/rss/swiat.xml',
@@ -343,7 +343,6 @@ export const curatedFeedLinks = [
 	'https://natemat.pl/rss/wszystkie',
 	'https://defence24.pl/_rss',
 	'https://spidersweb.pl/api/post/feed/feed-gn',
-	// 'http://www.money.pl/rss/',
 	'https://businessinsider.com.pl/.feed',
 	'https://www.pudelek.pl/rss2.xml',
 	'https://next.gazeta.pl/pub/next/rssnext.htm',
@@ -359,5 +358,14 @@ export const curatedFeedLinks = [
 	'https://www.rmf24.pl/fakty/polska/feed',
 	'https://www.rmf24.pl/fakty/swiat/feed',
 	'https://www.rmf24.pl/ekonomia/feed',
-	'https://www.rmf24.pl/nauka/feed'
+	'https://www.rmf24.pl/nauka/feed',
+
+	// No sure lang
+	'https://www.scmp.com/rss/91/feed',
+	'https://www.watchdoguganda.com/feed',
+	'https://www.wired.com/feed',
+	'https://www.winespectator.com/rss/rss?t=news',
+	'https://www.fxstreet.com/rss',
+	'https://natemat.pl/rss/wszystkie',
+	'https://businessinsider.com.pl/.feed'
 ]
