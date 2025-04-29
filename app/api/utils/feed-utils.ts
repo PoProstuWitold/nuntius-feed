@@ -172,21 +172,10 @@ export class FeedUtils {
 		url: string
 	): string {
 		const ignoredTlds = ['com', 'org', 'net', 'info', 'gov', 'edu']
-
-		let lang = rawLang?.toLowerCase() ?? ''
-
-		if (!lang && url) {
-			const hostname = new URL(url).hostname
-			const tld = hostname.split('.').pop()?.toLowerCase()
-			if (tld && !ignoredTlds.includes(tld)) lang = tld
-		}
-
-		if (!lang) return 'und-UND'
-
-		// Normalize common 2-letter codes to full BCP47
 		const mappings: Record<string, string> = {
 			pl: 'pl-PL',
 			en: 'en-US',
+			gb: 'en-GB',
 			de: 'de-DE',
 			fr: 'fr-FR',
 			ru: 'ru-RU',
@@ -197,11 +186,31 @@ export class FeedUtils {
 			sk: 'sk-SK'
 		}
 
-		// If already full format, return as-is
-		if (/^[a-z]{2}-[A-Z]{2}$/.test(lang)) return lang
+		const lang = rawLang?.trim().toLowerCase() || ''
 
-		// Try mapping
-		return mappings[lang] || `${lang}-${lang.toUpperCase()}`
+		// Normalize common lowercase full BCP47 codes like "en-gb" to "en-GB"
+		if (/^[a-z]{2}-[a-z]{2}$/.test(lang)) {
+			const [part1, part2] = lang.split('-')
+			return `${part1}-${part2.toUpperCase()}`
+		}
+
+		// Short code mappings
+		if (mappings[lang]) {
+			return mappings[lang]
+		}
+
+		// Try to guess from TLD if still no lang
+		if (!lang && url) {
+			const hostname = new URL(url).hostname
+			const tld = hostname.split('.').pop()?.toLowerCase()
+			if (tld && !ignoredTlds.includes(tld)) {
+				if (mappings[tld]) return mappings[tld]
+				return `${tld}-${tld.toUpperCase()}`
+			}
+		}
+
+		// Final fallback
+		return lang ? `${lang}-${lang.toUpperCase()}` : 'und-UND'
 	}
 
 	static async refreshAllFeeds() {

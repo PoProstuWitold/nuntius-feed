@@ -1,0 +1,193 @@
+'use client'
+
+import { ArrowUpLeft, LinkIcon } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import type { Feed } from '../types'
+import { client } from '../utils/client-rpc'
+import { getFlagEmoji } from '../utils/functions'
+
+const FeedRow = ({
+	feed,
+	onRefresh,
+	onUpdate
+}: {
+	feed: Feed
+	onRefresh: (id: string) => void
+	onUpdate: (id: string) => void
+}) => {
+	return (
+		<tr>
+			<th>
+				<span>
+					<Link
+						href={`/feed/${feed.id}`}
+						className='btn btn-secondary btn-sm'
+					>
+						<ArrowUpLeft size={15} /> Visit
+					</Link>
+				</span>
+			</th>
+			<td>
+				<div className='tooltip tooltip-bottom' data-tip={feed.url}>
+					<a
+						href={feed.url || '#'}
+						target='_blank'
+						rel='noopener noreferrer'
+						className='link link-hover font-bold text-primary line-clamp-1 overflow-hidden text-ellipsis'
+					>
+						{feed.url}
+					</a>
+				</div>
+			</td>
+			<td>
+				<div
+					className='tooltip tooltip-bottom flex items-center gap-2'
+					data-tip={feed.self}
+				>
+					<LinkIcon size={16} />
+					{feed.self ? (
+						<a
+							href={feed.self}
+							target='_blank'
+							rel='noopener noreferrer'
+							className='link link-hover'
+						>
+							{feed.meta.type?.toUpperCase() || 'Unknown'}{' '}
+							{feed.meta.version || ''}
+						</a>
+					) : (
+						<span>No feed source</span>
+					)}
+				</div>
+			</td>
+			<td>{getFlagEmoji(feed.language, feed.url)}</td>
+			<td>
+				<div
+					className='tooltip tooltip-bottom'
+					data-tip={feed.description || 'No description available.'}
+				>
+					<p className='cursor-pointer text-sm text-base-content/70 line-clamp-1 overflow-hidden text-ellipsis'>
+						{feed.description || 'No description available.'}
+					</p>
+				</div>
+			</td>
+			<td className='flex gap-2'>
+				<button
+					onClick={() => onRefresh(feed.id)}
+					className='btn btn-sm btn-primary'
+					type='button'
+				>
+					Refresh
+				</button>
+				<button
+					onClick={() => onUpdate(feed.id)}
+					className='btn btn-sm btn-error'
+					type='button'
+				>
+					Delete
+				</button>
+			</td>
+		</tr>
+	)
+}
+
+export const FeedList = () => {
+	const [feeds, setFeeds] = useState<Feed[]>([])
+	const [page, setPage] = useState(1)
+	const [loading, setLoading] = useState(false)
+	const [hasMore, setHasMore] = useState(true)
+
+	const loadFeeds = async () => {
+		setLoading(true)
+		try {
+			// const res = await fetch(`/api/feed/list?page=${page}`)
+			const res = await client.api.feed.$get({
+				query: {
+					page: page,
+					limit: 12,
+					offset: (page - 1) * 12
+				}
+			})
+			const data = await res.json()
+			if (data.feeds.length === 0) {
+				setHasMore(false)
+			} else {
+				setFeeds((prev) => [...prev, ...data.feeds])
+				setPage((prev) => prev + 1)
+			}
+		} catch (err) {
+			toast.error('Failed to load feeds')
+		}
+		setLoading(false)
+	}
+
+	// biome-ignore lint: Needs to be loaded once, so we need empty deps array
+	useEffect(() => {
+		loadFeeds()
+	}, [])
+
+	const handleRefresh = async (id: string) => {
+		try {
+			await fetch(`/api/feed/${id}/refresh`, { method: 'POST' })
+			toast.success('Feed refreshed!')
+		} catch {
+			toast.error('Failed to refresh feed')
+		}
+	}
+
+	const handleUpdate = async (id: string) => {
+		try {
+			await fetch(`/api/feed/${id}/update`, { method: 'POST' })
+			toast.success('Feed updated!')
+		} catch {
+			toast.error('Failed to update feed')
+		}
+	}
+
+	return (
+		<div className='mx-auto my-10'>
+			<h1 className='text-2xl font-bold'>Feed List</h1>
+
+			<div className='overflow-x-auto'>
+				<table className='table table-zebra'>
+					<thead>
+						<tr>
+							<th>Feed</th>
+							<th>Title</th>
+							<th>Source (Type & Version)</th>
+							<th>Language</th>
+							<th>Description</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{feeds.map((feed) => (
+							<FeedRow
+								key={feed.id}
+								feed={feed}
+								onRefresh={handleRefresh}
+								onUpdate={handleUpdate}
+							/>
+						))}
+					</tbody>
+				</table>
+			</div>
+
+			<div className='flex justify-center'>
+				{hasMore && (
+					<button
+						onClick={loadFeeds}
+						className='btn btn-outline'
+						disabled={loading}
+						type='button'
+					>
+						{loading ? 'Loading...' : 'Load More'}
+					</button>
+				)}
+				{!hasMore && <p className='text-gray-500'>No more feeds</p>}
+			</div>
+		</div>
+	)
+}

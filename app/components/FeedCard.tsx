@@ -15,40 +15,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import type { Feed } from '../types'
-
-function getFlagEmoji(language: string | null, url: string) {
-	const ignoredTlds = ['com', 'org', 'net', 'info', 'gov', 'edu']
-	const fallbackFlag = '🇺🇸 (?)'
-
-	let lang = language?.split('-')[1] || language
-
-	if ((!lang || lang.toLowerCase() === 'und') && url) {
-		const hostname = new URL(url).hostname
-		const tld = hostname.split('.').pop()?.toLowerCase()
-
-		if (tld && !ignoredTlds.includes(tld)) lang = tld
-	}
-
-	if (
-		!lang ||
-		lang.toLowerCase() === 'und' ||
-		ignoredTlds.includes(lang.toLowerCase()) ||
-		lang.toLowerCase() === 'en'
-	) {
-		return fallbackFlag
-	}
-
-	try {
-		const codePoints = lang
-			.toUpperCase()
-			.slice(0, 2)
-			.split('')
-			.map((char) => 127397 + char.charCodeAt(0))
-		return String.fromCodePoint(...codePoints)
-	} catch {
-		return fallbackFlag
-	}
-}
+import { getFlagEmoji } from '../utils/functions'
 
 export const FeedCard = ({ feed }: { feed: Feed }) => {
 	return (
