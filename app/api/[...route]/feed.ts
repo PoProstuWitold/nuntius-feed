@@ -1,7 +1,12 @@
 import { Hono } from 'hono'
+import { stream } from 'hono/streaming'
 import { Feed, Item } from '../models'
 import type { Env } from '../types'
-import { FeedUtils } from '../utils/feed-utils'
+import {
+	FeedUtils,
+	defaultsProgress,
+	refreshProgress
+} from '../utils/feed-utils'
 import { isAdmin, isAuthWithCookies } from '../utils/middlewares'
 import { validatorParamObjectId } from '../utils/schemas'
 
@@ -170,10 +175,62 @@ const app = new Hono<Env>()
 	// and instead return a 202 Accepted response
 	// and use a background job to refresh the feeds
 	.post('/refresh', isAuthWithCookies, isAdmin, async (c) => {
+		FeedUtils.refreshAllFeeds().catch((err) => {
+			console.error('Feed refresh error:', err)
+		})
+
 		c.status(202)
 		return c.json({
 			success: true,
 			message: 'Started refreshing all feeds'
+		})
+	})
+	.get('/refresh/status', isAuthWithCookies, isAdmin, (c) => {
+		// return c.json({
+		// 	success: true,
+		// 	progress: refreshProgress
+		// })
+		c.header('Content-Type', 'text/event-stream')
+		c.header('Cache-Control', 'no-cache')
+		c.header('Connection', 'keep-alive')
+		return stream(c, async (stream) => {
+			const send = () => {
+				stream.write(`data: ${JSON.stringify(refreshProgress)}\n\n`)
+			}
+
+			send()
+			const interval = setInterval(send, 1000)
+			stream.onAbort(() => clearInterval(interval))
+		})
+	})
+	.post('/defaults', isAuthWithCookies, isAdmin, async (c) => {
+		// start async task
+		FeedUtils.loadCuratedFeeds().catch((err) => {
+			console.error('Feed defaults loading error:', err)
+		})
+
+		c.status(202)
+		return c.json({
+			success: true,
+			message: 'Started importing curated feeds'
+		})
+	})
+	.get('/defaults/status', isAuthWithCookies, isAdmin, (c) => {
+		// return c.json({
+		// 	success: true,
+		// 	progress: defaultsProgress
+		// })
+		c.header('Content-Type', 'text/event-stream')
+		c.header('Cache-Control', 'no-cache')
+		c.header('Connection', 'keep-alive')
+		return stream(c, async (stream) => {
+			const send = () => {
+				stream.write(`data: ${JSON.stringify(defaultsProgress)}\n\n`)
+			}
+
+			send()
+			const interval = setInterval(send, 1000)
+			stream.onAbort(() => clearInterval(interval))
 		})
 	})
 

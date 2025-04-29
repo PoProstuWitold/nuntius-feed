@@ -3,6 +3,60 @@ import { Feed, type FeedDocument, Item } from '../models'
 import type { FeedData, ItemData } from '../types'
 import { GenericException } from './middlewares'
 
+interface RefreshStatus {
+	isRunning: boolean
+	startedAt: Date | null
+	finishedAt: Date | null
+	total: number
+	processed: number
+	success: number
+	failed: number
+	logs: Array<{
+		title: string
+		status: 'success' | 'fail'
+		message?: string
+	}>
+}
+
+export const refreshProgress: RefreshStatus = {
+	isRunning: false,
+	startedAt: null,
+	finishedAt: null,
+	total: 0,
+	processed: 0,
+	success: 0,
+	failed: 0,
+	logs: []
+}
+
+export interface DefaultsStatus {
+	isRunning: boolean
+	startedAt: Date | null
+	finishedAt: Date | null
+	total: number
+	processed: number
+	created: number
+	updated: number
+	failed: number
+	logs: Array<{
+		feedLink: string
+		status: 'created' | 'updated' | 'error'
+		message?: string
+	}>
+}
+
+export const defaultsProgress: DefaultsStatus = {
+	isRunning: false,
+	startedAt: null,
+	finishedAt: null,
+	total: 0,
+	processed: 0,
+	created: 0,
+	updated: 0,
+	failed: 0,
+	logs: []
+}
+
 export class FeedUtils {
 	// Function to validate feed URL
 	static validateFeedUrl(url: string): boolean {
@@ -149,4 +203,161 @@ export class FeedUtils {
 		// Try mapping
 		return mappings[lang] || `${lang}-${lang.toUpperCase()}`
 	}
+
+	static async refreshAllFeeds() {
+		if (refreshProgress.isRunning) return // zapobiegamy równoległym runom
+
+		refreshProgress.isRunning = true
+		refreshProgress.startedAt = new Date()
+		refreshProgress.finishedAt = null
+		refreshProgress.logs = []
+		refreshProgress.total = 0
+		refreshProgress.processed = 0
+		refreshProgress.success = 0
+		refreshProgress.failed = 0
+
+		const feeds = await Feed.find({})
+		refreshProgress.total = feeds.length
+
+		for (const feed of feeds) {
+			try {
+				const { parsedFeed, parsedItems } =
+					await FeedUtils.getFeedWithItems(feed.self)
+
+				await FeedUtils.updateFeedWithItems(
+					feed,
+					parsedFeed,
+					parsedItems
+				)
+
+				refreshProgress.logs.push({
+					title: feed.title || feed.self,
+					status: 'success'
+				})
+				refreshProgress.success++
+			} catch (err) {
+				refreshProgress.logs.push({
+					title: feed.title || feed.self,
+					status: 'fail',
+					message: (err as Error).message
+				})
+				refreshProgress.failed++
+			}
+
+			refreshProgress.processed++
+		}
+
+		refreshProgress.finishedAt = new Date()
+		refreshProgress.isRunning = false
+	}
+
+	static async loadCuratedFeeds() {
+		if (defaultsProgress.isRunning) return
+
+		defaultsProgress.isRunning = true
+		defaultsProgress.startedAt = new Date()
+		defaultsProgress.finishedAt = null
+		defaultsProgress.total = curatedFeedLinks.length
+		defaultsProgress.processed = 0
+		defaultsProgress.created = 0
+		defaultsProgress.updated = 0
+		defaultsProgress.failed = 0
+		defaultsProgress.logs = []
+
+		for (const feedLink of curatedFeedLinks) {
+			try {
+				const { parsedFeed, parsedItems } =
+					await FeedUtils.getFeedWithItems(feedLink)
+
+				const existingFeed = await Feed.findOne({
+					self: parsedFeed.self
+				})
+
+				if (existingFeed) {
+					await FeedUtils.updateFeedWithItems(
+						existingFeed,
+						parsedFeed,
+						parsedItems
+					)
+					defaultsProgress.updated++
+					defaultsProgress.logs.push({ feedLink, status: 'updated' })
+				} else {
+					const feed = await Feed.create(parsedFeed)
+					await Item.insertMany(
+						parsedItems.map((item) => ({ ...item, feed: feed._id }))
+					)
+					defaultsProgress.created++
+					defaultsProgress.logs.push({ feedLink, status: 'created' })
+				}
+			} catch (err) {
+				defaultsProgress.failed++
+				defaultsProgress.logs.push({
+					feedLink,
+					status: 'error',
+					message: (err as Error).message
+				})
+			}
+
+			defaultsProgress.processed++
+		}
+
+		defaultsProgress.finishedAt = new Date()
+		defaultsProgress.isRunning = false
+	}
 }
+
+export const curatedFeedLinks = [
+	'https://feeds.bbci.co.uk/news/world/rss.xml',
+	'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml',
+	'https://www.watchdoguganda.com/feed',
+	'https://www.scmp.com/rss/91/feed',
+	'https://www.spiegel.de/international/index.rss',
+	'https://www.vox.com/rss/index.xml',
+	'https://www.theguardian.com/world/rss',
+	'https://techcrunch.com/feed/',
+	'https://www.theverge.com/rss/index.xml',
+	'https://www.rollingstone.com/feed/',
+	'https://rt.com/rss/',
+	'https://www.themoscowtimes.com/rss/news',
+	'https://tealtech.com/feed/',
+	'https://www.artnews.com/feed/',
+	'https://spectrum.ieee.org/rss/blog/tech-talk/fulltext',
+	'https://www.wired.com/feed',
+	'https://feeds.npr.org/1045/rss.xml',
+	'https://www.rogerebert.com/feed',
+	'http://rss.cnn.com/rss/edition_sport.rss',
+	'https://feeds.npr.org/1008/rss.xml',
+	'https://feeds.feedburner.com/RaksKitchen',
+	'https://www.babypips.com/feed.rss',
+	'https://feeds.feedburner.com/BeMyTravelMuse',
+	'https://feeds.feedburner.com/Theblondeabroad/ScWo',
+	'https://feeds.feedburner.com/craftbeercom',
+
+	// Poland 🇵🇱
+	'https://www.polsatnews.pl/rss/wszystkie.xml',
+	'https://www.polsatnews.pl/rss/polska.xml',
+	'https://www.polsatnews.pl/rss/swiat.xml',
+	'https://tygodnik.interia.pl/feed',
+	'https://www.polsatnews.pl/rss/biznes.xml',
+	'https://feeds.feedburner.com/media2',
+	'https://natemat.pl/rss/wszystkie',
+	'https://defence24.pl/_rss',
+	'https://spidersweb.pl/api/post/feed/feed-gn',
+	// 'http://www.money.pl/rss/',
+	'https://businessinsider.com.pl/.feed',
+	'https://www.pudelek.pl/rss2.xml',
+	'https://next.gazeta.pl/pub/next/rssnext.htm',
+	'https://www.tvn24.pl/najnowsze.xml',
+	'https://www.tvn24.pl/najwazniejsze.xml',
+	'https://www.tvn24.pl/internet-hi-tech-media,40.xml',
+	'https://www.tvn24.pl/wiadomosci-z-kraju,3.xml',
+	'https://rss.gazeta.pl/pub/rss/gazetawyborcza_kraj.xml',
+	'https://rss.gazeta.pl/pub/rss/gazetawyborcza_swiat.xml',
+	'https://fakty.interia.pl/feed',
+	'https://gry.interia.pl/feed',
+	'https://www.rmf24.pl/fakty/feed',
+	'https://www.rmf24.pl/fakty/polska/feed',
+	'https://www.rmf24.pl/fakty/swiat/feed',
+	'https://www.rmf24.pl/ekonomia/feed',
+	'https://www.rmf24.pl/nauka/feed'
+]

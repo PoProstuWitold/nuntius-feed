@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { AdminFeeds } from '../components/AdminFeeds'
+import { FeedUtils } from '../components/FeedUtils'
 
 export const metadata: Metadata = {
 	title: 'Admin Dashboard',
@@ -13,6 +14,7 @@ export default async function Dashboard() {
 				Admin Dashboard
 			</h1>
 			<AdminFeeds />
+			<FeedUtils />
 		</>
 	)
 }
