@@ -45,7 +45,7 @@ export const FeedUtils = () => {
 	}
 
 	const formatTime = (timestamp: string | null) =>
-		timestamp ? new Date(timestamp).toLocaleTimeString() : '-'
+		timestamp ? new Date(timestamp).toLocaleString() : '-'
 
 	const percent = (processed: number, total: number) =>
 		total > 0 ? ` (${Math.round((processed / total) * 100)}%)` : ''
