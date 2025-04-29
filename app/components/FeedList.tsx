@@ -11,11 +11,11 @@ import { getFlagEmoji } from '../utils/functions'
 const FeedRow = ({
 	feed,
 	onRefresh,
-	onUpdate
+	onDelete
 }: {
 	feed: Feed
-	onRefresh: (id: string) => void
-	onUpdate: (id: string) => void
+	onRefresh: (feedLink: string) => void
+	onDelete: (feedLink: string) => void
 }) => {
 	return (
 		<tr>
@@ -75,14 +75,14 @@ const FeedRow = ({
 			</td>
 			<td className='flex gap-2'>
 				<button
-					onClick={() => onRefresh(feed.id)}
+					onClick={() => onRefresh(feed.self)}
 					className='btn btn-sm btn-primary'
 					type='button'
 				>
 					Refresh
 				</button>
 				<button
-					onClick={() => onUpdate(feed.id)}
+					onClick={() => onDelete(feed.id)}
 					className='btn btn-sm btn-error'
 					type='button'
 				>
@@ -99,23 +99,24 @@ export const FeedList = () => {
 	const [loading, setLoading] = useState(false)
 	const [hasMore, setHasMore] = useState(true)
 
-	const loadFeeds = async () => {
+	const loadFeeds = async (pageToLoad = page, reset = false) => {
 		setLoading(true)
 		try {
-			// const res = await fetch(`/api/feed/list?page=${page}`)
 			const res = await client.api.feed.$get({
 				query: {
-					page: page,
+					page: pageToLoad,
 					limit: 12,
-					offset: (page - 1) * 12
+					offset: (pageToLoad - 1) * 12
 				}
 			})
 			const data = await res.json()
 			if (data.feeds.length === 0) {
 				setHasMore(false)
 			} else {
-				setFeeds((prev) => [...prev, ...data.feeds])
-				setPage((prev) => prev + 1)
+				setFeeds((prev) =>
+					reset ? data.feeds : [...prev, ...data.feeds]
+				)
+				setPage(pageToLoad + 1)
 			}
 		} catch (err) {
 			toast.error('Failed to load feeds')
@@ -128,21 +129,23 @@ export const FeedList = () => {
 		loadFeeds()
 	}, [])
 
-	const handleRefresh = async (id: string) => {
+	const handleRefresh = async (feedLink: string) => {
 		try {
-			await fetch(`/api/feed/${id}/refresh`, { method: 'POST' })
+			await client.api.feed.$post({ json: { feedLink } })
 			toast.success('Feed refreshed!')
+			await loadFeeds(1, true)
 		} catch {
 			toast.error('Failed to refresh feed')
 		}
 	}
 
-	const handleUpdate = async (id: string) => {
+	const handleDelete = async (id: string) => {
 		try {
-			await fetch(`/api/feed/${id}/update`, { method: 'POST' })
-			toast.success('Feed updated!')
+			await client.api.feed[':id'].$delete({ param: { id } })
+			toast.success('Feed deleted!')
+			await loadFeeds(1, true)
 		} catch {
-			toast.error('Failed to update feed')
+			toast.error('Failed to delete feed')
 		}
 	}
 
@@ -155,9 +158,9 @@ export const FeedList = () => {
 					<thead>
 						<tr>
 							<th>Feed</th>
-							<th>Title</th>
-							<th>Source (Type & Version)</th>
-							<th>Language</th>
+							<th className='min-w-[18rem]'>Title</th>
+							<th className='min-w-[8rem]'>Source</th>
+							<th className='max-w-[5rem]'>Language</th>
 							<th>Description</th>
 							<th>Actions</th>
 						</tr>
@@ -168,7 +171,7 @@ export const FeedList = () => {
 								key={feed.id}
 								feed={feed}
 								onRefresh={handleRefresh}
-								onUpdate={handleUpdate}
+								onDelete={handleDelete}
 							/>
 						))}
 					</tbody>
@@ -178,7 +181,7 @@ export const FeedList = () => {
 			<div className='flex justify-center'>
 				{hasMore && (
 					<button
-						onClick={loadFeeds}
+						onClick={() => loadFeeds()}
 						className='btn btn-outline'
 						disabled={loading}
 						type='button'
