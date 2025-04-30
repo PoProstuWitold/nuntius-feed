@@ -41,6 +41,9 @@ importers:
       next:
         specifier: 15.3.1
         version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      p-limit:
+        specifier: ^6.2.0
+        version: 6.2.0
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -814,6 +817,10 @@ packages:
   openapi-types@12.1.3:
     resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
 
+  p-limit@6.2.0:
+    resolution: {integrity: sha512-kuUqqHNUqoIWp/c467RI4X6mmyuojY5jGutNU0wVTmEOOfcuwLqyMVoAi9MKi2Ak+5i9+nhmrK4ufZE8069kHA==}
+    engines: {node: '>=18'}
+
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -951,6 +958,10 @@ packages:
   xmlbuilder@11.0.1:
     resolution: {integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==}
     engines: {node: '>=4.0'}
+
+  yocto-queue@1.2.1:
+    resolution: {integrity: sha512-AyeEbWOu/TAXdxlV9wmGcR0+yh2j3vYPGOECcIj2S7MkrLyC7ne+oye2BKTItt0ii2PHk4cDy+95+LshzbXnGg==}
+    engines: {node: '>=12.20'}
 
   zhead@2.2.4:
     resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
@@ -1499,6 +1510,10 @@ snapshots:
 
   openapi-types@12.1.3: {}
 
+  p-limit@6.2.0:
+    dependencies:
+      yocto-queue: 1.2.1
+
   picocolors@1.1.1: {}
 
   postcss-value-parser@4.2.0: {}
@@ -1631,6 +1646,8 @@ snapshots:
       xmlbuilder: 11.0.1
 
   xmlbuilder@11.0.1: {}
+
+  yocto-queue@1.2.1: {}
 
   zhead@2.2.4: {}
 

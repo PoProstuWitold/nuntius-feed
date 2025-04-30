@@ -58,8 +58,8 @@ export default function FeedClientPage({
 						)}
 
 						{/* Authors & Categories */}
-						<div className='flex items-center gap-4 text-sm text-base-content/70'>
-							<div className='flex items-center gap-2 text-sm text-base-content/60'>
+						<div className='flex items-center gap-4 text-sm text-base-content/80'>
+							<div className='flex items-center gap-2'>
 								<CalendarIcon size={16} />
 								<span>
 									{item.published
@@ -80,17 +80,6 @@ export default function FeedClientPage({
 										: 'Unknown authors'}
 								</span>
 							</div>
-							<div className='divider divider-horizontal m-0' />
-							<div className='flex items-center gap-2'>
-								<TagsIcon size={16} />
-								<span>
-									{item.categories.length > 0
-										? item.categories
-												.map((c) => c.term)
-												.join(', ')
-										: 'No categories'}
-								</span>
-							</div>
 						</div>
 
 						{/* Title */}
@@ -107,7 +96,7 @@ export default function FeedClientPage({
 
 						{/* Description / Content */}
 						<div
-							className='text-base-content/70 prose max-w-none'
+							className='text-base-content/80 prose line-clamp-3'
 							// biome-ignore lint/security/noDangerouslySetInnerHtml: this HTML is sanitized manually
 							dangerouslySetInnerHTML={{
 								__html: stripImagesFromHTML(
@@ -117,6 +106,16 @@ export default function FeedClientPage({
 								)
 							}}
 						/>
+						<div className='flex items-center gap-2 text-base-content/80'>
+							<TagsIcon size={16} />
+							<span className='line-clamp-1'>
+								{item.categories.length > 0
+									? item.categories
+											.map((c) => c.term)
+											.join(', ')
+									: 'No categories'}
+							</span>
+						</div>
 					</li>
 				))}
 			</ul>
