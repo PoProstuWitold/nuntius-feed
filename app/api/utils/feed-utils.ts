@@ -154,6 +154,9 @@ export class FeedUtils {
 					)
 				)
 			)
+			updatedFeed.items = updatedItems.map((item) => item._id)
+			await updatedFeed.save()
+
 			return {
 				updatedFeed,
 				updatedItems

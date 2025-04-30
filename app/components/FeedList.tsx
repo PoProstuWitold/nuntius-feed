@@ -14,7 +14,7 @@ const FeedRow = ({
 	onDelete
 }: {
 	feed: Feed
-	onRefresh: (feedLink: string) => void
+	onRefresh: (feedLink: string | null) => void
 	onDelete: (feedLink: string) => void
 }) => {
 	return (
@@ -129,7 +129,7 @@ export const FeedList = () => {
 		loadFeeds()
 	}, [])
 
-	const handleRefresh = async (feedLink: string) => {
+	const handleRefresh = async (feedLink: string | null) => {
 		try {
 			await client.api.feed.$post({ json: { feedLink } })
 			toast.success('Feed refreshed!')

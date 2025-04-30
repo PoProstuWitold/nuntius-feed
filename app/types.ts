@@ -8,46 +8,84 @@ export interface User {
 	email: string
 }
 
+export interface FeedAuthor {
+	email: string | null
+	name: string | null
+	url: string | null
+}
+
+export interface FeedCategory {
+	label: string | null
+	term: string
+	url: string | null
+}
+
+export interface FeedGenerator {
+	label: string | null
+	url: string | null
+	version: string | null
+}
+
+export interface FeedImage {
+	title: string | null
+	url: string
+}
+
+export interface FeedMedia {
+	image: string | null
+	length: number | null
+	mimetype?: string | null
+	title: string | null
+	type: string | null
+	url: string
+}
+
+export interface Item {
+	feed: string
+	authors: FeedAuthor[]
+	categories: FeedCategory[]
+	content: string | null
+	description: string | null
+	guid: string | null
+	image: FeedImage | null
+	media: FeedMedia[]
+	published: string | null
+	title: string | null
+	updated: string | null
+	url: string | null
+}
+
+export interface FeedMeta {
+	type: 'atom' | 'rss'
+	version: '0.3' | '0.9' | '1.0' | '2.0'
+}
+
 export interface Feed {
 	id: string
-	itemsCount: number
-	title: string
-	description: string
-	url: string
-	self: string
-	updated: string
+	authors: FeedAuthor[]
+	categories: FeedCategory[]
 	copyright: string | null
-	language: string
-	generator: {
-		label: string | null
-		url: string | null
-		version: string | null
-	} | null
-	meta: {
-		type: string
-		version: string
-	}
-	authors: { name?: string; email?: string; url?: string }[]
-	categories: string[]
-	image: string | null
+	description: string | null
+	generator: FeedGenerator | null
+	image: FeedImage | null
+	language: string | null
+	meta: FeedMeta
 	published: string | null
+	self: string | null
+	title: string | null
+	updated: string | null
+	url: string | null
+	itemsCount: number
 	createdAt: string
 	updatedAt: string
 }
 
-export interface Pagination {
-	totalFeeds: number
+export interface ItemsPagination {
+	totalItems: number
 	totalPages: number
 	currentPage: number
 	hasNextPage: boolean
 	hasPreviousPage: boolean
 	nextPage: number | null
 	previousPage: number | null
-}
-
-export interface FeedsResponse {
-	success: boolean
-	message: string
-	feeds: Feed[]
-	pagination: Pagination
 }

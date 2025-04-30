@@ -1,14 +1,15 @@
 import { Hono } from 'hono'
 import { stream } from 'hono/streaming'
+import type { StatusCode } from 'hono/utils/http-status'
 import { Feed, Item } from '../models'
-import type { Env } from '../types'
+import type { Env, FeedData, ItemData } from '../types'
 import {
 	FeedUtils,
 	defaultsProgress,
 	refreshProgress
 } from '../utils/feed-utils'
 import { isAdmin, isAuthWithCookies } from '../utils/middlewares'
-import { validatorParamObjectId } from '../utils/schemas'
+import { validatorItemsQuery, validatorParamObjectId } from '../utils/schemas'
 
 const app = new Hono<Env>()
 	// List all available feeds (optionally with filters)
@@ -24,20 +25,22 @@ const app = new Hono<Env>()
 		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
 		const sortOptions = { [sortBy]: sortOrder }
 
-		const filters = {
-			limit,
-			offset,
-			sortBy,
-			sortOrder
-		}
-		const feeds = await Feed.find({}, null, {
-			limit,
-			skip: offset,
-			sort: sortOptions
-		}).lean()
+		const feeds = await Feed.find(
+			{},
+			{ items: 0 },
+			{
+				limit,
+				skip: offset,
+				sort: sortOptions
+			}
+		).lean()
 
-		// Dla każdego feeda - policz itemy
-		const feedsWithItemsCount = (await Promise.all(
+		const feedsWithItemsCount: (FeedData & {
+			id: string
+			itemsCount: number
+			createdAt: Date
+			updatedAt: Date
+		})[] = (await Promise.all(
 			feeds.map(async (feed) => {
 				const itemsCount = await Item.countDocuments({ feed: feed._id })
 				const { _id, __v, ...rest } = feed
@@ -48,60 +51,142 @@ const app = new Hono<Env>()
 					itemsCount
 				}
 			})
-			// biome-ignore lint: Weird and wrong type casting
-		)) as any
+		)) as (FeedData & {
+			id: string
+			itemsCount: number
+			createdAt: Date
+			updatedAt: Date
+		})[]
 
 		const totalFeeds = await Feed.countDocuments()
-		const totalPages = Math.ceil(totalFeeds / filters.limit)
-		const currentPage = Math.floor(filters.offset / filters.limit) + 1
-		const hasNextPage = filters.offset + filters.limit < totalFeeds
-		const hasPreviousPage = filters.offset > 0
-		const nextPage = hasNextPage ? currentPage + 1 : null
-		const previousPage = hasPreviousPage ? currentPage - 1 : null
+		const totalPages = Math.ceil(totalFeeds / limit)
+		const currentPage = Math.floor(offset / limit) + 1
+		const hasNextPage = offset + limit < totalFeeds
+		const hasPreviousPage = offset > 0
+
 		const pagination = {
 			totalFeeds,
 			totalPages,
 			currentPage,
 			hasNextPage,
 			hasPreviousPage,
-			nextPage,
-			previousPage
+			nextPage: hasNextPage ? currentPage + 1 : null,
+			previousPage: hasPreviousPage ? currentPage - 1 : null
 		}
 
-		const response = {
+		return c.json({
 			success: true,
 			message: 'Fetched all available feeds',
 			feeds: feedsWithItemsCount,
 			pagination
-		}
-
-		c.status(200)
-		return c.json(response)
+		})
 	})
 	// Get details of a single feed
 	.get('/:id', validatorParamObjectId, async (c) => {
-		c.status(200)
-		return c.json({
-			success: true,
-			message: `Fetched feed with ID ${c.req.param('id')}`
-		})
+		const feedId = c.req.param('id')
+		const feed = await Feed.findById(feedId, { items: 0 })
+
+		let status = 200
+		let response: {
+			success: boolean
+			message: string
+			feed?: FeedData & {
+				itemsCount: number
+				updatedAt: string
+				createdAt: string
+				id: string
+			}
+		}
+
+		if (!feed) {
+			status = 404
+			response = {
+				success: false,
+				message: `Feed with ID ${feedId} not found`
+			}
+		} else {
+			const itemsCount = await Item.countDocuments({ feed: feed._id })
+			const actualFeed: FeedData & {
+				itemsCount: number
+				updatedAt: string
+				createdAt: string
+				id: string
+			} = {
+				...(feed.toJSON() as FeedData),
+				itemsCount,
+				createdAt: feed.createdAt,
+				updatedAt: feed.updatedAt,
+				id: feed.id
+			} as FeedData & {
+				itemsCount: number
+				updatedAt: string
+				createdAt: string
+				id: string
+			}
+			response = {
+				success: true,
+				message: `Fetched feed with ID ${feedId}`,
+				feed: actualFeed
+			}
+		}
+
+		c.status(status as StatusCode)
+		return c.json(response)
 	})
-	// Get all feed items from user's subscribed feeds (with pagination, sorting, etc.)
-	.get('/items', async (c) => {
-		c.status(200)
-		return c.json({
-			success: true,
-			message: 'Fetched all user subscribed feed items'
-		})
-	})
-	// Get details of a specific feed item (optional)
-	.get('/:id/items', validatorParamObjectId, async (c) => {
-		c.status(200)
-		return c.json({
-			success: true,
-			message: `Fetched feed items for user subscribed feed with ID ${c.req.param('id')}`
-		})
-	})
+	// Get details of a specific feed items
+	.get(
+		'/:id/items',
+		validatorParamObjectId,
+		validatorItemsQuery,
+		async (c) => {
+			const feedId = c.req.param('id')
+
+			const limit = Number.parseInt(c.req.query('limit') || '12')
+			const offset = Number.parseInt(c.req.query('offset') || '0')
+
+			const allowedSortBy = [
+				'createdAt',
+				'updatedAt',
+				'published',
+				'title'
+			]
+			let sortBy = c.req.query('sortBy') || 'published'
+			if (!allowedSortBy.includes(sortBy)) {
+				sortBy = 'createdAt'
+			}
+			const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
+			const sortOptions = { [sortBy]: sortOrder }
+
+			const items: ItemData[] = await Item.find({ feed: feedId }, null, {
+				limit,
+				skip: offset,
+				sort: sortOptions
+			})
+
+			const totalItems = await Item.countDocuments({ feed: feedId })
+			const totalPages = Math.ceil(totalItems / limit)
+			const currentPage = Math.floor(offset / limit) + 1
+			const hasNextPage = offset + limit < totalItems
+			const hasPreviousPage = offset > 0
+
+			const pagination = {
+				totalItems,
+				totalPages,
+				currentPage,
+				hasNextPage,
+				hasPreviousPage,
+				nextPage: hasNextPage ? currentPage + 1 : null,
+				previousPage: hasPreviousPage ? currentPage - 1 : null
+			}
+
+			return c.json({
+				success: true,
+				message: `Fetched items for feed with ID ${feedId}`,
+				items,
+				pagination
+			})
+		}
+	)
 	// ADMIN ROUTES
 	// (Admin) Create new OR refresh (update, sync) a feed
 	.post('/', isAuthWithCookies, isAdmin, async (c) => {
@@ -125,8 +210,10 @@ const app = new Hono<Env>()
 			return c.json({
 				success: true,
 				message: 'Updated existing feed and items',
-				feed: updatedFeed,
-				items: updatedItems
+				feed: {
+					...updatedFeed.toJSON(),
+					itemsCount: updatedItems.length
+				}
 			})
 		}
 
@@ -137,13 +224,17 @@ const app = new Hono<Env>()
 				feed: feed._id
 			}))
 		)
+		feed.items = items.map((item) => item._id)
+		await feed.save()
 
 		c.status(200)
 		return c.json({
 			success: true,
 			message: 'Created a new feed and items',
-			feed,
-			items
+			feed: {
+				...feed.toJSON(),
+				itemsCount: items.length
+			}
 		})
 	})
 	// (Admin) Delete feed with items

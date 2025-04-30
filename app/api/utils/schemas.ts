@@ -34,3 +34,33 @@ export const validatorParamObjectId = zValidator(
 		}
 	}
 )
+
+const itemsQuerySchema = z.object({
+	limit: z.string().optional(),
+	offset: z.string().optional(),
+	sortBy: z.enum(['createdAt', 'updatedAt', 'published', 'title']).optional(),
+	sortOrder: z.enum(['asc', 'desc']).optional()
+})
+
+export const validatorItemsQuery = zValidator(
+	'query',
+	itemsQuerySchema,
+	async (result, _c) => {
+		if (!result.success) {
+			throw new GenericException({
+				statusCode: 400,
+				name: 'Bad Request',
+				message: 'Invalid query',
+				details: [
+					{
+						id:
+							result.success === false
+								? result.error.issues[0].message
+								: 'Invalid query',
+						value: String(result.data)
+					}
+				]
+			})
+		}
+	}
+)

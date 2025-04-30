@@ -57,7 +57,7 @@ const FeedSchema = new Schema<FeedDocument>(
 		description: String,
 		generator: { type: FeedGeneratorSchema, default: null },
 		image: { type: FeedImageSchema, default: null },
-		items: [{ type: Schema.Types.ObjectId, ref: 'FeedItem' }],
+		items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
 		language: String,
 		meta: { type: FeedMetaSchema, required: true },
 		published: Date,

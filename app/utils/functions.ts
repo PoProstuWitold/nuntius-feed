@@ -14,7 +14,7 @@ export const setThemeScript = `
 	}
 })();
 `
-export function getFlagEmoji(language: string | null, url: string) {
+export function getFlagEmoji(language: string | null, url: string | null = '') {
 	const ignoredTlds = ['com', 'org', 'net', 'info', 'gov', 'edu']
 	const fallbackFlag = '🇺🇸 (?)'
 

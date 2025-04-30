@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FeedCard } from './components/FeedCard'
-import type { FeedsResponse } from './types'
 import { client } from './utils/server-rpc'
 
 export const metadata: Metadata = {
@@ -33,7 +32,7 @@ export default async function Home({
 		}
 	})
 
-	const data: FeedsResponse = await res.json()
+	const data = await res.json()
 
 	return (
 		<>
