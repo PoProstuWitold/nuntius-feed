@@ -219,7 +219,6 @@ export class FeedUtils {
 
 	static async refreshAllFeeds() {
 		if (refreshProgress.isRunning) return
-
 		refreshProgress.isRunning = true
 		refreshProgress.startedAt = new Date()
 		refreshProgress.finishedAt = null
@@ -228,31 +227,14 @@ export class FeedUtils {
 		refreshProgress.processed = 0
 		refreshProgress.success = 0
 		refreshProgress.failed = 0
-
-		const cursor = Feed.find().cursor()
-		const batchSize = 20
-		let batch: FeedDocument[] = []
-
-		for await (const feed of cursor) {
-			batch.push(feed)
-
-			if (batch.length >= batchSize) {
-				await processFeedBatch(batch)
-				batch = []
-			}
-		}
-
-		if (batch.length > 0) {
-			await processFeedBatch(batch)
-		}
-
+		const feeds = await Feed.find()
+		await processFeedBatch(feeds)
 		refreshProgress.finishedAt = new Date()
 		refreshProgress.isRunning = false
 	}
 
 	static async loadCuratedFeeds() {
 		if (defaultsProgress.isRunning) return
-
 		defaultsProgress.isRunning = true
 		defaultsProgress.startedAt = new Date()
 		defaultsProgress.finishedAt = null
@@ -262,33 +244,24 @@ export class FeedUtils {
 		defaultsProgress.updated = 0
 		defaultsProgress.failed = 0
 		defaultsProgress.logs = []
-
-		const batchSize = 20
-		for (let i = 0; i < curatedFeedLinks.length; i += batchSize) {
-			const batch = curatedFeedLinks.slice(i, i + batchSize)
-			await processCuratedFeedBatch(batch)
-		}
-
+		await processCuratedFeedBatch(curatedFeedLinks)
 		defaultsProgress.finishedAt = new Date()
 		defaultsProgress.isRunning = false
 	}
 }
 
 async function processFeedBatch(feeds: FeedDocument[]) {
-	const limit = pLimit(20)
-
+	const limit = pLimit(30)
 	const tasks = feeds.map((feed) =>
 		limit(async () => {
 			try {
 				const { parsedFeed, parsedItems } =
 					await FeedUtils.getFeedWithItems(feed.self || '')
-
 				await FeedUtils.updateFeedWithItems(
 					feed,
 					parsedFeed,
 					parsedItems
 				)
-
 				refreshProgress.logs.push({
 					title: feed.title || feed.self || '',
 					status: 'success'
@@ -306,23 +279,19 @@ async function processFeedBatch(feeds: FeedDocument[]) {
 			}
 		})
 	)
-
 	await Promise.allSettled(tasks)
 }
 
 async function processCuratedFeedBatch(feedLinks: string[]) {
-	const limit = pLimit(20)
-
+	const limit = pLimit(30)
 	const tasks = feedLinks.map((feedLink) =>
 		limit(async () => {
 			try {
 				const { parsedFeed, parsedItems } =
 					await FeedUtils.getFeedWithItems(feedLink)
-
 				const existingFeed = await Feed.findOne({
 					self: parsedFeed.self
 				})
-
 				if (existingFeed) {
 					await FeedUtils.updateFeedWithItems(
 						existingFeed,
@@ -351,7 +320,6 @@ async function processCuratedFeedBatch(feedLinks: string[]) {
 			}
 		})
 	)
-
 	await Promise.allSettled(tasks)
 }
 
