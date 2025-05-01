@@ -113,9 +113,15 @@ export const FeedList = () => {
 			if (data.feeds.length === 0) {
 				setHasMore(false)
 			} else {
-				setFeeds((prev) =>
-					reset ? data.feeds : [...prev, ...data.feeds]
-				)
+				setFeeds((prev) => {
+					const all = reset ? data.feeds : [...prev, ...data.feeds]
+					const seen = new Set<string>()
+					return all.filter((f) => {
+						if (seen.has(f.id)) return false
+						seen.add(f.id)
+						return true
+					})
+				})
 				setPage(pageToLoad + 1)
 			}
 		} catch (err) {

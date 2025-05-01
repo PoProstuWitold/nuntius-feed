@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { FeedCard } from './components/FeedCard'
+import { FeedLandingList } from './components/FeedLandingList'
 import { client } from './utils/server-rpc'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
 	title: 'Nuntius Feed',
@@ -9,14 +10,9 @@ export const metadata: Metadata = {
 		'Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds.'
 }
 
-export default async function Home({
-	searchParams
-}: {
-	searchParams?: Promise<{ page?: string }>
-}) {
-	const page = Number((await searchParams)?.page || '1')
+export default async function Home() {
 	const limit = 12
-	const offset = (page - 1) * limit
+	const offset = 0
 	const sortBy = 'updatedAt'
 	const sortOrder = 'desc'
 
@@ -42,42 +38,8 @@ export default async function Home({
 				</h1>
 				<p>{text}</p>
 			</div>
-			{/* Feed list */}
-			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
-				{data.feeds.map((feed) => (
-					<FeedCard key={feed.id} feed={feed} />
-				))}
-			</div>
 
-			{/* Pagination */}
-			{data.feeds.length > 0 ? (
-				<div className='flex justify-center gap-4'>
-					{data.pagination.hasPreviousPage && (
-						<Link
-							href={`/?page=${data.pagination.previousPage}`}
-							className='btn btn-outline'
-						>
-							Previous
-						</Link>
-					)}
-					<span className='btn btn-disabled'>
-						Page {data.pagination.currentPage} of{' '}
-						{data.pagination.totalPages}
-					</span>
-					{data.pagination.hasNextPage && (
-						<Link
-							href={`/?page=${data.pagination.nextPage}`}
-							className='btn btn-outline'
-						>
-							Next
-						</Link>
-					)}
-				</div>
-			) : (
-				<span className='flex justify-center text-center mx-auto text-lg font-semibold'>
-					No feeds found
-				</span>
-			)}
+			<FeedLandingList initialFeeds={data.feeds} initialPage={1} />
 		</>
 	)
 }

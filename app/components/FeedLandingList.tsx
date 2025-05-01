@@ -1,0 +1,63 @@
+'use client'
+
+import { useState } from 'react'
+import type { Feed } from '../types'
+import { client } from '../utils/client-rpc' // klientowa wersja fetchera
+import { FeedCard } from './FeedCard'
+
+export function FeedLandingList({
+	initialFeeds,
+	initialPage
+}: {
+	initialFeeds: Feed[]
+	initialPage: number
+}) {
+	const [feeds, setFeeds] = useState<Feed[]>(initialFeeds)
+	const [page, setPage] = useState(initialPage)
+	const [hasMore, setHasMore] = useState(initialFeeds.length === 12)
+	const [loading, setLoading] = useState(false)
+
+	const loadMore = async () => {
+		setLoading(true)
+		const res = await client.api.feed.$get({
+			query: {
+				limit: '12',
+				offset: (page * 12).toString(),
+				sortBy: 'updatedAt',
+				sortOrder: 'desc'
+			}
+		})
+		const data = await res.json()
+		setFeeds((prev) => [...prev, ...data.feeds])
+		setPage((p) => p + 1)
+		setHasMore(data.feeds.length === 12)
+		setLoading(false)
+	}
+
+	return (
+		<>
+			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
+				{feeds.map((feed) => (
+					<FeedCard key={feed.id} feed={feed} />
+				))}
+			</div>
+			{hasMore && (
+				<div className='flex justify-center'>
+					<button
+						onClick={loadMore}
+						className='btn btn-outline'
+						disabled={loading}
+						type='button'
+					>
+						{loading ? 'Loading...' : 'Load more'}
+					</button>
+				</div>
+			)}
+			{!hasMore && feeds.length === 0 && (
+				<p className='text-center text-lg font-semibold'>
+					No feeds found
+				</p>
+			)}
+		</>
+	)
+}
