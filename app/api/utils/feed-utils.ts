@@ -432,7 +432,6 @@ export const curatedFeedLinks = [
 		'https://www.eurogamer.net/feed',
 		// -- News --
 		'https://feeds.feedburner.com/BeMyTravelMuse',
-		'https://feeds.feedburner.com/RaksKitchen',
 		'https://feeds.feedburner.com/Theblondeabroad/ScWo',
 		'https://feeds.feedburner.com/craftbeercom',
 		'https://feeds.feedburner.com/media2',
