@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUpLeft, LinkIcon } from 'lucide-react'
+import { ArrowUpLeft, LinkIcon, TrashIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -86,7 +86,7 @@ const FeedRow = ({
 					className='btn btn-sm btn-error'
 					type='button'
 				>
-					Delete
+					<TrashIcon size={16} />
 				</button>
 			</td>
 		</tr>
