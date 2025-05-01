@@ -1,4 +1,5 @@
 import FeedClientPage from '@/app/components/FeedClientPage'
+import { FeedImage } from '@/app/components/FeedImage'
 import { getFlagEmoji } from '@/app/utils/functions'
 import { client } from '@/app/utils/server-rpc'
 import { FileTextIcon, LinkIcon } from 'lucide-react'
@@ -104,7 +105,9 @@ export default async function FeedIdPage({
 					</div>
 				</div>
 				{/* Title */}
-				<h2 className='text-primary text-4xl font-bold'>
+				<h2 className='text-primary text-4xl font-bold flex flex-row items-center gap-4'>
+					{/* LOGO */}
+					<FeedImage feed={feed} />
 					<a
 						href={feed.url || '#'}
 						target='_blank'
