@@ -14,6 +14,7 @@
 		"@rowanmanning/feed-parser": "^2.0.2",
 		"@scalar/hono-api-reference": "^0.8.5",
 		"argon2": "^0.43.0",
+		"cheerio": "^1.0.0",
 		"hono": "^4.7.8",
 		"hono-openapi": "^0.4.7",
 		"jose": "^6.0.10",

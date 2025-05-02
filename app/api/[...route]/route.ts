@@ -1,4 +1,5 @@
 import { Scalar } from '@scalar/hono-api-reference'
+import * as cheerio from 'cheerio'
 import { Hono } from 'hono'
 import { openAPISpecs } from 'hono-openapi'
 import { compress } from 'hono/compress'
@@ -87,6 +88,39 @@ const routes = app
 				}
 			}
 		})
+	})
+	.get('/favicon', async (c) => {
+		const rawUrl = c.req.query('url')
+		if (!rawUrl) {
+			return c.json({ error: 'Missing url' }, 400)
+		}
+
+		let baseUrl: URL
+		try {
+			baseUrl = new URL(rawUrl)
+		} catch {
+			return c.json({ error: 'Invalid URL' }, 400)
+		}
+
+		try {
+			const res = await fetch(baseUrl.href)
+			const html = await res.text()
+			const $ = cheerio.load(html)
+
+			const iconHref =
+				$('link[rel="icon"]').attr('href') ||
+				$('link[rel="shortcut icon"]').attr('href') ||
+				'/favicon.ico'
+
+			const iconUrl = iconHref.startsWith('http')
+				? iconHref
+				: new URL(iconHref, baseUrl.origin).href
+
+			return c.json({ icon: iconUrl })
+		} catch (err) {
+			console.error('favicon fetch error:', err)
+			return c.json({ error: 'Failed to fetch favicon' }, 500)
+		}
 	})
 	.route('/auth', authRoutes)
 	.route('/feed', feedRoutes)

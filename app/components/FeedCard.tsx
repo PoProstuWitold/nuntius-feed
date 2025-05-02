@@ -16,6 +16,7 @@ import {
 import Link from 'next/link'
 import type { Feed } from '../types'
 import { getFlagEmoji } from '../utils/functions'
+import { FeedImage } from './FeedImage'
 
 export const FeedCard = ({ feed }: { feed: Feed }) => {
 	return (
@@ -66,7 +67,8 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 						</span>
 					</div>
 					{/* Title */}
-					<h2 className='card-title text-primary line-clamp-2 min-h-[4rem] overflow-hidden text-ellipsis'>
+					<h2 className='card-title flex flex-row text-primary line-clamp-2 min-h-[4rem] overflow-hidden text-ellipsis'>
+						<FeedImage feed={feed} />
 						<a
 							href={feed.url || '#'}
 							target='_blank'
