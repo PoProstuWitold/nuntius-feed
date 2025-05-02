@@ -25,8 +25,22 @@ const app = new Hono<Env>()
 		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
 		const sortOptions = { [sortBy]: sortOrder }
 
+		const search = c.req.query('search')?.trim()
+
+		const searchFilter = search
+			? {
+					$or: [
+						{ title: { $regex: search, $options: 'i' } },
+						{ description: { $regex: search, $options: 'i' } },
+						{ url: { $regex: search, $options: 'i' } },
+						{ language: { $regex: search, $options: 'i' } },
+						{ 'meta.type': { $regex: search, $options: 'i' } }
+					]
+				}
+			: {}
+
 		const feeds = await Feed.find(
-			{},
+			searchFilter,
 			{ items: 0 },
 			{
 				limit,
@@ -58,7 +72,7 @@ const app = new Hono<Env>()
 			updatedAt: Date
 		})[]
 
-		const totalFeeds = await Feed.countDocuments()
+		const totalFeeds = await Feed.countDocuments(searchFilter)
 		const totalPages = Math.ceil(totalFeeds / limit)
 		const currentPage = Math.floor(offset / limit) + 1
 		const hasNextPage = offset + limit < totalFeeds

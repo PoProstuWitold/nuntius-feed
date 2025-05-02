@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { FeedLandingList } from './components/FeedLandingList'
+import { SearchInput } from './components/SearchInput'
 import { client } from './utils/server-rpc'
 
 export const dynamic = 'force-dynamic'
@@ -10,11 +11,27 @@ export const metadata: Metadata = {
 		'Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds.'
 }
 
-export default async function Home() {
+export default async function Home({
+	searchParams
+}: {
+	searchParams?: Promise<Record<string, string | string[]>>
+}) {
+	const resolvedParams = await searchParams
 	const limit = 12
 	const offset = 0
-	const sortBy = 'updatedAt'
-	const sortOrder = 'desc'
+
+	const sortBy =
+		typeof resolvedParams?.sortBy === 'string'
+			? resolvedParams.sortBy
+			: 'updatedAt'
+	const sortOrder =
+		typeof resolvedParams?.sortOrder === 'string'
+			? resolvedParams.sortOrder
+			: 'desc'
+	const search =
+		typeof resolvedParams?.search === 'string'
+			? resolvedParams.search.trim()
+			: ''
 
 	const v1 = await client.api.v1.$get()
 	const text = await v1.text()
@@ -24,7 +41,8 @@ export default async function Home() {
 			limit: limit.toString(),
 			offset: offset.toString(),
 			sortBy,
-			sortOrder
+			sortOrder,
+			...(search ? { search } : {})
 		}
 	})
 
@@ -39,7 +57,12 @@ export default async function Home() {
 				<p>{text}</p>
 			</div>
 
-			<FeedLandingList initialFeeds={data.feeds} initialPage={1} />
+			<SearchInput />
+			<FeedLandingList
+				initialFeeds={data.feeds}
+				initialPage={1}
+				initialSearch={search}
+			/>
 		</>
 	)
 }

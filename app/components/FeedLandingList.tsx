@@ -2,18 +2,21 @@
 
 import { useState } from 'react'
 import type { Feed } from '../types'
-import { client } from '../utils/client-rpc' // klientowa wersja fetchera
+import { client } from '../utils/client-rpc'
 import { FeedCard } from './FeedCard'
 
 export function FeedLandingList({
 	initialFeeds,
-	initialPage
+	initialPage,
+	initialSearch
 }: {
 	initialFeeds: Feed[]
 	initialPage: number
+	initialSearch: string
 }) {
 	const [feeds, setFeeds] = useState<Feed[]>(initialFeeds)
 	const [page, setPage] = useState(initialPage)
+	const [search] = useState(initialSearch)
 	const [hasMore, setHasMore] = useState(initialFeeds.length === 12)
 	const [loading, setLoading] = useState(false)
 
@@ -24,7 +27,8 @@ export function FeedLandingList({
 				limit: '12',
 				offset: (page * 12).toString(),
 				sortBy: 'updatedAt',
-				sortOrder: 'desc'
+				sortOrder: 'desc',
+				...(search ? { search } : {})
 			}
 		})
 		const data = await res.json()
