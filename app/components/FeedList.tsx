@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUpLeft, LinkIcon, TrashIcon } from 'lucide-react'
+import { ArrowUpLeft, LinkIcon, RotateCw, TrashIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -79,7 +79,7 @@ const FeedRow = ({
 					className='btn btn-sm btn-primary'
 					type='button'
 				>
-					Refresh
+					<RotateCw size={16} />
 				</button>
 				<button
 					onClick={() => onDelete(feed.id)}
