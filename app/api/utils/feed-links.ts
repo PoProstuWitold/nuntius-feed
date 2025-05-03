@@ -57,6 +57,28 @@ export const curatedFeedLinks = [
 		'https://feeds.bbci.co.uk/news/world/rss.xml',
 		'https://www.theguardian.com/world/rss',
 
+		// ===== France =====
+		'https://www.france24.com/fr/rss',
+		'https://www.lemonde.fr/rss/une.xml',
+
+		// ===== Ukraine =====
+		'https://www.ukrinform.ua/rss',
+		'https://rss.unian.net/site/news_ukr.rss',
+
+		// ===== Lithuania =====
+		'https://www.15min.lt/rss',
+
+		// ===== Slovakia =====
+		'https://dennikn.sk/rss',
+		
+		// ===== Spain =====
+		'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada',
+		'https://estaticos.elmundo.es/elmundo/rss/portada.xml',
+
+		// ===== The Netherlands =====
+		'https://feeds.nos.nl/nosnieuwsalgemeen',
+		'https://www.telegraaf.nl/rss',
+
 		// ===== USA =====
 		'https://feeds.npr.org/1004/rss.xml',
 		'https://feeds.npr.org/1008/rss.xml',
