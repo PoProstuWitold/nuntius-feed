@@ -1,5 +1,6 @@
-import FeedClientPage from '@/app/components/FeedClientPage'
+import { FeedClientPage } from '@/app/components/FeedClientPage'
 import { FeedImage } from '@/app/components/FeedImage'
+import type { Item } from '@/app/types'
 import { getFlagEmoji } from '@/app/utils/functions'
 import { client } from '@/app/utils/server-rpc'
 import { FileTextIcon, LinkIcon } from 'lucide-react'
@@ -59,7 +60,8 @@ export default async function FeedIdPage({
 			offset: '0'
 		}
 	})
-	const itemsJson = await itemsRes.json()
+	const json = await itemsRes.json()
+	const jsonItems = json.items as Item[]
 
 	const feed = feedJson.feed
 
@@ -142,8 +144,8 @@ export default async function FeedIdPage({
 			{/* Items */}
 			<FeedClientPage
 				feed={feedJson.feed}
-				initialItems={itemsJson.items}
-				initialPagination={itemsJson.pagination}
+				initialItems={jsonItems}
+				initialPagination={json.pagination}
 			/>
 		</div>
 	)

@@ -171,11 +171,15 @@ const app = new Hono<Env>()
 			const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
 			const sortOptions = { [sortBy]: sortOrder }
 
-			const items: ItemData[] = await Item.find({ feed: feedId }, null, {
+			const items = (await Item.find({ feed: feedId }, null, {
 				limit,
 				skip: offset,
 				sort: sortOptions
-			})
+			})) as (ItemData & {
+				updatedAt: string
+				createdAt: string
+				id: string
+			})[]
 
 			const totalItems = await Item.countDocuments({ feed: feedId })
 			const totalPages = Math.ceil(totalItems / limit)
@@ -193,12 +197,31 @@ const app = new Hono<Env>()
 				previousPage: hasPreviousPage ? currentPage - 1 : null
 			}
 
-			return c.json({
+			const response: {
+				success: boolean
+				message: string
+				pagination: {
+					totalItems: number
+					totalPages: number
+					currentPage: number
+					hasNextPage: boolean
+					hasPreviousPage: boolean
+					nextPage: number | null
+					previousPage: number | null
+				}
+				items?: (ItemData & {
+					updatedAt: string
+					createdAt: string
+					id: string
+				})[]
+			} = {
 				success: true,
 				message: `Fetched items for feed with ID ${feedId}`,
 				items,
 				pagination
-			})
+			}
+
+			return c.json(response)
 		}
 	)
 	// ADMIN ROUTES

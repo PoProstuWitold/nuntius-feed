@@ -41,7 +41,15 @@ export interface FeedMedia {
 }
 
 export interface Item {
-	feed: string
+	id: string
+	feed:
+		| string
+		| {
+				id: string
+				title: string | null
+				url: string | null
+				self: string | null
+		  }
 	authors: FeedAuthor[]
 	categories: FeedCategory[]
 	content: string | null
@@ -53,6 +61,8 @@ export interface Item {
 	title: string | null
 	updated: string | null
 	url: string | null
+	createdAt: string
+	updatedAt: string
 }
 
 export interface FeedMeta {

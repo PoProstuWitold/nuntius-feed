@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
 	const cookie = req.headers.get('cookie') || ''
 
 	const publicOnlyPaths = ['/login']
-	const protectedPaths: (string | RegExp)[] = ['/profile']
+	const protectedPaths: (string | RegExp)[] = ['/profile', '/favorites', '/subscriptions']
 	const adminPaths: (string | RegExp)[] = ['/api', '/dashboard']
 
 	const isProtected = protectedPaths.some((route) =>

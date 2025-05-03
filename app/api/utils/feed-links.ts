@@ -62,7 +62,6 @@ export const curatedFeedLinks = [
 		'https://www.lemonde.fr/rss/une.xml',
 
 		// ===== Ukraine =====
-		'https://www.ukrinform.ua/rss',
 		'https://rss.unian.net/site/news_ukr.rss',
 
 		// ===== Lithuania =====
@@ -70,7 +69,7 @@ export const curatedFeedLinks = [
 
 		// ===== Slovakia =====
 		'https://dennikn.sk/rss',
-		
+
 		// ===== Spain =====
 		'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada',
 		'https://estaticos.elmundo.es/elmundo/rss/portada.xml',
@@ -103,7 +102,6 @@ export const curatedFeedLinks = [
 		'https://www.theverge.com/rss/index.xml',
 		'https://www.vox.com/rss/index.xml',
 		'https://www.winespectator.com/rss/rss?t=news',
-		'https://feeds.arstechnica.com/arstechnica/index/',
 		'https://spectrum.ieee.org/rss/blog/tech-talk/fulltext',
 		'https://tealtech.com/feed/',
 		'https://techcrunch.com/feed/',

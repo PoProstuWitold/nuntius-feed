@@ -1,9 +1,11 @@
 import {
+	Bell,
 	CodeIcon,
 	HomeIcon,
 	LogInIcon,
 	MenuIcon,
 	RssIcon,
+	StarIcon,
 	UserCog,
 	UserIcon
 } from 'lucide-react'
@@ -109,6 +111,22 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 											className='flex items-center gap-3'
 										>
 											<UserIcon size={18} /> Profile
+										</Link>
+									</li>
+									<li>
+										<Link
+											href='/subscriptions'
+											className='flex items-center gap-3'
+										>
+											<Bell size={18} /> Subscribed Channels
+										</Link>
+									</li>
+									<li>
+										<Link
+											href='/favorites'
+											className='flex items-center gap-3'
+										>
+											<StarIcon size={18} /> Favorite Articles
 										</Link>
 									</li>
 									{/* LOGOUT */}
