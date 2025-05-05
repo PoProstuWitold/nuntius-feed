@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { Item } from '../types'
 import { FeedItem } from './FeedItem'
 
@@ -10,10 +10,22 @@ type Props = {
 
 export function FavoritesClientPage({ initialItems }: Props) {
 	const [items, setItems] = useState<Item[]>(initialItems)
+	const pendingRemovals = useRef<Record<string, NodeJS.Timeout>>({})
 
 	const handleFavoriteChange = (itemId: string, newState: boolean) => {
 		if (!newState) {
-			setItems((prev) => prev.filter((item) => item.id !== itemId))
+			const timeoutId = setTimeout(() => {
+				setItems((prev) => prev.filter((item) => item.id !== itemId))
+				delete pendingRemovals.current[itemId]
+			}, 5000)
+
+			pendingRemovals.current[itemId] = timeoutId
+		} else {
+			const timeout = pendingRemovals.current[itemId]
+			if (timeout) {
+				clearTimeout(timeout)
+				delete pendingRemovals.current[itemId]
+			}
 		}
 	}
 
