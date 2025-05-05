@@ -65,6 +65,10 @@ export default async function FeedIdPage({
 
 	const feed = feedJson.feed
 
+	const favs = await client.api.user.favorites.$get()
+	const favsJson = await favs.json()
+	const favGuids = favsJson.favorites.map((fav: { id: string }) => fav.id)
+
 	return (
 		<div>
 			{/* Feed */}
@@ -146,6 +150,7 @@ export default async function FeedIdPage({
 				feed={feedJson.feed}
 				initialItems={jsonItems}
 				initialPagination={json.pagination}
+				initialFavorites={favGuids}
 			/>
 		</div>
 	)

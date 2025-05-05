@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { FeedLandingList } from './components/FeedLandingList'
 import { SearchInput } from './components/SearchInput'
 import { client } from './utils/server-rpc'
+import { Feed } from './types'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,6 +49,10 @@ export default async function Home({
 
 	const data = await res.json()
 
+	const subs = await client.api.user.subscriptions.$get()
+	const json = await subs.json()
+	const subIds = json.subscriptions.map((s: Feed) => s.id)
+
 	return (
 		<>
 			<div className='flex flex-col justify-center mb-10'>
@@ -62,6 +67,7 @@ export default async function Home({
 				initialFeeds={data.feeds}
 				initialPage={1}
 				initialSearch={search}
+				initialSubscriptions={subIds}
 			/>
 		</>
 	)

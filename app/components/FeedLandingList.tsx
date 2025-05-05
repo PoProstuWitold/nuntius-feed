@@ -8,11 +8,13 @@ import { FeedCard } from './FeedCard'
 export function FeedLandingList({
 	initialFeeds,
 	initialPage,
-	initialSearch
+	initialSearch,
+	initialSubscriptions = []
 }: {
 	initialFeeds: Feed[]
 	initialPage: number
 	initialSearch: string
+	initialSubscriptions?: string[]
 }) {
 	useEffect(() => {
 		console.log('useEffect fired')
@@ -23,23 +25,7 @@ export function FeedLandingList({
 	const [hasMore, setHasMore] = useState(initialFeeds.length === 12)
 	const [loading, setLoading] = useState(false)
 
-	const [subscriptions, setSubscriptions] = useState<string[]>([])
-
-	useEffect(() => {
-		async function fetchSubscriptions() {
-			try {
-				console.log('Fetching subscriptions...')
-				const res = await client.api.user.subscriptions.$get()
-				const json = await res.json()
-				console.log('Subscriptions response:', json)
-				const subIds = json.subscriptions.map((s: Feed) => s.id)
-				setSubscriptions(subIds)
-			} catch (error) {
-				console.error('Failed to fetch subscriptions:', error)
-			}
-		}
-		fetchSubscriptions()
-	}, [])
+	const [subscriptions, setSubscriptions] = useState<string[]>(initialSubscriptions)
 
 	const loadMore = async () => {
 		setLoading(true)

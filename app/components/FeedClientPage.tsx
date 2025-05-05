@@ -1,18 +1,20 @@
 'use client'
 
 import { client } from '@/app/utils/client-rpc'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { Feed, Item, ItemsPagination } from '../types'
 import { FeedItem } from './FeedItem'
 
 export function FeedClientPage({
 	feed,
 	initialItems,
-	initialPagination
+	initialPagination,
+	initialFavorites = []
 }: {
 	feed: Feed
 	initialItems: Item[]
 	initialPagination: ItemsPagination
+	initialFavorites?: string[]
 }) {
 	const [items, setItems] = useState(initialItems)
 	const [pagination, setPagination] = useState(initialPagination)
@@ -37,18 +39,6 @@ export function FeedClientPage({
 		setLoading(false)
 	}
 
-	const [favorites, setFavorites] = useState<string[]>([])
-
-	useEffect(() => {
-		async function fetchFavorites() {
-			const res = await client.api.user.favorites.$get()
-			const json = await res.json()
-			const favGuids = json.favorites.map((fav: { id: string }) => fav.id)
-			setFavorites(favGuids)
-		}
-		fetchFavorites()
-	}, [])
-
 	return (
 		<div>
 			<ul className='grid grid-cols-1 gap-6'>
@@ -57,7 +47,7 @@ export function FeedClientPage({
 						key={item.id}
 						item={item}
 						showFavorite={true}
-						isFavorite={favorites.includes(item.id || '')}
+						isFavorite={initialFavorites.includes(item.id || '')}
 					/>
 				))}
 			</ul>
