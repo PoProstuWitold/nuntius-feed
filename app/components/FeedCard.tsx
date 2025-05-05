@@ -17,8 +17,19 @@ import Link from 'next/link'
 import type { Feed } from '../types'
 import { getFlagEmoji } from '../utils/functions'
 import { FeedImage } from './FeedImage'
+import { SubscribeButton } from './SubscribeButton'
 
-export const FeedCard = ({ feed }: { feed: Feed }) => {
+export const FeedCard = ({
+	feed,
+	showFavorite = true,
+	isFavorite = false,
+	onFavoriteChange
+}: {
+	feed: Feed
+	showFavorite?: boolean
+	isFavorite?: boolean
+	onFavoriteChange?: (newState: boolean) => void
+}) => {
 	return (
 		<div className='card bg-base-100 shadow-md border border-base-300 relative overflow-hidden'>
 			{/* Ribbon / Wstążka */}
@@ -65,6 +76,19 @@ export const FeedCard = ({ feed }: { feed: Feed }) => {
 								<span>No feed source</span>
 							)}
 						</span>
+						{/* Subscribe Button */}
+						{showFavorite && (
+							<>
+								<div className='divider divider-horizontal ml-0 mr-2' />
+								<div className='text-right'>
+									<SubscribeButton
+										feedId={feed.id}
+										isSubscribed={isFavorite}
+										onChange={onFavoriteChange}
+									/>
+								</div>
+							</>
+						)}
 					</div>
 					{/* Title */}
 					<h2 className='card-title flex flex-row text-primary line-clamp-2 min-h-[4rem] overflow-hidden text-ellipsis'>

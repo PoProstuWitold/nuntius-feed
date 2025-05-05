@@ -1,7 +1,7 @@
 'use client'
 
 import { Bell, BellOff } from 'lucide-react'
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'react-toastify'
 import { client } from '../utils/client-rpc'
 
@@ -14,6 +14,10 @@ type Props = {
 export function SubscribeButton({ feedId, isSubscribed, onChange }: Props) {
 	const [subscribed, setSubscribed] = useState(isSubscribed)
 	const [isPending, startTransition] = useTransition()
+
+	useEffect(() => {
+		setSubscribed(isSubscribed)
+	}, [isSubscribed])
 
 	const toggleSubscription = () => {
 		startTransition(async () => {
@@ -42,14 +46,14 @@ export function SubscribeButton({ feedId, isSubscribed, onChange }: Props) {
 		<button
 			onClick={toggleSubscription}
 			disabled={isPending}
-			className='text-blue-500 hover:text-blue-600 transition'
+			className='text-yellow-500 hover:text-yellow-600 transition'
 			title={subscribed ? 'Unsubscribe' : 'Subscribe'}
 			type='button'
 		>
 			{subscribed ? (
-				<Bell className='w-5 h-5 fill-current' />
+				<Bell className='w-6 h-6 fill-current cursor-pointer' />
 			) : (
-				<BellOff className='w-5 h-5' />
+				<BellOff className='w-6 h-6 cursor-pointer' />
 			)}
 		</button>
 	)

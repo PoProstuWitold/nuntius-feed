@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Feed } from '../types'
 import { client } from '../utils/client-rpc'
 import { FeedCard } from './FeedCard'
@@ -14,11 +14,32 @@ export function FeedLandingList({
 	initialPage: number
 	initialSearch: string
 }) {
+	useEffect(() => {
+		console.log('useEffect fired')
+	}, [])
 	const [feeds, setFeeds] = useState<Feed[]>(initialFeeds)
 	const [page, setPage] = useState(initialPage)
 	const [search] = useState(initialSearch)
 	const [hasMore, setHasMore] = useState(initialFeeds.length === 12)
 	const [loading, setLoading] = useState(false)
+
+	const [subscriptions, setSubscriptions] = useState<string[]>([])
+
+	useEffect(() => {
+		async function fetchSubscriptions() {
+			try {
+				console.log('Fetching subscriptions...')
+				const res = await client.api.user.subscriptions.$get()
+				const json = await res.json()
+				console.log('Subscriptions response:', json)
+				const subIds = json.subscriptions.map((s: Feed) => s.id)
+				setSubscriptions(subIds)
+			} catch (error) {
+				console.error('Failed to fetch subscriptions:', error)
+			}
+		}
+		fetchSubscriptions()
+	}, [])
 
 	const loadMore = async () => {
 		setLoading(true)
@@ -38,13 +59,30 @@ export function FeedLandingList({
 		setLoading(false)
 	}
 
+	const handleFavoriteChange = (feedId: string, newState: boolean) => {
+		if (newState) {
+			setSubscriptions((prev) => [...prev, feedId])
+		} else {
+			setSubscriptions((prev) => prev.filter((id) => id !== feedId))
+		}
+	}
+
 	return (
 		<>
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
 				{feeds.map((feed) => (
-					<FeedCard key={feed.id} feed={feed} />
+					<FeedCard
+						key={feed.id}
+						feed={feed}
+						showFavorite={true}
+						isFavorite={subscriptions.includes(feed.id)}
+						onFavoriteChange={(newState) =>
+							handleFavoriteChange(feed.id, newState)
+						}
+					/>
 				))}
 			</div>
+
 			{hasMore && (
 				<div className='flex justify-center'>
 					<button
@@ -57,6 +95,7 @@ export function FeedLandingList({
 					</button>
 				</div>
 			)}
+
 			{!hasMore && feeds.length === 0 && (
 				<p className='text-center text-lg font-semibold'>
 					No feeds found
