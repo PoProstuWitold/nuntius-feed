@@ -15,6 +15,7 @@ import { setThemeScript } from '../utils/functions'
 import { client } from '../utils/server-rpc'
 import { LogoutButton } from './LogoutButton'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import Image from 'next/image'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -73,10 +74,15 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 								</div>
 							</div>
 							<div className='flex-1 px-2 font-bold text-lg'>
-								<span className='flex items-center gap-2 text-center font-extrabold text-2xl text-primary'>
-									<RssIcon size='32' />
-									<span>Nuntius Feed</span>
-								</span>
+								<Link href='/'>
+									<span className='flex items-center gap-2 text-center font-extrabold text-2xl text-primary'>
+										<Image width={40} height={40} alt='Logo' src='/favicon.ico' />
+										<span>
+											<span className='text-[#1F3B66]'>Nuntius</span>
+											<span className='text-[#F57C00]'>Feed</span>
+										</span>
+									</span>
+								</Link>
 							</div>
 						</div>
 
