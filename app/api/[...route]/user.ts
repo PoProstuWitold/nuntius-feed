@@ -17,6 +17,27 @@ const app = new Hono<Env>()
 			subscriptions: dbUser?.subscriptions || []
 		})
 	})
+	// Check if user is subscribed to a single feed
+	.get(
+		'/subscriptions/:id',
+		validatorParamObjectId,
+		isAuthWithCookies,
+		async (c) => {
+			const user = c.get('user')
+			const feedId = c.req.param('id')
+
+			const dbUser = await User.findById(user?.sub)
+
+			const isSubscribed = dbUser.subscriptions.some(
+				(id: ObjectId | string) => id.toString() === feedId
+			)
+			return c.json({
+				success: true,
+				message: isSubscribed ? 'Subscribed' : 'Not subscribed',
+				isSubscribed
+			})
+		}
+	)
 	// Subscribe to feed by ID
 	.post(
 		'/subscriptions/:id',

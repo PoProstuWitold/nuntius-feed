@@ -1,5 +1,6 @@
 import { FeedClientPage } from '@/app/components/FeedClientPage'
 import { FeedImage } from '@/app/components/FeedImage'
+import { SubscribeButton } from '@/app/components/SubscribeButton'
 import type { Item } from '@/app/types'
 import { getFlagEmoji } from '@/app/utils/functions'
 import { client } from '@/app/utils/server-rpc'
@@ -69,6 +70,13 @@ export default async function FeedIdPage({
 	const favsJson = await favs.json()
 	const favGuids = favsJson.favorites.map((fav: { id: string }) => fav.id)
 
+	const isSubToFeed = await client.api.user.subscriptions[':id'].$get({
+		param: {
+			id: feed.id
+		}
+	})
+	const isSubToFeedJson = await isSubToFeed.json()
+
 	return (
 		<div>
 			{/* Feed */}
@@ -108,6 +116,14 @@ export default async function FeedIdPage({
 						) : (
 							<span>{getFlagEmoji(feed.language, feed.url)}</span>
 						)}
+					</div>
+					{/* Subscribe Button */}
+					<div className='divider divider-horizontal' />
+					<div className='mt-2 mr-2'>
+						<SubscribeButton
+							feedId={feed.id}
+							isSubscribed={isSubToFeedJson.isSubscribed}
+						/>
 					</div>
 				</div>
 				{/* Title */}

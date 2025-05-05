@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { FeedLandingList } from './components/FeedLandingList'
 import { SearchInput } from './components/SearchInput'
+import type { Feed } from './types'
 import { client } from './utils/server-rpc'
-import { Feed } from './types'
 
 export const dynamic = 'force-dynamic'
 

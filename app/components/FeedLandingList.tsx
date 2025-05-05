@@ -25,7 +25,8 @@ export function FeedLandingList({
 	const [hasMore, setHasMore] = useState(initialFeeds.length === 12)
 	const [loading, setLoading] = useState(false)
 
-	const [subscriptions, setSubscriptions] = useState<string[]>(initialSubscriptions)
+	const [subscriptions, setSubscriptions] =
+		useState<string[]>(initialSubscriptions)
 
 	const loadMore = async () => {
 		setLoading(true)
