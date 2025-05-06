@@ -1,3 +1,4 @@
+import { InfoIcon } from 'lucide-react'
 import type { Metadata } from 'next'
 import { FeedLandingList } from './components/FeedLandingList'
 import { SearchInput } from './components/SearchInput'
@@ -55,11 +56,19 @@ export default async function Home({
 
 	return (
 		<>
-			<div className='flex flex-col justify-center mb-10'>
+			{/* Info about refreshing feeds every 30 minutes */}
+			<div className='flex flex-col justify-center mb-3'>
 				<h1 className='text-4xl font-bold lg:text-left text-center'>
 					Nuntius Feed
 				</h1>
 				<p>{text}</p>
+			</div>
+			<div className='flex flex-col justify-center m-0 p-0'>
+				<p className='text-sm bg-accent p-4 text-accent-content items-center flex flex-row gap-2 font-bold mb-10 rounded-full'>
+					<InfoIcon size={30} /> Feeds are automatically refreshed
+					every 30 minutes. Admin users can refresh them on demand at
+					any time.
+				</p>
 			</div>
 
 			<SearchInput />
