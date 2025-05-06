@@ -9,7 +9,7 @@ import { prettyJSON } from 'hono/pretty-json'
 import { requestId } from 'hono/request-id'
 import { secureHeaders } from 'hono/secure-headers'
 import mongoose from 'mongoose'
-import { job } from '../utils/cron'
+import '../utils/cron'
 
 import pkg from '../../../package.json'
 import type { Env } from '../types'
@@ -26,7 +26,6 @@ import userRoutes from './user'
 const app = new Hono<Env>().basePath('/api')
 
 await connectDB()
-await job.start()
 
 app.use(compress())
 app.use(
