@@ -99,3 +99,13 @@ export interface ItemsPagination {
 	nextPage: number | null
 	previousPage: number | null
 }
+
+export interface FeedPagination {
+	totalFeeds: number
+	totalPages: number
+	currentPage: number
+	hasNextPage: boolean
+	hasPreviousPage: boolean
+	nextPage: number | null
+	previousPage: number | null
+}

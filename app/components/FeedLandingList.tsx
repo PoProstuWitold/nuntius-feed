@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Feed } from '../types'
+import type { Feed, FeedPagination } from '../types'
 import { client } from '../utils/client-rpc'
 import { FeedCard } from './FeedCard'
 
@@ -9,18 +9,21 @@ export function FeedLandingList({
 	initialFeeds,
 	initialPage,
 	initialSearch,
-	initialSubscriptions = []
+	initialSubscriptions = [],
+	initialPagination
 }: {
 	initialFeeds: Feed[]
 	initialPage: number
 	initialSearch: string
 	initialSubscriptions?: string[]
+	initialPagination: FeedPagination
 }) {
 	const [feeds, setFeeds] = useState<Feed[]>(initialFeeds)
 	const [page, setPage] = useState(initialPage)
 	const [search] = useState(initialSearch)
 	const [hasMore, setHasMore] = useState(initialFeeds.length === 12)
 	const [loading, setLoading] = useState(false)
+	const [pagination, setPagination] = useState(initialPagination)
 
 	const [subscriptions, setSubscriptions] =
 		useState<string[]>(initialSubscriptions)
@@ -40,6 +43,7 @@ export function FeedLandingList({
 		setFeeds((prev) => [...prev, ...data.feeds])
 		setPage((p) => p + 1)
 		setHasMore(data.feeds.length === 12)
+		setPagination(data.pagination)
 		setLoading(false)
 	}
 
@@ -53,6 +57,9 @@ export function FeedLandingList({
 
 	return (
 		<>
+			<div className='divider'>
+				Showing {feeds.length} of {pagination.totalFeeds} feeds
+			</div>
 			<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
 				{feeds.map((feed) => (
 					<FeedCard

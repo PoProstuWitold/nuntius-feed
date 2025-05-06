@@ -68,6 +68,7 @@ export default async function Home({
 				initialPage={1}
 				initialSearch={search}
 				initialSubscriptions={subIds}
+				initialPagination={data.pagination}
 			/>
 		</>
 	)
