@@ -1,12 +1,13 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const SORT_FIELDS = [
 	{ value: 'updatedAt', label: 'Last Updated' },
 	{ value: 'createdAt', label: 'Created At' },
-	{ value: 'title', label: 'Title' }
+	{ value: 'title', label: 'Title' },
+	{ value: 'published', label: 'Published' }
 ]
 
 const SORT_ORDERS = [
@@ -14,9 +15,8 @@ const SORT_ORDERS = [
 	{ value: 'asc', label: 'Ascending' }
 ]
 
-export function SearchInput() {
+export function SearchInput({ path = '/' }: { path?: string }) {
 	const searchParams = useSearchParams()
-	const router = useRouter()
 
 	const [value, setValue] = useState(searchParams.get('search') || '')
 	const [sortBy, setSortBy] = useState(
@@ -45,7 +45,7 @@ export function SearchInput() {
 		params.set('sortOrder', sortOrder)
 		params.delete('page')
 
-		window.location.href = `/?${params.toString()}`
+		window.location.href = `${path}?${params.toString()}`
 	}
 
 	return (

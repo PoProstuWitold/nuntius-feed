@@ -4,6 +4,7 @@ import {
 	HomeIcon,
 	LogInIcon,
 	MenuIcon,
+	Newspaper,
 	RssIcon,
 	StarIcon,
 	UserCog,
@@ -109,14 +110,30 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 									<HomeIcon size={18} /> Home
 								</Link>
 							</li>
+							<li>
+								<Link
+									href='/articles'
+									className='flex items-center gap-3'
+								>
+									<RssIcon size={18} /> All Articles
+								</Link>
+							</li>
 							{user && (
 								<>
 									<li>
 										<Link
-											href='/profile'
+											href='/subscriptions/articles'
 											className='flex items-center gap-3'
 										>
-											<UserIcon size={18} /> Profile
+											<Newspaper size={18} /> Your Articles
+										</Link>
+									</li>
+									<li>
+										<Link
+											href='/favorites'
+											className='flex items-center gap-3'
+										>
+											<StarIcon size={18} /> Favorite Articles
 										</Link>
 									</li>
 									<li>
@@ -129,10 +146,10 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 									</li>
 									<li>
 										<Link
-											href='/favorites'
+											href='/profile'
 											className='flex items-center gap-3'
 										>
-											<StarIcon size={18} /> Favorite Articles
+											<UserIcon size={18} /> Profile
 										</Link>
 									</li>
 									{/* LOGOUT */}

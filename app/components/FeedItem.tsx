@@ -102,6 +102,7 @@ export function FeedItem({
 
 			{/* Description */}
 			<div
+				suppressHydrationWarning
 				className='text-base-content/80 prose line-clamp-3'
 				// biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized
 				dangerouslySetInnerHTML={{

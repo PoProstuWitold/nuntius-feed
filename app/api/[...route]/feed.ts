@@ -95,6 +95,74 @@ const app = new Hono<Env>()
 			pagination
 		})
 	})
+	// Fetch articles from pagination with sort
+	.get('/articles', async (c) => {
+		const limit = Number.parseInt(c.req.query('limit') || '12')
+		const offset = Number.parseInt(c.req.query('offset') || '0')
+
+		const allowedSortBy = ['createdAt', 'updatedAt', 'published', 'title']
+		let sortBy = c.req.query('sortBy') || 'published'
+		if (!allowedSortBy.includes(sortBy)) {
+			sortBy = 'published'
+		}
+		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
+		const sortOptions = { [sortBy]: sortOrder }
+
+		const search = c.req.query('search')?.trim() || ''
+
+		const matchingFeeds = await Feed.find({
+			$or: [
+				{ title: { $regex: search, $options: 'i' } },
+				{ url: { $regex: search, $options: 'i' } },
+				{ self: { $regex: search, $options: 'i' } }
+			]
+		}).select('_id')
+
+		const feedIds = matchingFeeds.map((f) => f._id)
+
+		const searchFilter = search
+			? {
+					$or: [
+						{ title: { $regex: search, $options: 'i' } },
+						{ description: { $regex: search, $options: 'i' } },
+						{ feed: { $in: feedIds } } // <- to podmienia zakomentowane warunki
+					]
+				}
+			: {}
+
+		const items = await Item.find(searchFilter, null, {
+			limit,
+			skip: offset,
+			sort: sortOptions,
+			populate: {
+				path: 'feed',
+				select: 'title url self'
+			}
+		})
+
+		const totalItems = await Item.countDocuments(searchFilter)
+		const totalPages = Math.ceil(totalItems / limit)
+		const currentPage = Math.floor(offset / limit) + 1
+		const hasNextPage = offset + limit < totalItems
+		const hasPreviousPage = offset > 0
+
+		const pagination = {
+			totalItems,
+			totalPages,
+			currentPage,
+			hasNextPage,
+			hasPreviousPage,
+			nextPage: hasNextPage ? currentPage + 1 : null,
+			previousPage: hasPreviousPage ? currentPage - 1 : null
+		}
+
+		return c.json({
+			success: true,
+			message: 'Fetched items',
+			items,
+			pagination
+		})
+	})
 	// Get details of a single feed
 	.get('/:id', validatorParamObjectId, async (c) => {
 		const feedId = c.req.param('id')
