@@ -20,10 +20,10 @@ export function LogoutButton() {
 				router.push('/login')
 				router.refresh()
 			} else {
-				console.error('Logout failed')
+				toast.error('Invalid credentials')
 			}
 		} catch (err) {
-			console.error('Logout error:', err)
+			toast.error('Logout error')
 		}
 	}
 

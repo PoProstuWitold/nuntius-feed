@@ -3,6 +3,7 @@ import { AllItemsClientPage } from '../components/AllItemsClientPage'
 import { SearchInput } from '../components/SearchInput'
 import type { Item } from '../types'
 import { client } from '../utils/server-rpc'
+import { getUser } from '../utils/user'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,6 +48,8 @@ export default async function AllArticles({
 	const jsonItems = json.items as Item[]
 	const jsonPagination = json.pagination
 
+	const user = await getUser()
+
 	return (
 		<>
 			<div className='flex flex-col justify-center mb-10'>
@@ -56,6 +59,7 @@ export default async function AllArticles({
 			</div>
 			<SearchInput path='/articles' />
 			<AllItemsClientPage
+				userId={user?.sub}
 				initialItems={jsonItems}
 				initialPagination={jsonPagination}
 			/>

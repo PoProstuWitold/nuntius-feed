@@ -8,6 +8,13 @@ export interface User {
 	email: string
 }
 
+export interface PayloadUser {
+	sub: string
+	name: string
+	email: string
+	role: string
+}
+
 export interface FeedAuthor {
 	email: string | null
 	name: string | null

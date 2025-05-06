@@ -6,12 +6,14 @@ import { client } from '../utils/client-rpc'
 import { FeedCard } from './FeedCard'
 
 export function FeedLandingList({
+	userId,
 	initialFeeds,
 	initialPage,
 	initialSearch,
 	initialSubscriptions = [],
 	initialPagination
 }: {
+	userId?: string
 	initialFeeds: Feed[]
 	initialPage: number
 	initialSearch: string
@@ -65,7 +67,7 @@ export function FeedLandingList({
 					<FeedCard
 						key={feed.id}
 						feed={feed}
-						showFavorite={true}
+						showFavorite={!!userId}
 						isFavorite={subscriptions.includes(feed.id)}
 						onFavoriteChange={(newState) =>
 							handleFavoriteChange(feed.id, newState)

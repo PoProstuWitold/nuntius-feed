@@ -53,7 +53,8 @@ export const FeedImage = ({ feed }: { feed: Feed }) => {
 			width={40}
 			height={40}
 			onError={() => setIsVisible(false)}
-			onLoadingComplete={(img) => {
+			onLoad={(e) => {
+				const img = e.currentTarget as HTMLImageElement
 				if (img.naturalWidth === 0) setIsVisible(false)
 			}}
 			className='h-14 w-auto p-2'

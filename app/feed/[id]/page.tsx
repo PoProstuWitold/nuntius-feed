@@ -4,6 +4,7 @@ import { SubscribeButton } from '@/app/components/SubscribeButton'
 import type { Item } from '@/app/types'
 import { getFlagEmoji } from '@/app/utils/functions'
 import { client } from '@/app/utils/server-rpc'
+import { getUser } from '@/app/utils/user'
 import { FileTextIcon, LinkIcon } from 'lucide-react'
 
 export async function generateMetadata({
@@ -68,7 +69,8 @@ export default async function FeedIdPage({
 
 	const favs = await client.api.user.favorites.$get()
 	const favsJson = await favs.json()
-	const favGuids = favsJson.favorites.map((fav: { id: string }) => fav.id)
+	const favGuids =
+		favsJson.favorites?.map((fav: { id: string }) => fav.id) || []
 
 	const isSubToFeed = await client.api.user.subscriptions[':id'].$get({
 		param: {
@@ -76,6 +78,7 @@ export default async function FeedIdPage({
 		}
 	})
 	const isSubToFeedJson = await isSubToFeed.json()
+	const user = await getUser()
 
 	return (
 		<div>
@@ -117,14 +120,18 @@ export default async function FeedIdPage({
 							<span>{getFlagEmoji(feed.language, feed.url)}</span>
 						)}
 					</div>
-					{/* Subscribe Button */}
-					<div className='divider divider-horizontal' />
-					<div className='mt-2 mr-2'>
-						<SubscribeButton
-							feedId={feed.id}
-							isSubscribed={isSubToFeedJson.isSubscribed}
-						/>
-					</div>
+					{user && (
+						<>
+							{/* Subscribe Button */}
+							<div className='divider divider-horizontal' />
+							<div className='mt-2 mr-2'>
+								<SubscribeButton
+									feedId={feed.id}
+									isSubscribed={isSubToFeedJson.isSubscribed}
+								/>
+							</div>
+						</>
+					)}
 				</div>
 				{/* Title */}
 				<h2 className='text-primary text-4xl font-bold flex flex-row items-center gap-4'>
@@ -163,6 +170,7 @@ export default async function FeedIdPage({
 			<div className='divider'>Items ({feed.itemsCount} in total)</div>
 			{/* Items */}
 			<FeedClientPage
+				userId={user?.sub}
 				feed={feedJson.feed}
 				initialItems={jsonItems}
 				initialPagination={json.pagination}

@@ -37,7 +37,7 @@ export default function AuthForm() {
 				router.push('/profile')
 				router.refresh()
 			} else {
-				console.error('Sign in error')
+				toast.error('Invalid credentials')
 			}
 		} else {
 			const res = await client.api.auth.signup.$post({ json: data })
@@ -51,7 +51,7 @@ export default function AuthForm() {
 				router.push('/profile')
 				router.refresh()
 			} else {
-				console.error('Signed up error')
+				toast.error('Invalid data')
 			}
 		}
 	}

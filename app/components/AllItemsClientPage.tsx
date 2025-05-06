@@ -6,10 +6,12 @@ import type { Item, ItemsPagination } from '../types'
 import { FeedItem } from './FeedItem'
 
 export function AllItemsClientPage({
+	userId,
 	initialItems,
 	initialPagination,
 	initialFavorites = []
 }: {
+	userId?: string
 	initialItems: Item[]
 	initialPagination: ItemsPagination
 	initialFavorites?: string[]
@@ -41,7 +43,7 @@ export function AllItemsClientPage({
 					<FeedItem
 						key={item.id}
 						item={item}
-						showFavorite={true}
+						showFavorite={!!userId}
 						isFavorite={initialFavorites.includes(item.id || '')}
 					/>
 				))}

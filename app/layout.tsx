@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { ToastContainer } from 'react-toastify'
 import { Layout } from './components/Layout'
 import { ThemeProvider } from './context/ThemeContext'
+import { UserProviderWrapper } from './context/UserContext'
 
 export const metadata: Metadata = {
 	title: 'Nuntius Feed',
@@ -17,8 +18,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<ThemeProvider defaultTheme='system'>
-			<Layout>{children}</Layout>
-			<ToastContainer />
+			<UserProviderWrapper>
+				<Layout>{children}</Layout>
+				<ToastContainer />
+			</UserProviderWrapper>
 		</ThemeProvider>
 	)
 }

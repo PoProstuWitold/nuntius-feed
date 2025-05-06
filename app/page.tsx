@@ -4,6 +4,7 @@ import { FeedLandingList } from './components/FeedLandingList'
 import { SearchInput } from './components/SearchInput'
 import type { Feed } from './types'
 import { client } from './utils/server-rpc'
+import { getUser } from './utils/user'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,7 +53,9 @@ export default async function Home({
 
 	const subs = await client.api.user.subscriptions.$get()
 	const json = await subs.json()
-	const subIds = json.subscriptions.map((s: Feed) => s.id)
+	const subIds = json.subscriptions?.map((s: Feed) => s.id) || []
+
+	const user = await getUser()
 
 	return (
 		<>
@@ -73,6 +76,7 @@ export default async function Home({
 
 			<SearchInput />
 			<FeedLandingList
+				userId={user?.sub}
 				initialFeeds={data.feeds}
 				initialPage={1}
 				initialSearch={search}

@@ -6,11 +6,13 @@ import type { Feed, Item, ItemsPagination } from '../types'
 import { FeedItem } from './FeedItem'
 
 export function FeedClientPage({
+	userId,
 	feed,
 	initialItems,
 	initialPagination,
 	initialFavorites = []
 }: {
+	userId?: string
 	feed: Feed
 	initialItems: Item[]
 	initialPagination: ItemsPagination
@@ -46,7 +48,7 @@ export function FeedClientPage({
 					<FeedItem
 						key={item.id}
 						item={item}
-						showFavorite={true}
+						showFavorite={!!userId}
 						isFavorite={initialFavorites.includes(item.id || '')}
 					/>
 				))}
