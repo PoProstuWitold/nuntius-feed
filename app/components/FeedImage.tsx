@@ -22,8 +22,7 @@ export const FeedImage = ({ feed }: { feed: Feed }) => {
 				const data = await res.json()
 				if ('icon' in data) {
 					setUrl(data.icon)
-				}
-				else setUrl(`${new URL(feed.url).origin}/favicon.ico`)
+				} else setUrl(`${new URL(feed.url).origin}/favicon.ico`)
 			} catch {
 				setUrl(`${new URL(feed.url).origin}/favicon.ico`)
 			}

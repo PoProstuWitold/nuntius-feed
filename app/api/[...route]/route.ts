@@ -1,4 +1,3 @@
-import { job } from '../utils/cron'
 import { Scalar } from '@scalar/hono-api-reference'
 import * as cheerio from 'cheerio'
 import { Hono } from 'hono'
@@ -10,6 +9,7 @@ import { prettyJSON } from 'hono/pretty-json'
 import { requestId } from 'hono/request-id'
 import { secureHeaders } from 'hono/secure-headers'
 import mongoose from 'mongoose'
+import { job } from '../utils/cron'
 
 import pkg from '../../../package.json'
 import type { Env } from '../types'
