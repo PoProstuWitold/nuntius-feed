@@ -125,7 +125,7 @@ const app = new Hono<Env>()
 					$or: [
 						{ title: { $regex: search, $options: 'i' } },
 						{ description: { $regex: search, $options: 'i' } },
-						{ feed: { $in: feedIds } } // <- to podmienia zakomentowane warunki
+						{ feed: { $in: feedIds } }
 					]
 				}
 			: {}
@@ -354,10 +354,8 @@ const app = new Hono<Env>()
 			const deletedItems = await Item.deleteMany({
 				feed: feedId
 			})
-			console.log('deletedItems', deletedItems)
 
 			const deletedFeed = await Feed.findByIdAndDelete(feedId)
-			console.log('deletedFeed', deletedFeed)
 
 			c.status(200)
 			return c.json({
@@ -382,10 +380,6 @@ const app = new Hono<Env>()
 		})
 	})
 	.get('/refresh/status', isAuthWithCookies, isAdmin, (c) => {
-		// return c.json({
-		// 	success: true,
-		// 	progress: refreshProgress
-		// })
 		c.header('Content-Type', 'text/event-stream')
 		c.header('Cache-Control', 'no-cache')
 		c.header('Connection', 'keep-alive')
@@ -400,7 +394,6 @@ const app = new Hono<Env>()
 		})
 	})
 	.post('/defaults', isAuthWithCookies, isAdmin, async (c) => {
-		// start async task
 		FeedUtils.loadCuratedFeeds().catch((err) => {
 			console.error('Feed defaults loading error:', err)
 		})
@@ -412,10 +405,6 @@ const app = new Hono<Env>()
 		})
 	})
 	.get('/defaults/status', isAuthWithCookies, isAdmin, (c) => {
-		// return c.json({
-		// 	success: true,
-		// 	progress: defaultsProgress
-		// })
 		c.header('Content-Type', 'text/event-stream')
 		c.header('Cache-Control', 'no-cache')
 		c.header('Connection', 'keep-alive')

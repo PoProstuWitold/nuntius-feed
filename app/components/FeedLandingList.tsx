@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { Feed } from '../types'
 import { client } from '../utils/client-rpc'
 import { FeedCard } from './FeedCard'
@@ -16,9 +16,6 @@ export function FeedLandingList({
 	initialSearch: string
 	initialSubscriptions?: string[]
 }) {
-	useEffect(() => {
-		console.log('useEffect fired')
-	}, [])
 	const [feeds, setFeeds] = useState<Feed[]>(initialFeeds)
 	const [page, setPage] = useState(initialPage)
 	const [search] = useState(initialSearch)

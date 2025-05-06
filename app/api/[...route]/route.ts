@@ -1,3 +1,4 @@
+import { job } from '../utils/cron'
 import { Scalar } from '@scalar/hono-api-reference'
 import * as cheerio from 'cheerio'
 import { Hono } from 'hono'
@@ -24,10 +25,9 @@ import userRoutes from './user'
 
 const app = new Hono<Env>().basePath('/api')
 
-// MongoDB connection
 await connectDB()
+await job.start()
 
-// middlewares
 app.use(compress())
 app.use(
 	cors({

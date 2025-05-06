@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
 		return NextResponse.next()
 	}
 
-	console.log('[middleware] Triggered:', path)
+	console.info('[middleware] Triggered:', path)
 
 	const cookie = req.headers.get('cookie') || ''
 
@@ -38,7 +38,6 @@ export async function middleware(req: NextRequest) {
 	if (me.ok) {
 		isLoggedIn = true
 		user = await me.json()
-		console.log('[middleware] User info:', user)
 	} else {
 		console.warn('[middleware] Access token expired, trying refresh...')
 
@@ -65,7 +64,7 @@ export async function middleware(req: NextRequest) {
 	const isAdmin = user?.user?.role === 'admin'
 
 	if (isLoggedIn && publicOnlyPaths.includes(path)) {
-		console.log(
+		console.info(
 			'[middleware] Redirecting logged-in user from public-only path:',
 			path
 		)
@@ -73,7 +72,7 @@ export async function middleware(req: NextRequest) {
 	}
 
 	if (!isLoggedIn && isProtected) {
-		console.log(
+		console.info(
 			'[middleware] Redirecting anon user from protected path:',
 			path
 		)
@@ -81,7 +80,7 @@ export async function middleware(req: NextRequest) {
 	}
 
 	if (isAdminRoute && !isAdmin) {
-		console.log(
+		console.info(
 			'[middleware] Redirecting non-admin user from admin path:',
 			path
 		)

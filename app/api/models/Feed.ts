@@ -78,7 +78,6 @@ FeedSchema.set('toJSON', {
 	}
 })
 
-// To query/sort by freshness
 FeedSchema.index({ lastBuildDate: -1 })
 
 export const Feed = models.Feed || model<FeedDocument>('Feed', FeedSchema)

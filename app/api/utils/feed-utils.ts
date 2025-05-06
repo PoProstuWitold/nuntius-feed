@@ -60,13 +60,13 @@ export const defaultsProgress: DefaultsStatus = {
 }
 
 export class FeedUtils {
-	// Function to validate feed URL
+	// Method to validate feed URL
 	static validateFeedUrl(url: string): boolean {
 		const feedUrlPattern = /^(https?:\/\/[^\s]+)$/i
 		return feedUrlPattern.test(url)
 	}
 
-	// Function to parse feed and return items
+	// Method to parse feed and return items
 	static async parseFeed(feedUrl: string) {
 		const response = await fetch(feedUrl)
 		const feed = parseFeed(await response.text())
@@ -214,7 +214,6 @@ export class FeedUtils {
 			}
 		}
 
-		// Final fallback
 		return lang ? `${lang}-${lang.toUpperCase()}` : 'und-UND'
 	}
 

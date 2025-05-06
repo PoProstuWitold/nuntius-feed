@@ -24,7 +24,6 @@ export default function AuthForm() {
 
 	const onSubmit = async (data: FormData) => {
 		if (isLogin) {
-			// Sign In
 			const res = await client.api.auth.signin.$post({
 				json: data
 			})
@@ -41,7 +40,6 @@ export default function AuthForm() {
 				console.error('Sign in error')
 			}
 		} else {
-			// Sign Up
 			const res = await client.api.auth.signup.$post({ json: data })
 			if (res.ok) {
 				const result = await res.json()

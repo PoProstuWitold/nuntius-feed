@@ -66,7 +66,6 @@ export const isAuthWithCookies = async (c: Context, next: Next) => {
 			c.set('user', payload)
 			return await next()
 		} catch {
-			// no throwing error, maybe we can refresh token later
 			console.warn('Access token expired or invalid')
 			return c.json({ message: 'Unauthorized' }, 401)
 		}
