@@ -12,9 +12,21 @@ const app = new Hono<Env>()
 
 		const dbUser = await User.findById(user?.sub).populate('subscriptions')
 
+		const subscriptionsWithCount = await Promise.all(
+			// biome-ignore lint: Irrelevant types that break RPC
+			(dbUser?.subscriptions || []).map(async (sub: any) => {
+				const itemsCount = await Item.countDocuments({ feed: sub._id })
+
+				return {
+					...sub.toJSON(),
+					itemsCount
+				}
+			})
+		)
+
 		return c.json({
 			success: true,
-			subscriptions: dbUser?.subscriptions || []
+			subscriptions: subscriptionsWithCount
 		})
 	})
 	// Check if user is subscribed to a single feed
