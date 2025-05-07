@@ -16,9 +16,9 @@ export default async function Api() {
 			<div className='bg-base-100'>
 				<div>
 					<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
-						Hono API
+						NuntiusFeed API
 					</h1>
-					<p className='my-2'>RSS Aggregator Hono REST API info.</p>
+					<p className='my-2'>Application for subscribing to and reading RSS and Atom feeds.</p>
 					<p className='flex flex-row items-center gap-2 font-bold'>
 						<span>Status:</span>
 						<span
