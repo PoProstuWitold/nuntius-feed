@@ -49,7 +49,8 @@ export function getFlagEmoji(language: string | null, url: string | null = '') {
 }
 
 export function parseSearchParams(
-	params?: URLSearchParams | Record<string, string | string[]>
+	params?: URLSearchParams | Record<string, string | string[]>,
+	defaultLimit?: number
 ) {
 	const safeParams = params ?? {}
 
@@ -60,7 +61,7 @@ export function parseSearchParams(
 				? (safeParams[key] as string)
 				: undefined
 
-	const limit = Number.parseInt(get('limit') ?? '24', 10)
+	const limit = Number.parseInt(get('limit') ?? `${defaultLimit ?? 24}`, 10)
 	const offset = Number.parseInt(get('offset') ?? '0', 10)
 	const sortBy = get('sortBy') ?? 'published'
 	const sortOrder = get('sortOrder') ?? 'desc'

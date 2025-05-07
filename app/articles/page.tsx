@@ -45,7 +45,7 @@ export default async function AllArticles({
 					All Articles
 				</h1>
 			</div>
-			<SearchInput path='/articles' />
+			<SearchInput path='/articles' limit={24} />
 			<AllItemsClientPage
 				userId={user?.sub}
 				initialItems={jsonItems}

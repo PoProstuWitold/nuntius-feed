@@ -93,7 +93,7 @@ export class FeedUtils {
 				image: feed.image,
 				language: FeedUtils.getLanguageTag(feed.language, feedUrl),
 				meta: feed.meta,
-				published: feed.published,
+				published: feed.published || feed.updated || new Date(),
 				title: feed.title,
 				self: feedUrl,
 				updated: feed.updated,

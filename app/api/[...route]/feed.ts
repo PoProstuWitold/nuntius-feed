@@ -17,7 +17,7 @@ const app = new Hono<Env>()
 		const limit = Number.parseInt(c.req.query('limit') || '12')
 		const offset = Number.parseInt(c.req.query('offset') || '0')
 
-		const allowedSortBy = ['createdAt', 'updatedAt', 'title']
+		const allowedSortBy = ['createdAt', 'updatedAt', 'title', 'published']
 		let sortBy = c.req.query('sortBy') || 'updatedAt'
 		if (!allowedSortBy.includes(sortBy)) {
 			sortBy = 'createdAt'

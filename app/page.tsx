@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { FeedLandingList } from './components/FeedLandingList'
 import { SearchInput } from './components/SearchInput'
 import type { Feed } from './types'
+import { parseSearchParams } from './utils/functions'
 import { client } from './utils/server-rpc'
 import { getUser } from './utils/user'
 
@@ -20,29 +21,18 @@ export default async function Home({
 	searchParams?: Promise<Record<string, string | string[]>>
 }) {
 	const resolvedParams = await searchParams
-	const limit = 12
-	const offset = 0
-
-	const sortBy =
-		typeof resolvedParams?.sortBy === 'string'
-			? resolvedParams.sortBy
-			: 'updatedAt'
-	const sortOrder =
-		typeof resolvedParams?.sortOrder === 'string'
-			? resolvedParams.sortOrder
-			: 'desc'
-	const search =
-		typeof resolvedParams?.search === 'string'
-			? resolvedParams.search.trim()
-			: ''
+	const { limit, offset, sortBy, sortOrder, search } = parseSearchParams(
+		resolvedParams,
+		12
+	)
 
 	const v1 = await client.api.v1.$get()
 	const text = await v1.text()
 
 	const res = await client.api.feed.$get({
 		query: {
-			limit: limit.toString(),
-			offset: offset.toString(),
+			limit,
+			offset,
 			sortBy,
 			sortOrder,
 			...(search ? { search } : {})
@@ -78,8 +68,6 @@ export default async function Home({
 			<FeedLandingList
 				userId={user?.sub}
 				initialFeeds={data.feeds}
-				initialPage={1}
-				initialSearch={search}
 				initialSubscriptions={subIds}
 				initialPagination={data.pagination}
 			/>

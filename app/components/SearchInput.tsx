@@ -15,7 +15,13 @@ const SORT_ORDERS = [
 	{ value: 'asc', label: 'Ascending' }
 ]
 
-export function SearchInput({ path = '/' }: { path?: string }) {
+export function SearchInput({
+	path = '/',
+	limit = 12
+}: {
+	path?: string
+	limit?: number
+}) {
 	const searchParams = useSearchParams()
 
 	const [value, setValue] = useState(searchParams.get('search') || '')
@@ -43,7 +49,7 @@ export function SearchInput({ path = '/' }: { path?: string }) {
 		}
 		params.set('sortBy', sortBy)
 		params.set('sortOrder', sortOrder)
-		params.set('limit', '24')
+		params.set('limit', limit.toString())
 		params.set('offset', '0')
 		params.delete('page')
 
