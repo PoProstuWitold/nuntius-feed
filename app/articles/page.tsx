@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { AllItemsClientPage } from '../components/AllItemsClientPage'
 import { SearchInput } from '../components/SearchInput'
 import type { Item } from '../types'
+import { parseSearchParams } from '../utils/functions'
 import { client } from '../utils/server-rpc'
 import { getUser } from '../utils/user'
 
@@ -19,21 +20,8 @@ export default async function AllArticles({
 	searchParams?: Promise<Record<string, string | string[]>>
 }) {
 	const resolvedParams = await searchParams
-	const limit = 24
-	const offset = 0
-
-	const sortBy =
-		typeof resolvedParams?.sortBy === 'string'
-			? resolvedParams.sortBy
-			: 'published'
-	const sortOrder =
-		typeof resolvedParams?.sortOrder === 'string'
-			? resolvedParams.sortOrder
-			: 'desc'
-	const search =
-		typeof resolvedParams?.search === 'string'
-			? resolvedParams.search.trim()
-			: ''
+	const { limit, offset, sortBy, sortOrder, search } =
+		parseSearchParams(resolvedParams)
 
 	const res = await client.api.feed.articles.$get({
 		query: {

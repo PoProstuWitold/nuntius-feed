@@ -47,3 +47,24 @@ export function getFlagEmoji(language: string | null, url: string | null = '') {
 		return fallbackFlag
 	}
 }
+
+export function parseSearchParams(
+	params?: URLSearchParams | Record<string, string | string[]>
+) {
+	const safeParams = params ?? {}
+
+	const get = (key: string): string | undefined =>
+		safeParams instanceof URLSearchParams
+			? (safeParams.get(key) ?? undefined)
+			: typeof safeParams[key] === 'string'
+				? (safeParams[key] as string)
+				: undefined
+
+	const limit = Number.parseInt(get('limit') ?? '24', 10)
+	const offset = Number.parseInt(get('offset') ?? '0', 10)
+	const sortBy = get('sortBy') ?? 'published'
+	const sortOrder = get('sortOrder') ?? 'desc'
+	const search = get('search')?.trim() ?? ''
+
+	return { limit, offset, sortBy, sortOrder, search }
+}

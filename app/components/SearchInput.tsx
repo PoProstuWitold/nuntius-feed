@@ -4,10 +4,10 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const SORT_FIELDS = [
-	{ value: 'updatedAt', label: 'Last Updated' },
-	{ value: 'createdAt', label: 'Created At' },
+	{ value: 'published', label: 'Published' },
 	{ value: 'title', label: 'Title' },
-	{ value: 'published', label: 'Published' }
+	{ value: 'updatedAt', label: 'Last Updated' },
+	{ value: 'createdAt', label: 'Created At' }
 ]
 
 const SORT_ORDERS = [
@@ -20,7 +20,7 @@ export function SearchInput({ path = '/' }: { path?: string }) {
 
 	const [value, setValue] = useState(searchParams.get('search') || '')
 	const [sortBy, setSortBy] = useState(
-		searchParams.get('sortBy') || 'updatedAt'
+		searchParams.get('sortBy') || 'published'
 	)
 	const [sortOrder, setSortOrder] = useState(
 		searchParams.get('sortOrder') || 'desc'
@@ -28,7 +28,7 @@ export function SearchInput({ path = '/' }: { path?: string }) {
 
 	useEffect(() => {
 		setValue(searchParams.get('search') || '')
-		setSortBy(searchParams.get('sortBy') || 'updatedAt')
+		setSortBy(searchParams.get('sortBy') || 'published')
 		setSortOrder(searchParams.get('sortOrder') || 'desc')
 	}, [searchParams])
 
@@ -43,6 +43,8 @@ export function SearchInput({ path = '/' }: { path?: string }) {
 		}
 		params.set('sortBy', sortBy)
 		params.set('sortOrder', sortOrder)
+		params.set('limit', '24')
+		params.set('offset', '0')
 		params.delete('page')
 
 		window.location.href = `${path}?${params.toString()}`

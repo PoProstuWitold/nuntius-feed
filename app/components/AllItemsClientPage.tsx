@@ -1,8 +1,10 @@
 'use client'
 
 import { client } from '@/app/utils/client-rpc'
+import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import type { Item, ItemsPagination } from '../types'
+import { parseSearchParams } from '../utils/functions'
 import { FeedItem } from './FeedItem'
 
 export function AllItemsClientPage({
@@ -16,20 +18,42 @@ export function AllItemsClientPage({
 	initialPagination: ItemsPagination
 	initialFavorites?: string[]
 }) {
+	const searchParams = useSearchParams()
+	const resolvedParams = Object.fromEntries(searchParams.entries())
+	const { limit, sortBy, sortOrder, search } =
+		parseSearchParams(resolvedParams)
+
 	const [items, setItems] = useState(initialItems)
 	const [pagination, setPagination] = useState(initialPagination)
 	const [loading, setLoading] = useState(false)
+	const [page, setPage] = useState(1)
 
 	const loadMore = async () => {
 		if (!pagination.hasNextPage || loading) return
 		setLoading(true)
 
-		const res = await client.api.feed.articles.$get()
-		const json = await res.json()
-		const jsonItems = json.items as Item[]
+		const nextOffset = page * limit
 
-		setItems((prev) => [...prev, ...jsonItems])
+		const res = await client.api.feed.articles.$get({
+			query: {
+				limit: limit.toString(),
+				offset: nextOffset.toString(),
+				sortBy,
+				sortOrder,
+				...(search ? { search } : {})
+			}
+		})
+
+		const json = await res.json()
+		setItems((prev) => {
+			const existingIds = new Set(prev.map((item) => item.id))
+			const newItems = json.items.filter(
+				(item: Item) => !existingIds.has(item.id)
+			)
+			return [...prev, ...newItems]
+		})
 		setPagination(json.pagination)
+		setPage((prev) => prev + 1)
 		setLoading(false)
 	}
 
