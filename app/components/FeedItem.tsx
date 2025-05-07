@@ -7,6 +7,7 @@ import {
 	TagsIcon,
 	UsersIcon
 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Item } from '../types'
 import { FavoriteButton } from './FavoriteButton'
@@ -30,10 +31,13 @@ export function FeedItem({
 		<li className='card bg-base-100 shadow-md border border-base-300 p-5 flex flex-col gap-4'>
 			{/* Image */}
 			{item.image?.url && (
-				<img
+				<Image
 					src={item.image.url}
 					alt={item.image.title || 'Image'}
-					className='rounded h-56 w-full object-cover border border-base-300'
+					className='rounded-xl h-56 w-full object-cover border border-base-300'
+					height={224}
+					width={448}
+					unoptimized
 				/>
 			)}
 
