@@ -18,7 +18,10 @@ export default async function Api() {
 					<h1 className='text-4xl font-bold lg:text-left text-center mb-4'>
 						NuntiusFeed API
 					</h1>
-					<p className='my-2'>Application for subscribing to and reading RSS and Atom feeds.</p>
+					<p className='my-2'>
+						Application for subscribing to and reading RSS and Atom
+						feeds.
+					</p>
 					<p className='flex flex-row items-center gap-2 font-bold'>
 						<span>Status:</span>
 						<span

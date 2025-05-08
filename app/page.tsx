@@ -52,7 +52,7 @@ export default async function Home({
 			{/* Info about refreshing feeds every 30 minutes */}
 			<div className='flex flex-col justify-center mb-3'>
 				<h1 className='text-4xl font-bold lg:text-left text-center'>
-					Nuntius Feed
+					NuntiusFeed
 				</h1>
 				<p>{text}</p>
 			</div>

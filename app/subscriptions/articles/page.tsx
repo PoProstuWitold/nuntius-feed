@@ -7,6 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default async function SubscriptionsArticles() {
-
 	return <SubscriptionArticlesClientPage />
 }
