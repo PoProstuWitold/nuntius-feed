@@ -28,6 +28,107 @@ const app = new Hono<Env>()
 			success: true,
 			subscriptions: subscriptionsWithCount
 		})
+	}) // Get all articles from user subscribed feeds
+	.get('/subscriptions/articles', isAuthWithCookies, async (c) => {
+		const user = c.get('user')
+
+		const limit = Number.parseInt(c.req.query('limit') || '12')
+		const offset = Number.parseInt(c.req.query('offset') || '0')
+
+		const allowedSortBy = ['createdAt', 'updatedAt', 'published', 'title']
+		let sortBy = c.req.query('sortBy') || 'published'
+		if (!allowedSortBy.includes(sortBy)) {
+			sortBy = 'published'
+		}
+		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
+		const sortOptions = { [sortBy]: sortOrder }
+
+		const search = c.req.query('search')?.trim() || ''
+
+		// Pobierz subskrybowane feedy użytkownika (tylko ID)
+		const dbUser = await User.findById(user?.sub).populate(
+			'subscriptions',
+			'_id'
+		)
+		// biome-ignore lint: Irrelevant types that break RPC
+		const userFeedIds = dbUser?.subscriptions.map((f: any) => f._id) || []
+
+		if (userFeedIds.length === 0) {
+			return c.json({
+				success: true,
+				message: 'No subscriptions found',
+				items: [],
+				pagination: {
+					totalItems: 0,
+					totalPages: 0,
+					currentPage: 1,
+					hasNextPage: false,
+					hasPreviousPage: false,
+					nextPage: null,
+					previousPage: null
+				}
+			})
+		}
+
+		// Jeśli jest search, wyszukaj feedy pasujące do frazy i przecinaj z subskrypcjami
+		let effectiveFeedIds = userFeedIds
+		if (search) {
+			const matchingFeeds = await Feed.find({
+				$or: [
+					{ title: { $regex: search, $options: 'i' } },
+					{ url: { $regex: search, $options: 'i' } },
+					{ self: { $regex: search, $options: 'i' } }
+				]
+			}).select('_id')
+
+			const matchedIds = matchingFeeds.map((f) => f._id.toString())
+			effectiveFeedIds = userFeedIds.filter((id: string) =>
+				matchedIds.includes(id.toString())
+			)
+		}
+
+		const searchFilter = {
+			feed: { $in: effectiveFeedIds },
+			...(search && {
+				$or: [
+					{ title: { $regex: search, $options: 'i' } },
+					{ description: { $regex: search, $options: 'i' } }
+				]
+			})
+		}
+
+		const items = await Item.find(searchFilter, null, {
+			limit,
+			skip: offset,
+			sort: sortOptions,
+			populate: {
+				path: 'feed',
+				select: 'title url self'
+			}
+		})
+
+		const totalItems = await Item.countDocuments(searchFilter)
+		const totalPages = Math.ceil(totalItems / limit)
+		const currentPage = Math.floor(offset / limit) + 1
+		const hasNextPage = offset + limit < totalItems
+		const hasPreviousPage = offset > 0
+
+		const pagination = {
+			totalItems,
+			totalPages,
+			currentPage,
+			hasNextPage,
+			hasPreviousPage,
+			nextPage: hasNextPage ? currentPage + 1 : null,
+			previousPage: hasPreviousPage ? currentPage - 1 : null
+		}
+
+		return c.json({
+			success: true,
+			message: 'Fetched items from subscriptions',
+			items,
+			pagination
+		})
 	})
 	// Check if user is subscribed to a single feed
 	.get(

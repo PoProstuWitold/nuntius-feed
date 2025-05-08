@@ -38,18 +38,25 @@ export default async function AllArticles({
 
 	const user = await getUser()
 
+	const favs = await client.api.user.favorites.$get()
+	const favsJson = await favs.json()
+	const favGuids =
+		favsJson.favorites?.map((fav: { id: string }) => fav.id) || []
+
 	return (
 		<>
 			<div className='flex flex-col justify-center mb-10'>
 				<h1 className='text-4xl font-bold lg:text-left text-center'>
 					All Articles
 				</h1>
+				<p>Articles from all feeds present in NuntiusFeed.</p>
 			</div>
 			<SearchInput path='/articles' limit={24} />
 			<AllItemsClientPage
 				userId={user?.sub}
 				initialItems={jsonItems}
 				initialPagination={jsonPagination}
+				initialFavorites={favGuids}
 			/>
 		</>
 	)
