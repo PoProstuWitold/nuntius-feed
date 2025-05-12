@@ -28,7 +28,8 @@ const app = new Hono<Env>()
 			success: true,
 			subscriptions: subscriptionsWithCount
 		})
-	}) // Get all articles from user subscribed feeds
+	}) 
+	// Get all articles from user subscribed feeds
 	.get('/subscriptions/articles', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
@@ -45,7 +46,6 @@ const app = new Hono<Env>()
 
 		const search = c.req.query('search')?.trim() || ''
 
-		// Pobierz subskrybowane feedy użytkownika (tylko ID)
 		const dbUser = await User.findById(user?.sub).populate(
 			'subscriptions',
 			'_id'
@@ -70,7 +70,6 @@ const app = new Hono<Env>()
 			})
 		}
 
-		// Wyszukiwanie tylko po itemach (nie filtrujemy feedów)
 		const searchFilter = {
 			feed: { $in: userFeedIds },
 			...(search
