@@ -72,7 +72,10 @@ export class FeedUtils {
 		const feed = parseFeed(await response.text())
 		const parsedItems = feed.items.map((item) => ({
 			authors: item.authors,
-			categories: item.categories,
+			// Some feeds have literally "undefined" or "null" as string as categories
+			categories: item.categories.filter(
+				(cat) => cat.term !== 'undefined' && cat.term !== 'null'
+			),
 			content: item.content,
 			description: item.description,
 			guid: item.id || item.url,
@@ -86,7 +89,9 @@ export class FeedUtils {
 		return {
 			parsedFeed: {
 				authors: feed.authors,
-				categories: feed.categories,
+				categories: feed.categories.filter(
+					(cat) => cat.term !== 'undefined' && cat.term !== 'null'
+				),
 				description: feed.description,
 				copyright: feed.copyright,
 				generator: feed.generator,

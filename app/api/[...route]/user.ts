@@ -70,31 +70,17 @@ const app = new Hono<Env>()
 			})
 		}
 
-		// Jeśli jest search, wyszukaj feedy pasujące do frazy i przecinaj z subskrypcjami
-		let effectiveFeedIds = userFeedIds
-		if (search) {
-			const matchingFeeds = await Feed.find({
-				$or: [
-					{ title: { $regex: search, $options: 'i' } },
-					{ url: { $regex: search, $options: 'i' } },
-					{ self: { $regex: search, $options: 'i' } }
-				]
-			}).select('_id')
-
-			const matchedIds = matchingFeeds.map((f) => f._id.toString())
-			effectiveFeedIds = userFeedIds.filter((id: string) =>
-				matchedIds.includes(id.toString())
-			)
-		}
-
+		// Wyszukiwanie tylko po itemach (nie filtrujemy feedów)
 		const searchFilter = {
-			feed: { $in: effectiveFeedIds },
-			...(search && {
-				$or: [
-					{ title: { $regex: search, $options: 'i' } },
-					{ description: { $regex: search, $options: 'i' } }
-				]
-			})
+			feed: { $in: userFeedIds },
+			...(search
+				? {
+						$or: [
+							{ title: { $regex: search, $options: 'i' } },
+							{ description: { $regex: search, $options: 'i' } }
+						]
+					}
+				: {})
 		}
 
 		const items = await Item.find(searchFilter, null, {
