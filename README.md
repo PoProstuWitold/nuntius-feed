@@ -1,6 +1,53 @@
-# Nuntius Feed
+<p>
+  <img src="./public/favicon.png" alt="Logo" width="48" height="48" style="vertical-align: middle;" />
+  <span style="font-size: 2rem; vertical-align: middle">Nuntius Feed</span>
+</p>
 
-Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds.
+## ***"Your personal herald for the digital age."***
+
+<hr>
+
+<details>
+<summary>
+
+### Demo Screenshots
+
+</summary> 
+
+Landing Page:
+![Admin Landing Page][Admin Landing Page]
+
+Subscribed Feeds:
+![Subscribed Feeds][Subscribed Feeds]
+
+Single Feed:
+![Single Feed][Single Feed]
+
+All Articles:
+![All Articles][All Articles]
+
+Favorite Articles:
+![Favorite Articles][Favorite Articles]
+
+Admin Dashboard:
+![Admin Dash1][Admin Dash1]
+![Admin Dash2][Admin Dash2]
+
+[Admin Landing Page]: ./screenshots/admin_landing.png "Admin Landing Page"
+[Subscribed Feeds]: ./screenshots/sub_feeds.png "Subscribed Feeds"
+[Single Feed]: ./screenshots/single_feed.png "Single Feed"
+[All Articles]: ./screenshots/all_articles.png "All Articles"
+[Favorite Articles]: ./screenshots/fav_articles.png "Favorite Articles"
+[Admin Dash1]: ./screenshots/admin_dash1.png "Admin Dash1"
+[Admin Dash2]: ./screenshots/admin_dash2.png "Admin Dash2"
+
+...and many more!
+  
+</details>
+
+<hr>
+
+A lightweight web application for subscribing to and reading RSS and Atom feeds.
 Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web Tokens (JWT).
 
 ## ✨ Features
