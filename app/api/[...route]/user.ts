@@ -28,7 +28,7 @@ const app = new Hono<Env>()
 			success: true,
 			subscriptions: subscriptionsWithCount
 		})
-	}) 
+	})
 	// Get all articles from user subscribed feeds
 	.get('/subscriptions/articles', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
