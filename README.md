@@ -1,7 +1,4 @@
-<p>
-  <img src="./public/favicon.png" alt="Logo" width="48" height="48" style="vertical-align: middle;" />
-  <span style="font-size: 2rem; vertical-align: middle">Nuntius Feed</span>
-</p>
+# Nuntius Feed
 
 ## ***"Your personal herald for the digital age."***
 
