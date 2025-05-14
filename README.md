@@ -17,11 +17,10 @@ Pozwala użytkownikom subskrybować interesujące ich kanały, a następnie prze
 Dane prezentowane są w nowoczesnym interfejsie, umożliwiając szybkie wyszukiwanie, filtrowanie i odczyt kluczowych informacji.
 
 #### Przykładowe pytania, na które odpowiada aplikacja:
-- Które kanały są aktualizowane najczęściej, a które od dłuższego czasu nie publikowały nowych treści?
+- Które kanały są aktualizowane, a które od dłuższego czasu nie publikowały nowych treści?
 - Jakie są najnowsze artykuły z dodanych kanałów RSS i Atom?
 - Ile jest arykułów zawierających określone słowa kluczowe (np. "Unia Europejska", "AI")?
-- Które kanały mają największą ilość
-- Jak często konkretne źródła publikują treści – np. codziennie, tygodniowo, nieregularnie?
+- Które kanały mają największą liczbę wpisów?
 - Które kanały dostarczają dane, które wymagają korekty lub fallbacków (np. brak ``description``,``author`` czy ``language``)?
 - Jak różnią się schematy danych pomiędzy źródłami i jak aplikacja je normalizuje?
 
