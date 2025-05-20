@@ -12,7 +12,10 @@ const app = new Hono<Env>()
 			return c.json({ message: 'User already exists' }, 400)
 		}
 
-		const user = await User.create({ name, email, password })
+		const isFirstUser = (await User.countDocuments()) === 0
+		const role = isFirstUser ? 'admin' : 'user'
+
+		const user = await User.create({ name, email, password, role })
 
 		const accessToken = await Tokens.create(
 			{
