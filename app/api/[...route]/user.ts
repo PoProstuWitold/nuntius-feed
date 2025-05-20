@@ -10,13 +10,42 @@ const app = new Hono<Env>()
 	.get('/subscriptions', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
-		const dbUser = await User.findById(user?.sub).populate('subscriptions')
+		const limit = Number.parseInt(c.req.query('limit') || '12')
+		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const search = c.req.query('search')?.trim() || ''
+
+		const allowedSortBy = ['title', 'createdAt', 'updatedAt', 'published']
+		let sortBy = c.req.query('sortBy') || 'title'
+		if (!allowedSortBy.includes(sortBy)) {
+			sortBy = 'title'
+		}
+		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
+		const sortOptions = { [sortBy]: sortOrder }
+
+		const dbUser = await User.findById(user?.sub).select('subscriptions')
+		const allIds = dbUser?.subscriptions || []
+
+		// biome-ignore lint: Irrelevant types that break RPC
+		const filter: any = { _id: { $in: allIds } }
+		if (search) {
+			filter.$or = [
+				{ title: { $regex: search, $options: 'i' } },
+				{ url: { $regex: search, $options: 'i' } },
+				{ self: { $regex: search, $options: 'i' } }
+			]
+		}
+
+		const totalFeeds = await Feed.countDocuments(filter)
+
+		const feeds = await Feed.find(filter, null, {
+			limit,
+			skip: offset,
+			sort: sortOptions
+		})
 
 		const subscriptionsWithCount = await Promise.all(
-			// biome-ignore lint: Irrelevant types that break RPC
-			(dbUser?.subscriptions || []).map(async (sub: any) => {
+			feeds.map(async (sub) => {
 				const itemsCount = await Item.countDocuments({ feed: sub._id })
-
 				return {
 					...sub.toJSON(),
 					itemsCount
@@ -24,9 +53,25 @@ const app = new Hono<Env>()
 			})
 		)
 
+		const totalPages = Math.ceil(totalFeeds / limit)
+		const currentPage = Math.floor(offset / limit) + 1
+		const hasNextPage = offset + limit < totalFeeds
+		const hasPreviousPage = offset > 0
+
+		const pagination = {
+			totalFeeds,
+			totalPages,
+			currentPage,
+			hasNextPage,
+			hasPreviousPage,
+			nextPage: hasNextPage ? currentPage + 1 : null,
+			previousPage: hasPreviousPage ? currentPage - 1 : null
+		}
+
 		return c.json({
 			success: true,
-			subscriptions: subscriptionsWithCount
+			subscriptions: subscriptionsWithCount,
+			pagination
 		})
 	})
 	// Get all articles from user subscribed feeds
@@ -192,21 +237,68 @@ const app = new Hono<Env>()
 	.get('/favorites', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
-		const dbUser = await User.findById(user?.sub).populate({
-			path: 'favorites',
+		const limit = Number.parseInt(c.req.query('limit') || '12')
+		const offset = Number.parseInt(c.req.query('offset') || '0')
+
+		const allowedSortBy = ['createdAt', 'updatedAt', 'published', 'title']
+		let sortBy = c.req.query('sortBy') || 'published'
+		if (!allowedSortBy.includes(sortBy)) {
+			sortBy = 'published'
+		}
+		const sortOrder = c.req.query('sortOrder') === 'asc' ? 1 : -1
+		const sortOptions = { [sortBy]: sortOrder }
+
+		const search = c.req.query('search')?.trim() || ''
+
+		const dbUser = await User.findById(user?.sub).select('favorites')
+		const favoriteIds = dbUser?.favorites || []
+
+		const searchFilter = {
+			_id: { $in: favoriteIds },
+			...(search
+				? {
+						$or: [
+							{ title: { $regex: search, $options: 'i' } },
+							{ description: { $regex: search, $options: 'i' } }
+						]
+					}
+				: {})
+		}
+
+		const favorites = await Item.find(searchFilter, null, {
+			limit,
+			skip: offset,
+			sort: sortOptions,
 			populate: {
 				path: 'feed',
 				select: 'title url self'
 			}
 		})
 
-		const reversedFavorites = (dbUser?.favorites || []).toReversed()
+		const totalItems = await Item.countDocuments(searchFilter)
+		const totalPages = Math.ceil(totalItems / limit)
+		const currentPage = Math.floor(offset / limit) + 1
+		const hasNextPage = offset + limit < totalItems
+		const hasPreviousPage = offset > 0
+
+		const pagination = {
+			totalItems,
+			totalPages,
+			currentPage,
+			hasNextPage,
+			hasPreviousPage,
+			nextPage: hasNextPage ? currentPage + 1 : null,
+			previousPage: hasPreviousPage ? currentPage - 1 : null
+		}
 
 		return c.json({
 			success: true,
-			favorites: reversedFavorites
+			message: 'Fetched favorite items',
+			favorites: favorites,
+			pagination
 		})
 	})
+
 	// Add favorite item
 	.post(
 		'/favorites/:id',

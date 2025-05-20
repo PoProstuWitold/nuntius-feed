@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { SubscriptionsClientPage } from '../components/SubscriptionsClientPage'
+import { parseSearchParams } from '../utils/functions'
 import { client } from '../utils/server-rpc'
 
 export const metadata: Metadata = {
@@ -7,10 +8,32 @@ export const metadata: Metadata = {
 	description: 'List of channels you are subscribed to'
 }
 
-export default async function Subscriptions() {
-	const res = await client.api.user.subscriptions.$get()
-	const data = await res.json()
-	const subscriptions = data.subscriptions
+export default async function SubscriptionsPage({
+	searchParams
+}: {
+	searchParams?: Promise<Record<string, string | string[]>>
+}) {
+	const resolvedParams = await searchParams
+	const { limit, offset, sortBy, sortOrder, search } = parseSearchParams(
+		resolvedParams,
+		12
+	)
 
-	return <SubscriptionsClientPage initialSubscriptions={subscriptions} />
+	const res = await client.api.user.subscriptions.$get({
+		query: {
+			limit,
+			offset,
+			sortBy,
+			sortOrder,
+			...(search ? { search } : {})
+		}
+	})
+	const data = await res.json()
+
+	return (
+		<SubscriptionsClientPage
+			initialSubscriptions={data.subscriptions}
+			initialPagination={data.pagination}
+		/>
+	)
 }
