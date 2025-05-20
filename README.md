@@ -5,7 +5,7 @@
 <details>
 <summary>
 
-#### Opis/Description (Polish)
+### Opis/Description (Polish)
 
 </summary>
 
@@ -24,7 +24,7 @@ Dane prezentowane są w nowoczesnym interfejsie, umożliwiając szybkie wyszukiw
 - Które kanały dostarczają dane, które wymagają korekty lub fallbacków (np. brak ``description``,``author`` czy ``language``)?
 - Jak różnią się schematy danych pomiędzy źródłami i jak aplikacja je normalizuje?
 
-Dane kanałów RSS i Atom można eksportować w formacie XML i JSON.
+Dane kanałów RSS i Atom można eksportować w formacie XML.
 
 Pierwszy zarejestrowany w systemie użytkownik zostaje adminem.
   
