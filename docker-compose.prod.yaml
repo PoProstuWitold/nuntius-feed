@@ -1,0 +1,34 @@
+services:
+  mongodb_feed:
+    container_name: mongodb_feed
+    image: mongo:noble
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: feed
+    volumes:
+      - mongodb_feed_data:/data/db
+    networks:
+      - nuntius
+  nuntius_feed:
+    container_name: nuntius_feed
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      MONGODB_URI: mongodb://mongodb_feed:27017/feed
+      JWT_SIGNING_SECRET: 2855b2310be0b827f5af8522d1a54873
+      JWT_ENCRYPTION_SECRET: a2b27f9dc8f2a3e59603ddb3a5a90e13
+    depends_on:
+      - mongodb_feed
+    networks:
+      - nuntius
+
+volumes:
+  mongodb_feed_data:
+
+networks:
+  nuntius:
+    driver: bridge

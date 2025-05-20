@@ -105,6 +105,14 @@ JWT_SIGNING_SECRET=your_generated_signing_secret
 JWT_ENCRYPTION_SECRET=your_generated_encryption_secret
 ```
 
+## Production
+
+Check ``docker-compose.prod.yaml``, modify ENVs there and run:
+
+```bash
+docker compose -f docker-compose.prod.yaml up
+```
+
 ## Access + Refresh token
 
 > This is practical implementation of token-based authentication described in my blog post here:

@@ -1,0 +1,11 @@
+.next
+screenshots
+.dockerignore
+.env
+.env.example
+.gitignore
+biome.json
+docker-compose.dev.yaml
+docker-compose.prod.yaml
+README.md
+LICENSE

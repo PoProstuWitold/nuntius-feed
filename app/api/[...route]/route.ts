@@ -25,7 +25,9 @@ import userRoutes from './user'
 
 const app = new Hono<Env>().basePath('/api')
 
-await connectDB()
+if (process.env.BUILD_PHASE !== 'true') {
+	await connectDB()
+}
 
 app.use(compress())
 app.use(
