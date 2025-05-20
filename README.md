@@ -84,7 +84,9 @@ Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web 
 ### 📚 RSS & Atom feeds
 - A curated list of predefined feeds available to all users
 - Feed and items allow and parse all specifications of Atom and RSS standards
-- Users can subscribe or unsubscribe from available feeds
+- Users can subscribe to or unsubscribe from available feeds
+- Users can add or remove articles from favorites
+- OPML subscriptions export & import
 - Each user can manage their personal list of subscribed feeds
 - Channel items are cached and stored in MongoDB for efficient delivery
 - Periodic background refresh of channel items (e.g. every 30 minutes)
