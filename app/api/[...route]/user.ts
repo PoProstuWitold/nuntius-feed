@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import type { ObjectId } from 'mongoose'
 import { Feed, Item, User } from '../models'
-import type { Env } from '../types'
+import type { Env, FeedData } from '../types'
 import { isAuthWithCookies } from '../utils/middlewares'
 import { validatorParamObjectId } from '../utils/schemas'
 
@@ -72,6 +72,64 @@ const app = new Hono<Env>()
 			success: true,
 			subscriptions: subscriptionsWithCount,
 			pagination
+		})
+	})
+	.get('/subscriptions/export', isAuthWithCookies, async (c) => {
+		const user = c.get('user')
+
+		const dbUser = await User.findById(user?.sub).select('subscriptions')
+		const allIds = dbUser?.subscriptions || []
+		const filter = { _id: { $in: allIds } }
+		const feeds: FeedData[] = await Feed.find(filter, null, {
+			sort: { title: 1 }
+		})
+
+		const opmlXml = `<?xml version="1.0" encoding="UTF-8"?>
+		<opml version="2.0">
+		<head>
+			<title>NuntiusFeed Export</title>
+			<dateCreated>${new Date().toUTCString()}</dateCreated>
+			<ownerName>${user?.name}</ownerName>
+			<ownerEmail>${user?.email}</ownerEmail>
+		</head>
+		<body>
+		${feeds
+			.map(
+				(feed) => `<outline
+			type="${feed.meta.type}"
+			version="${feed.meta.version}"
+			language="${feed.language}" 
+			title="${feed.title}"
+			xmlUrl="${feed.self}"
+			htmlUrl="${feed.url}"
+		/>`
+			)
+			.join('\n\t\t')}
+		</body>
+		</opml>`
+
+		return c.text(opmlXml, 200, {
+			'Content-Type': 'application/xml',
+			'Content-Disposition': 'attachment; filename="nf_subs.xml"'
+		})
+	})
+	.post('/subscriptions/import', isAuthWithCookies, async (c) => {
+		const user = c.get('user')
+
+		// Check if the request has a file
+
+		// Parse the OPML file
+
+		// Try to find feeds in database. If not present, create them alongside items
+
+		// Subscribe the user to the feeds
+
+		// Return the feeds
+
+		return c.json({
+			success: true,
+			message: 'Imported subscriptions',
+			feeds: []
 		})
 	})
 	// Get all articles from user subscribed feeds
