@@ -25,6 +25,7 @@ services:
       - mongodb_feed
     networks:
       - nuntius
+      # - caddy
 
 volumes:
   mongodb_feed_data:
@@ -32,3 +33,6 @@ volumes:
 networks:
   nuntius:
     driver: bridge
+  # caddy:
+  #   name: caddy
+  #   external: true
