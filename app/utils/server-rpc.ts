@@ -5,8 +5,8 @@ import type { AppType } from '../api/[...route]/route'
 
 const baseUrl =
 	process.env.NODE_ENV === 'development'
-		? process.env.APP_LAN ?? 'http://localhost:3006'
-		: process.env.APP_URL ?? 'http://localhost:3006'
+		? (process.env.APP_LAN ?? 'http://localhost:3006')
+		: 'http://nuntius_feed:3006'
 
 export const client = hc<AppType>(baseUrl, {
 	fetch: async (input, reqInit, _env, _ctx) => {

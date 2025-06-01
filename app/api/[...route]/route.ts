@@ -34,9 +34,10 @@ app.use(
 	cors({
 		origin: [
 			'http://localhost:3006',
+			'http://nuntius_feed:3006',
 			process.env.NEXT_PUBLIC_APP_URL || '',
 			process.env.APP_URL || '',
-			process.env.APP_LAN || '',
+			process.env.APP_LAN || ''
 		],
 		credentials: true,
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
