@@ -33,7 +33,8 @@ app.use(compress())
 app.use(
 	cors({
 		origin: [
-			process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3006',
+			'http://localhost:3006',
+			process.env.NEXT_PUBLIC_APP_URL || '',
 			process.env.APP_URL || '',
 			process.env.APP_LAN || '',
 		],
