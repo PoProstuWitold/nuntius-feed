@@ -32,7 +32,11 @@ if (process.env.BUILD_PHASE !== 'true') {
 app.use(compress())
 app.use(
 	cors({
-		origin: process.env.NEXT_PUBLIC_APP_URL || '*',
+		origin: [
+			process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3006',
+			process.env.APP_URL || '',
+			process.env.APP_LAN || '',
+		],
 		credentials: true,
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
 	})

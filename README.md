@@ -102,9 +102,11 @@ Run the command twice and assign the first output to ``JWT_SIGNING_SECRET``, and
 
 Example ``.env`` file:
 ```ini
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3006
 JWT_SIGNING_SECRET=your_generated_signing_secret
 JWT_ENCRYPTION_SECRET=your_generated_encryption_secret
+APP_URL=
+APP_LAN=
 ```
 
 ## Production

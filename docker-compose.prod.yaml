@@ -16,11 +16,13 @@ services:
       dockerfile: ./Dockerfile
     restart: unless-stopped
     ports:
-      - 3000:3000
+      - 3006:3006
     environment:
       MONGODB_URI: mongodb://mongodb_feed:27017/feed
       JWT_SIGNING_SECRET: 2855b2310be0b827f5af8522d1a54873
       JWT_ENCRYPTION_SECRET: a2b27f9dc8f2a3e59603ddb3a5a90e13
+      APP_URL: "http://localhost:3006"
+      APP_LAN: "http://192.168.100.5:3006"
     depends_on:
       - mongodb_feed
     networks:

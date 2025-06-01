@@ -22,7 +22,7 @@ WORKDIR /app
 
 ENV BUILD_PHASE=true
 
-ENV NEXT_PUBLIC_APP_URL=http://localhost:3000
+ENV NEXT_PUBLIC_APP_URL=http://localhost:3006
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=deps /app/node_modules ./node_modules
@@ -41,7 +41,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
+ENV PORT=3006
 ENV HOSTNAME="0.0.0.0"
 ENV TZ=Europe/Warsaw
 
@@ -60,6 +60,6 @@ RUN chmod +x ./entrypoint.sh
 
 USER nuntius
 
-EXPOSE 3000
+EXPOSE 3006
 
 CMD ["./entrypoint.sh"]
