@@ -5,36 +5,6 @@
 <details>
 <summary>
 
-### Opis/Description (Polish)
-
-</summary>
-
-Aplikacja umożliwia przegląd i analizę danych z różnych kanałów RSS i Atom, agregując je w jednolitym formacie niezależnie od ich źródła i struktury. 
-
-
-Pozwala użytkownikom subskrybować interesujące ich kanały, a następnie przeglądać treści w spójnej i przejrzystej formie. System automatycznie przetwarza heterogeniczne dane XML, ujednolica je i zapisuje w bazie danych, umożliwiając dalsze analizy oraz korelacje między źródłami i tematami.
-
-Dane prezentowane są w nowoczesnym interfejsie, umożliwiając szybkie wyszukiwanie, filtrowanie i odczyt kluczowych informacji.
-
-#### Przykładowe pytania, na które odpowiada aplikacja:
-- Które kanały są aktualizowane, a które od dłuższego czasu nie publikowały nowych treści?
-- Jakie są najnowsze artykuły z dodanych kanałów RSS i Atom?
-- Ile jest arykułów zawierających określone słowa kluczowe (np. "Unia Europejska", "AI")?
-- Które kanały mają największą liczbę wpisów?
-- Które kanały dostarczają dane, które wymagają korekty lub fallbacków (np. brak ``description``,``author`` czy ``language``)?
-- Jak różnią się schematy danych pomiędzy źródłami i jak aplikacja je normalizuje?
-
-Dane kanałów RSS i Atom można eksportować w formacie XML.
-
-Pierwszy zarejestrowany w systemie użytkownik zostaje adminem.
-  
-</details>
-
-<hr>
-
-<details>
-<summary>
-
 ### Demo Screenshots
 
 </summary> 
