@@ -1,8 +1,8 @@
 'use client'
 
-import { client } from '@/app/utils/client-rpc'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+import { client } from '@/app/utils/client-rpc'
 import type { Item, ItemsPagination } from '../types'
 import { parseSearchParams } from '../utils/functions'
 import { FeedItem } from './FeedItem'

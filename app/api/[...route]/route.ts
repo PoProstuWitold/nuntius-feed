@@ -1,21 +1,21 @@
 import { Scalar } from '@scalar/hono-api-reference'
 import * as cheerio from 'cheerio'
 import { Hono } from 'hono'
-import { openAPISpecs } from 'hono-openapi'
 import { compress } from 'hono/compress'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
 import { requestId } from 'hono/request-id'
 import { secureHeaders } from 'hono/secure-headers'
+import { openAPISpecs } from 'hono-openapi'
 import mongoose from 'mongoose'
 import '../utils/cron'
 
 import pkg from '../../../package.json'
 import type { Env } from '../types'
 import {
-	GenericException,
 	errorHandler,
+	GenericException,
 	responseTime
 } from '../utils/middlewares'
 import { connectDB } from '../utils/mongo'
@@ -35,7 +35,6 @@ app.use(
 		origin: [
 			'http://localhost:3006',
 			'http://nuntius_feed:3006',
-			process.env.NEXT_PUBLIC_APP_URL || '',
 			process.env.APP_URL || '',
 			process.env.APP_LAN || ''
 		],

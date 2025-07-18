@@ -1,4 +1,4 @@
-import { type Document, Schema, type Types, model, models } from 'mongoose'
+import { type Document, model, models, Schema } from 'mongoose'
 import type { ItemData } from '../types'
 import { FeedAuthorSchema, FeedCategorySchema, FeedImageSchema } from './Feed'
 

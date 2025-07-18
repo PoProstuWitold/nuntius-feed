@@ -1,9 +1,9 @@
+import type { Metadata } from 'next'
 import { SearchInput } from '@/app/components/SearchInput'
 import { SubscriptionArticlesClientPage } from '@/app/components/SubscriptionArticlesClientPage'
 import type { Item } from '@/app/types'
 import { parseSearchParams } from '@/app/utils/functions'
 import { client } from '@/app/utils/server-rpc'
-import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'Your Articles',

@@ -22,7 +22,7 @@ export function LogoutButton() {
 			} else {
 				toast.error('Invalid credentials')
 			}
-		} catch (err) {
+		} catch (_err) {
 			toast.error('Logout error')
 		}
 	}

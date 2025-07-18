@@ -1,3 +1,4 @@
+import { FileTextIcon, LinkIcon } from 'lucide-react'
 import { FeedClientPage } from '@/app/components/FeedClientPage'
 import { FeedImage } from '@/app/components/FeedImage'
 import { SubscribeButton } from '@/app/components/SubscribeButton'
@@ -5,11 +6,12 @@ import type { Item } from '@/app/types'
 import { getFlagEmoji } from '@/app/utils/functions'
 import { client } from '@/app/utils/server-rpc'
 import { getUser } from '@/app/utils/user'
-import { FileTextIcon, LinkIcon } from 'lucide-react'
 
 export async function generateMetadata({
 	params
-}: { params: Promise<{ id: string }> }) {
+}: {
+	params: Promise<{ id: string }>
+}) {
 	const { id } = await params
 	const res = await client.api.feed[':id'].$get({ param: { id } })
 	const json = await res.json()
@@ -35,7 +37,9 @@ export async function generateMetadata({
 
 export default async function FeedIdPage({
 	params
-}: { params: Promise<{ id: string }> }) {
+}: {
+	params: Promise<{ id: string }>
+}) {
 	const { id } = await params
 	const feedRes = await client.api.feed[':id'].$get({
 		param: {

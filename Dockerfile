@@ -21,8 +21,6 @@ FROM base AS builder
 WORKDIR /app
 
 ENV BUILD_PHASE=true
-
-ENV NEXT_PUBLIC_APP_URL=http://localhost:3006
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=deps /app/node_modules ./node_modules

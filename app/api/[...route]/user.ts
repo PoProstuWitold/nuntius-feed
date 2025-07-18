@@ -74,6 +74,40 @@ const app = new Hono<Env>()
 			pagination
 		})
 	})
+	.get('/subscriptions/all', isAuthWithCookies, async (c) => {
+		const user = c.get('user')
+		const search = c.req.query('search')?.trim() || ''
+
+		const dbUser = await User.findById(user?.sub).select('subscriptions')
+		const allIds = dbUser?.subscriptions || []
+
+		// biome-ignore lint: Irrelevant types that break RPC
+		const filter: any = { _id: { $in: allIds } }
+		if (search) {
+			filter.$or = [
+				{ title: { $regex: search, $options: 'i' } },
+				{ url: { $regex: search, $options: 'i' } },
+				{ self: { $regex: search, $options: 'i' } }
+			]
+		}
+
+		const feeds = await Feed.find(filter)
+
+		const subscriptionsWithCount = await Promise.all(
+			feeds.map(async (sub) => {
+				const itemsCount = await Item.countDocuments({ feed: sub._id })
+				return {
+					...sub.toJSON(),
+					itemsCount
+				}
+			})
+		)
+
+		return c.json({
+			success: true,
+			subscriptions: subscriptionsWithCount
+		})
+	})
 	.get('/subscriptions/export', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
@@ -114,7 +148,7 @@ const app = new Hono<Env>()
 		})
 	})
 	.post('/subscriptions/import', isAuthWithCookies, async (c) => {
-		const user = c.get('user')
+		const _user = c.get('user')
 
 		// Check if the request has a file
 

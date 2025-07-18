@@ -1,7 +1,7 @@
 'use client'
 
-import { client } from '@/app/utils/client-rpc'
 import { useState } from 'react'
+import { client } from '@/app/utils/client-rpc'
 import type { Feed, Item, ItemsPagination } from '../types'
 import { FeedItem } from './FeedItem'
 

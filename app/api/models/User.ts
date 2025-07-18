@@ -2,10 +2,10 @@ import argon2 from 'argon2'
 import {
 	type Document,
 	type HydratedDocument,
-	Schema,
-	type Types,
 	model,
-	models
+	models,
+	Schema,
+	type Types
 } from 'mongoose'
 import type { FeedDocument } from './Feed'
 import type { ItemDocument } from './Item'

@@ -124,7 +124,7 @@ export const FeedList = () => {
 				})
 				setPage(pageToLoad + 1)
 			}
-		} catch (err) {
+		} catch (_err) {
 			toast.error('Failed to load feeds')
 		}
 		setLoading(false)

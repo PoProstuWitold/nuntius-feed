@@ -27,6 +27,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
 export function UserProviderWrapper({
 	children
-}: { children: React.ReactNode }) {
+}: {
+	children: React.ReactNode
+}) {
 	return <UserProvider>{children}</UserProvider>
 }

@@ -126,7 +126,7 @@ export class FeedUtils {
 				parsedFeed,
 				parsedItems
 			}
-		} catch (err) {
+		} catch (_err) {
 			throw new GenericException({
 				message: 'Error parsing feed',
 				statusCode: 400,
@@ -168,7 +168,7 @@ export class FeedUtils {
 				updatedFeed,
 				updatedItems
 			}
-		} catch (err) {
+		} catch (_err) {
 			throw new GenericException({
 				message: 'Error updating feed and items',
 				statusCode: 400,

@@ -41,7 +41,7 @@ export default async function Home({
 
 	const data = await res.json()
 
-	const subs = await client.api.user.subscriptions.$get()
+	const subs = await client.api.user.subscriptions.all.$get()
 	const json = await subs.json()
 	const subIds = json.subscriptions?.map((s: Feed) => s.id) || []
 

@@ -5,6 +5,8 @@ import type { PayloadUser } from '../api/types'
 import { client } from '../utils/client-rpc'
 
 export default function Profile({ user }: { user: PayloadUser | null }) {
+	const [file, setFile] = useState<File | null>(null)
+
 	if (!user) {
 		return (
 			<div className='alert alert-warning'>
@@ -12,8 +14,6 @@ export default function Profile({ user }: { user: PayloadUser | null }) {
 			</div>
 		)
 	}
-
-	const [file, setFile] = useState<File | null>(null)
 
 	const handleImport = async () => {
 		if (!file) {

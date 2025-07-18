@@ -10,37 +10,43 @@
 		"types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@hono/zod-validator": "^0.5.0",
-		"@rowanmanning/feed-parser": "^2.0.2",
-		"@scalar/hono-api-reference": "^0.8.9",
-		"argon2": "^0.43.0",
-		"cheerio": "^1.0.0",
-		"cron": "^4.3.0",
-		"hono": "^4.7.9",
+		"@hono/zod-validator": "^0.7.1",
+		"@rowanmanning/feed-parser": "^2.1.1",
+		"@scalar/hono-api-reference": "^0.9.11",
+		"argon2": "^0.43.1",
+		"cheerio": "^1.1.0",
+		"cron": "^4.3.2",
+		"hono": "^4.8.5",
 		"hono-openapi": "^0.4.8",
-		"jose": "^6.0.11",
-		"lucide-react": "^0.510.0",
-		"mongoose": "^8.14.2",
+		"jose": "^6.0.12",
+		"lucide-react": "^0.525.0",
+		"mongoose": "^8.16.4",
 		"nanoid": "^5.1.5",
-		"next": "15.3.2",
+		"next": "15.4.1",
 		"p-limit": "^6.2.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-hook-form": "^7.56.3",
+		"react-hook-form": "^7.60.0",
 		"react-toastify": "^11.0.5",
 		"rss-parser": "^3.13.0",
-		"zod": "^3.24.4"
+		"zod": "^4.0.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@tailwindcss/postcss": "^4.1.6",
-		"@types/node": "^22.15.17",
-		"@types/react": "^19.1.4",
-		"@types/react-dom": "^19.1.5",
+		"@biomejs/biome": "^2.1.2",
+		"@tailwindcss/postcss": "^4.1.11",
+		"@types/node": "^24.0.14",
+		"@types/react": "^19.1.8",
+		"@types/react-dom": "^19.1.6",
 		"autoprefixer": "^10.4.21",
-		"daisyui": "^5.0.35",
-		"postcss": "^8.5.3",
-		"tailwindcss": "^4.1.6",
+		"daisyui": "^5.0.46",
+		"postcss": "^8.5.6",
+		"tailwindcss": "^4.1.11",
 		"typescript": "^5.8.3"
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"volta": {
+		"node": "22.17.1"
 	}
 }

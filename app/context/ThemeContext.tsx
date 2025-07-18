@@ -34,6 +34,7 @@ export const ThemeProvider = ({
 }) => {
 	const [theme, setTheme] = useState<Theme>(defaultTheme)
 
+	// biome-ignore lint: No more dependencies needed
 	useEffect(() => {
 		const savedTheme =
 			(localStorage.getItem('theme') as Theme) || defaultTheme

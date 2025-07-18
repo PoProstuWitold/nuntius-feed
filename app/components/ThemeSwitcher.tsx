@@ -2,7 +2,6 @@
 
 import {
 	BriefcaseIcon,
-	CandyIcon,
 	ChevronDownIcon,
 	CloudIcon,
 	GhostIcon,
@@ -16,7 +15,7 @@ import {
 import { useTheme } from '../context/ThemeContext'
 
 export function ThemeSwitcher() {
-	const { theme, setTheme } = useTheme()
+	const { setTheme } = useTheme()
 
 	const themes = [
 		{ name: 'system', label: 'System', icon: <MonitorIcon size={16} /> },
