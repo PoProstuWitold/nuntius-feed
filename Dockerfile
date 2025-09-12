@@ -2,7 +2,7 @@ FROM node:jod-alpine AS base
 
 # ----------------------------
 FROM base AS deps
-RUN apk add --no-cache libc6-compat tzdata \
+RUN apk add --no-cache libc6-compat tzdata curl \
     && npm install -g pm2
 
 WORKDIR /app
@@ -37,13 +37,14 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
+ENV DOCKER=true
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3006
 ENV HOSTNAME="0.0.0.0"
 ENV TZ=Europe/Warsaw
 
-RUN apk add --no-cache libc6-compat tzdata \
+RUN apk add --no-cache libc6-compat tzdata curl \
     && npm install -g pm2
 
 RUN addgroup --system --gid 1001 nuntius
@@ -59,5 +60,10 @@ RUN chmod +x ./entrypoint.sh
 USER nuntius
 
 EXPOSE 3006
+
+# healthcheck
+ENV HEALTHCHECK_URL=http://localhost:3006/api/health
+HEALTHCHECK --interval=120s --timeout=10s --start-period=30s --retries=3 \
+CMD curl --fail --silent --show-error "$HEALTHCHECK_URL" >/dev/null || exit 1
 
 CMD ["./entrypoint.sh"]

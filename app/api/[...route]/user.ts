@@ -10,8 +10,8 @@ const app = new Hono<Env>()
 	.get('/subscriptions', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
-		const limit = Number.parseInt(c.req.query('limit') || '12')
-		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const limit = Number.parseInt(c.req.query('limit') || '12', 10)
+		const offset = Number.parseInt(c.req.query('offset') || '0', 10)
 		const search = c.req.query('search')?.trim() || ''
 
 		const allowedSortBy = ['title', 'createdAt', 'updatedAt', 'published']
@@ -170,8 +170,8 @@ const app = new Hono<Env>()
 	.get('/subscriptions/articles', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
-		const limit = Number.parseInt(c.req.query('limit') || '12')
-		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const limit = Number.parseInt(c.req.query('limit') || '12', 10)
+		const offset = Number.parseInt(c.req.query('offset') || '0', 10)
 
 		const allowedSortBy = ['createdAt', 'updatedAt', 'published', 'title']
 		let sortBy = c.req.query('sortBy') || 'published'
@@ -329,8 +329,8 @@ const app = new Hono<Env>()
 	.get('/favorites', isAuthWithCookies, async (c) => {
 		const user = c.get('user')
 
-		const limit = Number.parseInt(c.req.query('limit') || '12')
-		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const limit = Number.parseInt(c.req.query('limit') || '12', 10)
+		const offset = Number.parseInt(c.req.query('offset') || '0', 10)
 
 		const allowedSortBy = ['createdAt', 'updatedAt', 'published', 'title']
 		let sortBy = c.req.query('sortBy') || 'published'

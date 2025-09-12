@@ -7,12 +7,11 @@ import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
 import { requestId } from 'hono/request-id'
 import { secureHeaders } from 'hono/secure-headers'
-import { openAPISpecs } from 'hono-openapi'
-import mongoose from 'mongoose'
+import { openAPIRouteHandler } from 'hono-openapi'
 import '../utils/cron'
 
-import pkg from '../../../package.json'
 import type { Env } from '../types'
+import { health } from '../utils/health'
 import {
 	errorHandler,
 	GenericException,
@@ -51,7 +50,7 @@ app.use(
 )
 app.use('*', requestId())
 app.use('*', secureHeaders())
-app.get('/openapi', openAPISpecs(app))
+app.get('/openapi', openAPIRouteHandler(app))
 app.get(
 	'/docs',
 	Scalar({
@@ -80,21 +79,7 @@ const routes = app
 			'Your personal herald for the digital age. A lightweight web application for subscribing to and reading RSS and Atom feeds. Built with Next.js (frontend), Hono (backend via RPC) and secured with JSON Web Tokens (JWT).'
 		)
 	)
-	.get('/health', (c) => {
-		const mongoStatus = mongoose.connection.readyState === 1
-
-		return c.json({
-			status: 'ok',
-			uptime: process.uptime(),
-			timestamp: new Date().toISOString(),
-			version: pkg.version,
-			services: {
-				mongodb: {
-					connected: mongoStatus
-				}
-			}
-		})
-	})
+	.get('/health', health)
 	.get('/favicon', async (c) => {
 		const rawUrl = c.req.query('url')
 		if (!rawUrl) {

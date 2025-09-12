@@ -1,11 +1,11 @@
 import {
 	Bell,
-	CodeIcon,
 	HomeIcon,
 	LogInIcon,
 	MenuIcon,
 	Newspaper,
 	RssIcon,
+	SquareActivity,
 	StarIcon,
 	UserCog,
 	UserIcon
@@ -181,10 +181,10 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 									</li>
 									<li>
 										<Link
-											href='/api'
+											href='/status'
 											className='flex items-center gap-3'
 										>
-											<CodeIcon size={18} /> API
+											<SquareActivity size={18} /> NuntiusFeed Status
 										</Link>
 									</li>
 								</>

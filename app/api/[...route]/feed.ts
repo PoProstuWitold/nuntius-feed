@@ -14,8 +14,8 @@ import { validatorItemsQuery, validatorParamObjectId } from '../utils/schemas'
 const app = new Hono<Env>()
 	// List all available feeds (optionally with filters)
 	.get('/', async (c) => {
-		const limit = Number.parseInt(c.req.query('limit') || '12')
-		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const limit = Number.parseInt(c.req.query('limit') || '12', 10)
+		const offset = Number.parseInt(c.req.query('offset') || '0', 10)
 
 		const allowedSortBy = ['createdAt', 'updatedAt', 'title', 'published']
 		let sortBy = c.req.query('sortBy') || 'updatedAt'
@@ -97,8 +97,8 @@ const app = new Hono<Env>()
 	})
 	// Fetch articles from pagination with sort
 	.get('/articles', async (c) => {
-		const limit = Number.parseInt(c.req.query('limit') || '12')
-		const offset = Number.parseInt(c.req.query('offset') || '0')
+		const limit = Number.parseInt(c.req.query('limit') || '12', 10)
+		const offset = Number.parseInt(c.req.query('offset') || '0', 10)
 
 		const allowedSortBy = ['createdAt', 'updatedAt', 'published', 'title']
 		let sortBy = c.req.query('sortBy') || 'published'
@@ -223,8 +223,8 @@ const app = new Hono<Env>()
 		async (c) => {
 			const feedId = c.req.param('id')
 
-			const limit = Number.parseInt(c.req.query('limit') || '12')
-			const offset = Number.parseInt(c.req.query('offset') || '0')
+			const limit = Number.parseInt(c.req.query('limit') || '12', 10)
+			const offset = Number.parseInt(c.req.query('offset') || '0', 10)
 
 			const allowedSortBy = [
 				'createdAt',
