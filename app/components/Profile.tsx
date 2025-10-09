@@ -32,6 +32,8 @@ export default function Profile({ user }: { user: PayloadUser | null }) {
 			if (!res.ok) throw new Error('Failed to import file')
 
 			const json = await res.json()
+
+			// @ts-expect-error
 			toast.success(`Imported ${json.feeds.length} feeds`)
 		} catch (err) {
 			console.error(err)

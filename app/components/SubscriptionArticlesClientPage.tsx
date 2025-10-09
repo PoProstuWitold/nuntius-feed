@@ -45,6 +45,7 @@ export const SubscriptionArticlesClientPage = ({
 		const json = await res.json()
 		setItems((prev) => {
 			const existingIds = new Set(prev.map((item) => item.id))
+			// @ts-expect-error
 			const newItems = json.items.filter(
 				(item: Item) => !existingIds.has(item.id)
 			)

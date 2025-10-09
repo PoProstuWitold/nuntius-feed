@@ -17,6 +17,7 @@ import { client } from '../utils/server-rpc'
 import { LogoutButton } from './LogoutButton'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import Image from 'next/image'
+import { SidebarLink } from './SidebarLink'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -103,54 +104,54 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 						<ul className='menu p-6 w-80 min-h-full bg-base-200 text-base-content gap-2'>
 							<div className='divider'>Navigation</div>
 							<li>
-								<Link
+								<SidebarLink
 									href='/'
 									className='flex items-center gap-3'
 								>
 									<HomeIcon size={18} /> Home
-								</Link>
+								</SidebarLink>
 							</li>
 							<li>
-								<Link
+								<SidebarLink
 									href='/articles'
 									className='flex items-center gap-3'
 								>
 									<RssIcon size={18} /> All Articles
-								</Link>
+								</SidebarLink>
 							</li>
 							{user && (
 								<>
 									<li>
-										<Link
+										<SidebarLink
 											href='/subscriptions/articles'
 											className='flex items-center gap-3'
 										>
 											<Newspaper size={18} /> Your Articles
-										</Link>
+										</SidebarLink>
 									</li>
 									<li>
-										<Link
+										<SidebarLink
 											href='/favorites'
 											className='flex items-center gap-3'
 										>
 											<StarIcon size={18} /> Favorite Articles
-										</Link>
+										</SidebarLink>
 									</li>
 									<li>
-										<Link
+										<SidebarLink
 											href='/subscriptions'
 											className='flex items-center gap-3'
 										>
 											<Bell size={18} /> Subscribed Channels
-										</Link>
+										</SidebarLink>
 									</li>
 									<li>
-										<Link
+										<SidebarLink
 											href='/profile'
 											className='flex items-center gap-3'
 										>
 											<UserIcon size={18} /> Profile
-										</Link>
+										</SidebarLink>
 									</li>
 									{/* LOGOUT */}
 									<LogoutButton />
@@ -158,12 +159,12 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 							)}
 							{!user && (
 								<li>
-									<Link
+									<SidebarLink
 										href='/login'
 										className='flex items-center gap-3'
 									>
 										<LogInIcon size={18} /> Login
-									</Link>
+									</SidebarLink>
 								</li>
 							)}
 							<div className='divider'>Settings</div>
@@ -172,20 +173,20 @@ export async function Layout({ children }: { children: React.ReactNode }) {
 								<>
 									<div className='divider'>Admin</div>
 									<li>
-										<Link
+										<SidebarLink
 											href='/dashboard'
 											className='flex items-center gap-3'
 										>
 											<UserCog size={18} /> Dashboard
-										</Link>
+										</SidebarLink>
 									</li>
 									<li>
-										<Link
+										<SidebarLink
 											href='/status'
 											className='flex items-center gap-3'
 										>
-											<SquareActivity size={18} /> NuntiusFeed Status
-										</Link>
+											<SquareActivity size={18} /> System Status
+										</SidebarLink>
 									</li>
 								</>
 							)}

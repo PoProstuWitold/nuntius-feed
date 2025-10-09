@@ -74,6 +74,7 @@ export default async function FeedIdPage({
 	const favs = await client.api.user.favorites.$get()
 	const favsJson = await favs.json()
 	const favGuids =
+		// @ts-expect-error
 		favsJson.favorites?.map((fav: { id: string }) => fav.id) || []
 
 	const isSubToFeed = await client.api.user.subscriptions[':id'].$get({

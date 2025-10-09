@@ -43,6 +43,7 @@ export default async function Home({
 
 	const subs = await client.api.user.subscriptions.all.$get()
 	const json = await subs.json()
+	// @ts-expect-error
 	const subIds = json.subscriptions?.map((s: Feed) => s.id) || []
 
 	const user = await getUser()
