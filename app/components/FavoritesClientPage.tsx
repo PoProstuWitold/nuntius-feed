@@ -39,8 +39,11 @@ export function FavoritesClientPage({
 			}
 		})
 		const data = await res.json()
+
+		// @ts-expect-error
 		setItems((prev) => [...prev, ...data.favorites])
 		setPage((p) => p + 1)
+		// @ts-expect-error
 		setPagination(data.pagination)
 		setLoading(false)
 	}

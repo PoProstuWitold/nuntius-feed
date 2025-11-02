@@ -6,7 +6,7 @@ export async function getUser() {
 	const res = await client.api.auth.me.$get()
 	const json = await res.json()
 	if (res.status === 200) {
-		user = json.user as PayloadUser
+		user = 'user' in json ? (json.user as PayloadUser) : null
 	}
 	return user
 }

@@ -132,6 +132,7 @@ export default async function FeedIdPage({
 							<div className='mt-2 mr-2'>
 								<SubscribeButton
 									feedId={feed.id}
+									// @ts-expect-error
 									isSubscribed={isSubToFeedJson.isSubscribed}
 								/>
 							</div>

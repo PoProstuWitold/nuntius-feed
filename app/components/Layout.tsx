@@ -33,7 +33,8 @@ const geistMono = Geist_Mono({
 
 export async function Layout({ children }: { children: React.ReactNode }) {
 	const res = await client.api.auth.me.$get()
-	const { user } = await res.json()
+	const json = await res.json()
+	const user = 'user' in json ? json.user : null
 
 	return (
 		<html

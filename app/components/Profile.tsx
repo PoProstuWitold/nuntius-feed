@@ -33,7 +33,6 @@ export default function Profile({ user }: { user: PayloadUser | null }) {
 
 			const json = await res.json()
 
-			// @ts-expect-error
 			toast.success(`Imported ${json.feeds.length} feeds`)
 		} catch (err) {
 			console.error(err)

@@ -32,7 +32,9 @@ export default async function SubscriptionsPage({
 
 	return (
 		<SubscriptionsClientPage
+			// @ts-expect-error
 			initialSubscriptions={data.subscriptions}
+			// @ts-expect-error
 			initialPagination={data.pagination}
 		/>
 	)

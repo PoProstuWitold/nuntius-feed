@@ -29,7 +29,9 @@ export default async function SubscriptionsArticles({
 		}
 	})
 	const json = await res.json()
+	// @ts-expect-error
 	const jsonItems = json.items as Item[]
+	// @ts-expect-error
 	const jsonPagination = json.pagination
 
 	const favs = await client.api.user.favorites.$get()

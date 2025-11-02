@@ -42,8 +42,10 @@ export function SubscriptionsClientPage({
 			}
 		})
 		const data = await res.json()
+		// @ts-expect-error
 		setSubscriptions((prev) => [...prev, ...data.subscriptions])
 		setPage((p) => p + 1)
+		// @ts-expect-error
 		setPagination(data.pagination)
 		setLoading(false)
 	}

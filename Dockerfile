@@ -1,4 +1,4 @@
-FROM node:jod-alpine AS base
+FROM node:krypton-alpine AS base
 
 # ----------------------------
 FROM base AS deps

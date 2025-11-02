@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { client } from './app/utils/server-rpc'
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
 	const path = req.nextUrl.pathname
 
 	if (
@@ -20,9 +20,9 @@ export async function middleware(req: NextRequest) {
 
 	const publicOnlyPaths = ['/login']
 	const protectedPaths: (string | RegExp)[] = [
-		'/profile', 
-		'/favorites', 
-		'/subscriptions', 
+		'/profile',
+		'/favorites',
+		'/subscriptions',
 		'/subscriptions/articles'
 	]
 	const adminPaths: (string | RegExp)[] = ['/api', '/dashboard']
@@ -35,6 +35,7 @@ export async function middleware(req: NextRequest) {
 	)
 
 	let isLoggedIn = false
+	// biome-ignore lint: doesnt need type here
 	let user: any = null
 
 	// Try to get user info from the API

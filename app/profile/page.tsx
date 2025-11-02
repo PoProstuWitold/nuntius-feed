@@ -4,7 +4,8 @@ import { client } from '../utils/server-rpc'
 
 export async function generateMetadata(): Promise<Metadata> {
 	const res = await client.api.auth.me.$get()
-	const { user } = await res.json()
+	const json = await res.json()
+	const user = 'user' in json ? json.user : null
 
 	if (!user) {
 		return {
@@ -21,7 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Login() {
 	const res = await client.api.auth.me.$get()
-	const { user } = await res.json()
+	const json = await res.json()
+	const user = 'user' in json ? json.user : null
 
 	return (
 		<>

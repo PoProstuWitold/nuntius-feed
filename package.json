@@ -1,7 +1,7 @@
 {
 	"name": "nuntius-feed",
 	"description": "A lightweight web application for subscribing to and reading RSS and Atom feeds.",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev --port 3006 --turbopack",
@@ -12,38 +12,38 @@
 	},
 	"dependencies": {
 		"@hono/standard-validator": "^0.1.5",
-		"@hono/zod-validator": "^0.7.3",
+		"@hono/zod-validator": "^0.7.4",
 		"@rowanmanning/feed-parser": "^2.1.1",
-		"@scalar/hono-api-reference": "^0.9.21",
+		"@scalar/hono-api-reference": "^0.9.22",
 		"argon2": "^0.44.0",
 		"cheerio": "^1.1.2",
 		"cron": "^4.3.3",
-		"hono": "^4.9.10",
-		"hono-openapi": "^1.1.0",
+		"hono": "^4.10.4",
+		"hono-openapi": "^1.1.1",
 		"jose": "^6.1.0",
-		"lucide-react": "^0.545.0",
-		"mongoose": "^8.19.1",
+		"lucide-react": "^0.552.0",
+		"mongoose": "^8.19.2",
 		"nanoid": "^5.1.6",
-		"next": "15.5.4",
-		"p-limit": "^7.1.1",
-		"react": "^19.2.0",
-		"react-dom": "^19.2.0",
-		"react-hook-form": "^7.64.0",
+		"next": "16.0.1",
+		"p-limit": "^7.2.0",
+		"react": "19.2.0",
+		"react-dom": "19.2.0",
+		"react-hook-form": "^7.66.0",
 		"react-toastify": "^11.0.5",
 		"rss-parser": "^3.13.0",
 		"zod": "^4.1.12",
 		"zod-openapi": "^5.4.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.2.5",
-		"@tailwindcss/postcss": "^4.1.14",
-		"@types/node": "^24.7.0",
-		"@types/react": "^19.2.2",
-		"@types/react-dom": "^19.2.1",
+		"@biomejs/biome": "^2.3.2",
+		"@tailwindcss/postcss": "^4.1.16",
+		"@types/node": "^24.9.2",
+		"@types/react": "19.2.2",
+		"@types/react-dom": "19.2.2",
 		"autoprefixer": "^10.4.21",
-		"daisyui": "^5.1.29",
+		"daisyui": "^5.4.2",
 		"postcss": "^8.5.6",
-		"tailwindcss": "^4.1.14",
+		"tailwindcss": "^4.1.16",
 		"typescript": "^5.9.3"
 	},
 	"engines": {
@@ -51,7 +51,13 @@
 		"pnpm": ">=10"
 	},
 	"volta": {
-		"node": "22.20.0",
-		"pnpm": "10.18.1"
+		"node": "24.11.0",
+		"pnpm": "10.20.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"@types/react": "19.2.2",
+			"@types/react-dom": "19.2.2"
+		}
 	}
 }

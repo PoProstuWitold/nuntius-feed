@@ -30,7 +30,9 @@ export default async function Favorites({
 
 	return (
 		<FavoritesClientPage
+			// @ts-expect-error
 			initialItems={data.favorites}
+			// @ts-expect-error
 			initialPagination={data.pagination}
 		/>
 	)

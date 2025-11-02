@@ -51,6 +51,7 @@ export const SubscriptionArticlesClientPage = ({
 			)
 			return [...prev, ...newItems]
 		})
+		// @ts-expect-error
 		setPagination(json.pagination)
 		setPage((prev) => prev + 1)
 		setLoading(false)
