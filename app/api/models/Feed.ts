@@ -72,9 +72,10 @@ const FeedSchema = new Schema<FeedDocument>(
 FeedSchema.set('toJSON', {
 	virtuals: true,
 	versionKey: false,
-	transform: (_, ret) => {
+	// biome-ignore lint: acceptable
+	transform: (_doc, ret: any) => {
 		ret.id = ret._id
-		ret._id = undefined
+		delete ret._id
 	}
 })
 

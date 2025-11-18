@@ -68,9 +68,10 @@ UserSchema.methods.isFavorite = function (itemId: Types.ObjectId | string) {
 UserSchema.set('toJSON', {
 	virtuals: true,
 	versionKey: false,
-	transform: (_, ret) => {
+	// biome-ignore lint: acceptable
+	transform: (_doc, ret: any) => {
 		ret.id = ret._id
-		ret._id = undefined
+		delete ret._id
 	}
 })
 
