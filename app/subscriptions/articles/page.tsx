@@ -28,17 +28,29 @@ export default async function SubscriptionsArticles({
 			...(search ? { search } : {})
 		}
 	})
-	const json = await res.json()
-	// @ts-expect-error
-	const jsonItems = json.items as Item[]
-	// @ts-expect-error
-	const jsonPagination = json.pagination
+	const json = (await res.json()) as
+		| { message: string }
+		| { items: Item[]; pagination: import('@/app/types').ItemsPagination }
+	const jsonItems = 'items' in json ? json.items : []
+	const jsonPagination =
+		'items' in json
+			? json.pagination
+			: ({
+					totalItems: 0,
+					totalPages: 0,
+					currentPage: 1,
+					hasNextPage: false,
+					hasPreviousPage: false,
+					nextPage: null,
+					previousPage: null
+				} satisfies import('@/app/types').ItemsPagination)
 
 	const favs = await client.api.user.favorites.$get()
-	const favsJson = await favs.json()
+	const favsJson = (await favs.json()) as
+		| { message: string }
+		| { message: string; favorites: { id: string }[] }
 	const favGuids =
-		// @ts-expect-error
-		favsJson.favorites?.map((fav: { id: string }) => fav.id) || []
+		'favorites' in favsJson ? favsJson.favorites.map((fav) => fav.id) : []
 
 	return (
 		<>

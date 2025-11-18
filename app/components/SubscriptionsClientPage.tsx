@@ -41,11 +41,12 @@ export function SubscriptionsClientPage({
 				...(search ? { search } : {})
 			}
 		})
-		const data = await res.json()
-		// @ts-expect-error
+		const data = (await res.json()) as {
+			subscriptions: Feed[]
+			pagination: FeedPagination
+		}
 		setSubscriptions((prev) => [...prev, ...data.subscriptions])
 		setPage((p) => p + 1)
-		// @ts-expect-error
 		setPagination(data.pagination)
 		setLoading(false)
 	}

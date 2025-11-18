@@ -38,12 +38,17 @@ export function FavoritesClientPage({
 				...(search ? { search } : {})
 			}
 		})
-		const data = await res.json()
+		const data = (await res.json()) as
+			| { message: string }
+			| { favorites: Item[]; pagination: ItemsPagination }
 
-		// @ts-expect-error
+		if (!('favorites' in data)) {
+			setLoading(false)
+			return
+		}
+
 		setItems((prev) => [...prev, ...data.favorites])
 		setPage((p) => p + 1)
-		// @ts-expect-error
 		setPagination(data.pagination)
 		setLoading(false)
 	}

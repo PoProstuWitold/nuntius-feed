@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { SubscriptionsClientPage } from '../components/SubscriptionsClientPage'
+import type { Feed, FeedPagination } from '../types'
 import { parseSearchParams } from '../utils/functions'
 import { client } from '../utils/server-rpc'
 
@@ -28,13 +29,14 @@ export default async function SubscriptionsPage({
 			...(search ? { search } : {})
 		}
 	})
-	const data = await res.json()
+	const data = (await res.json()) as {
+		subscriptions: Feed[]
+		pagination: FeedPagination
+	}
 
 	return (
 		<SubscriptionsClientPage
-			// @ts-expect-error
 			initialSubscriptions={data.subscriptions}
-			// @ts-expect-error
 			initialPagination={data.pagination}
 		/>
 	)

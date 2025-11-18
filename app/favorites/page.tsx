@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { FavoritesClientPage } from '../components/FavoritesClientPage'
+import type { Item, ItemsPagination } from '../types'
 import { parseSearchParams } from '../utils/functions'
 import { client } from '../utils/server-rpc'
 
@@ -26,14 +27,38 @@ export default async function Favorites({
 			...(search ? { search } : {})
 		}
 	})
-	const data = await res.json()
+	const data = (await res.json()) as
+		| {
+				message: string
+		  }
+		| {
+				message: string
+				success: true
+				favorites: unknown[]
+				pagination: unknown
+		  }
+
+	if (!('favorites' in data)) {
+		return (
+			<FavoritesClientPage
+				initialItems={[]}
+				initialPagination={{
+					totalItems: 0,
+					totalPages: 0,
+					currentPage: 1,
+					hasNextPage: false,
+					hasPreviousPage: false,
+					nextPage: null,
+					previousPage: null
+				}}
+			/>
+		)
+	}
 
 	return (
 		<FavoritesClientPage
-			// @ts-expect-error
-			initialItems={data.favorites}
-			// @ts-expect-error
-			initialPagination={data.pagination}
+			initialItems={data.favorites as Item[]}
+			initialPagination={data.pagination as ItemsPagination}
 		/>
 	)
 }

@@ -72,17 +72,20 @@ export default async function FeedIdPage({
 	const feed = feedJson.feed
 
 	const favs = await client.api.user.favorites.$get()
-	const favsJson = await favs.json()
+	const favsJson = (await favs.json()) as
+		| { message: string }
+		| { message: string; favorites: { id: string }[] }
 	const favGuids =
-		// @ts-expect-error
-		favsJson.favorites?.map((fav: { id: string }) => fav.id) || []
+		'favorites' in favsJson ? favsJson.favorites.map((fav) => fav.id) : []
 
 	const isSubToFeed = await client.api.user.subscriptions[':id'].$get({
 		param: {
 			id: feed.id
 		}
 	})
-	const isSubToFeedJson = await isSubToFeed.json()
+	const isSubToFeedJson = (await isSubToFeed.json()) as unknown as
+		| { success: false }
+		| { success: true; isSubscribed: boolean }
 	const user = await getUser()
 
 	return (
@@ -132,8 +135,12 @@ export default async function FeedIdPage({
 							<div className='mt-2 mr-2'>
 								<SubscribeButton
 									feedId={feed.id}
-									// @ts-expect-error
-									isSubscribed={isSubToFeedJson.isSubscribed}
+									isSubscribed={
+										'success' in isSubToFeedJson &&
+										isSubToFeedJson.success === true
+											? isSubToFeedJson.isSubscribed
+											: false
+									}
 								/>
 							</div>
 						</>

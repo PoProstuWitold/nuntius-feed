@@ -23,10 +23,18 @@ const app = new Hono<Env>()
 		const sortOptions = { [sortBy]: sortOrder }
 
 		const dbUser = await User.findById(user?.sub).select('subscriptions')
-		const allIds = dbUser?.subscriptions || []
+		const allIds = dbUser?.subscriptions ?? []
 
-		// biome-ignore lint: Irrelevant types that break RPC
-		const filter: any = { _id: { $in: allIds } }
+		const filter: {
+			_id: { $in: ObjectId[] }
+			$or?:
+				| undefined
+				| {
+						title?: { $regex: string; $options: string }
+						url?: { $regex: string; $options: string }
+						self?: { $regex: string; $options: string }
+				  }[]
+		} = { _id: { $in: allIds } }
 		if (search) {
 			filter.$or = [
 				{ title: { $regex: search, $options: 'i' } },
@@ -79,10 +87,18 @@ const app = new Hono<Env>()
 		const search = c.req.query('search')?.trim() || ''
 
 		const dbUser = await User.findById(user?.sub).select('subscriptions')
-		const allIds = dbUser?.subscriptions || []
+		const allIds = dbUser?.subscriptions ?? []
 
-		// biome-ignore lint: Irrelevant types that break RPC
-		const filter: any = { _id: { $in: allIds } }
+		const filter: {
+			_id: { $in: ObjectId[] }
+			$or?:
+				| undefined
+				| {
+						title?: { $regex: string; $options: string }
+						url?: { $regex: string; $options: string }
+						self?: { $regex: string; $options: string }
+				  }[]
+		} = { _id: { $in: allIds } }
 		if (search) {
 			filter.$or = [
 				{ title: { $regex: search, $options: 'i' } },
@@ -187,8 +203,10 @@ const app = new Hono<Env>()
 			'subscriptions',
 			'_id'
 		)
-		// biome-ignore lint: Irrelevant types that break RPC
-		const userFeedIds = dbUser?.subscriptions.map((f: any) => f._id) || []
+		const userFeedIds =
+			(dbUser?.subscriptions as { _id: ObjectId }[] | undefined)?.map(
+				(f) => f._id
+			) ?? []
 
 		if (userFeedIds.length === 0) {
 			return c.json({

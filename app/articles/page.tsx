@@ -32,17 +32,35 @@ export default async function AllArticles({
 			...(search ? { search } : {})
 		}
 	})
-	const json = await res.json()
-	const jsonItems = json.items as Item[]
-	const jsonPagination = json.pagination
+	const json = (await res.json()) as
+		| { message: string }
+		| { items: Item[]; pagination: import('../types').ItemsPagination }
+	const jsonItems = 'items' in json ? json.items : []
+	const jsonPagination =
+		'items' in json
+			? json.pagination
+			: ({
+					totalItems: 0,
+					totalPages: 0,
+					currentPage: 1,
+					hasNextPage: false,
+					hasPreviousPage: false,
+					nextPage: null,
+					previousPage: null
+				} satisfies import('../types').ItemsPagination)
 
 	const user = await getUser()
 
 	const favs = await client.api.user.favorites.$get()
-	const favsJson = await favs.json()
+	const favsJson = (await favs.json()) as
+		| { message: string }
+		| { message: string; favorites: { id: string }[] }
 	const favGuids =
-		// @ts-expect-error
-		favsJson.favorites?.map((fav: { id: string }) => fav.id) || []
+		'invalid' in favsJson
+			? []
+			: 'favorites' in favsJson
+				? favsJson.favorites.map((fav) => fav.id)
+				: []
 
 	return (
 		<>

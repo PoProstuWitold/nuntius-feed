@@ -42,16 +42,22 @@ export const SubscriptionArticlesClientPage = ({
 			}
 		})
 
-		const json = await res.json()
+		const json = (await res.json()) as
+			| { message: string }
+			| { items: Item[]; pagination: ItemsPagination }
+
+		if (!('items' in json)) {
+			setLoading(false)
+			return
+		}
+
 		setItems((prev) => {
 			const existingIds = new Set(prev.map((item) => item.id))
-			// @ts-expect-error
 			const newItems = json.items.filter(
 				(item: Item) => !existingIds.has(item.id)
 			)
 			return [...prev, ...newItems]
 		})
-		// @ts-expect-error
 		setPagination(json.pagination)
 		setPage((prev) => prev + 1)
 		setLoading(false)
