@@ -177,7 +177,6 @@ export class FeedUtils {
 		}
 	}
 
-	// biome-ignore lint: linter removes private static methods?
 	private static getLanguageTag(
 		rawLang: string | null | undefined,
 		url: string

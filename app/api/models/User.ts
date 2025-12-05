@@ -40,11 +40,11 @@ const UserSchema = new Schema<UserDocument>(
 	}
 )
 
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function () {
 	const user = this as HydratedDocument<UserDocument>
-	if (!user.isModified('password')) return next()
+	if (!user.isModified('password')) return
+
 	user.password = await argon2.hash(user.password)
-	next()
 })
 
 UserSchema.methods.verifyPassword = async function (inputPassword: string) {
