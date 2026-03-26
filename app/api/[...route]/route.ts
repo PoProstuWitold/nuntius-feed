@@ -124,6 +124,6 @@ const DELETE = app.fetch
 const OPTIONS = app.fetch
 const HEAD = app.fetch
 
-export { GET, POST, PUT, DELETE, OPTIONS, HEAD }
+export { DELETE, GET, HEAD, OPTIONS, POST, PUT }
 
 export type AppType = typeof routes
