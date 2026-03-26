@@ -5,7 +5,7 @@ import type { AppType } from '../api/[...route]/route'
 
 const baseUrl = (() => {
 	if (process.env.NODE_ENV !== 'production') {
-		return process.env.APP_LAN ?? 'http://localhost:3006'
+		return 'http://localhost:3006'
 	}
 
 	if (process.env.DOCKER === 'true') {

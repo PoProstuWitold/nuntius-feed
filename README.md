@@ -75,7 +75,6 @@ Example ``.env`` file:
 JWT_SIGNING_SECRET=your_generated_signing_secret
 JWT_ENCRYPTION_SECRET=your_generated_encryption_secret
 APP_URL=
-APP_LAN=
 ```
 
 ## Production

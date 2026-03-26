@@ -34,8 +34,7 @@ app.use(
 		origin: [
 			'http://localhost:3006',
 			'http://nuntius_feed:3006',
-			process.env.APP_URL || '',
-			process.env.APP_LAN || ''
+			process.env.APP_URL || ''
 		],
 		credentials: true,
 		allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']
