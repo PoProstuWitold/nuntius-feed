@@ -149,7 +149,7 @@ export class FeedUtils {
 						lastBuildDate: new Date()
 					}
 				},
-				{ new: true }
+				{ returnDocument: 'after' }
 			)
 
 			const updatedItems = await Promise.all(
@@ -157,7 +157,11 @@ export class FeedUtils {
 					Item.findOneAndUpdate(
 						{ guid: item.guid, feed: existingFeed._id },
 						{ ...item, feed: updatedFeed._id },
-						{ upsert: true, new: true, setDefaultsOnInsert: true }
+						{
+							upsert: true,
+							returnDocument: 'after',
+							setDefaultsOnInsert: true
+						}
 					)
 				)
 			)
