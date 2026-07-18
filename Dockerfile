@@ -39,6 +39,14 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
+LABEL org.opencontainers.image.title="Nuntius Feed" \
+      org.opencontainers.image.description="A lightweight web application for subscribing to and reading RSS and Atom feeds." \
+      org.opencontainers.image.source="https://github.com/PoProstuWitold/nuntius-feed" \
+      org.opencontainers.image.url="https://hub.docker.com/r/poprostuwitold/nuntius-feed" \
+      org.opencontainers.image.documentation="https://github.com/PoProstuWitold/nuntius-feed#readme" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.authors="Witold Zawada (PoProstuWitold)"
+
 ENV DOCKER=true
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
