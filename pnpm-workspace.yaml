@@ -1,3 +1,8 @@
+allowBuilds:
+  argon2: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - react-hook-form@7.82.0
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@tailwindcss/oxide'

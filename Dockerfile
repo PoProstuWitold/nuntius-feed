@@ -1,5 +1,7 @@
 FROM node:krypton-alpine AS base
 
+ENV CI=true
+
 # ----------------------------
 FROM base AS deps
 RUN apk add --no-cache libc6-compat tzdata curl \
@@ -7,7 +9,7 @@ RUN apk add --no-cache libc6-compat tzdata curl \
 
 WORKDIR /app
 
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+COPY package.json pnpm-workspace.yaml yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 
 RUN \
     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
